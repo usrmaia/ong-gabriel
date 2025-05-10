@@ -2,5 +2,6 @@
   "recommendations": [
     "ms-vscode.vscode-typescript-next",
     "dbaeumer.vscode-eslint",
+    "vivaxy.vscode-conventional-commits",
   ]
 }
