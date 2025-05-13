@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFF8F2;
+  --foreground: #342B2B;
+  --font-poppins: "Poppins", sans-serif;
+  --font-young-serif: "Young Serif", serif;
 }
 
 @theme inline {
@@ -10,17 +12,43 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --breakpoint-xs: 0px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1536px;
+  --color-verdigris: #31B7BC;
+  --color-saffron: #F0C84A;
+  --color-wenge: #76645C;
+  --color-liver: #675049;
+  --color-saisin-black: #342B2B;
+  --color-ivory: #FEFBE9;
+  --color-seashell: #FFF8F2;
+  --color-azure-web: #E9FEFF;
+  /* semantic colors */
+  --color-success: #31BC80;
+  --color-warning: #F9A814;
+  --color-error: #E93C3C;
+  --color-info: #3DBBC9;
+  --color-enable: #3DBBC9;
+  --color-limited: #EE853A;
+  --color-disable: #D9C2C2;
+
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #342B2B;
+    --foreground: #FFF8F2;
   }
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  font-family: var(--font-poppins);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-young-serif);
 }

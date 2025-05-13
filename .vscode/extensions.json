@@ -3,5 +3,6 @@
     "ms-vscode.vscode-typescript-next",
     "dbaeumer.vscode-eslint",
     "vivaxy.vscode-conventional-commits",
+    "bradlc.vscode-tailwindcss",
   ]
 }

@@ -1,6 +1,10 @@
 {
     "conventionalCommits.scopes": [
         "proj",
-        "git"
-    ]
+        "git",
+        "tailwind"
+    ],
+    "editor.quickSuggestions": {
+        "strings": "on"
+    }
 }
