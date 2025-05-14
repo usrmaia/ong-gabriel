@@ -12,19 +12,26 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Screen Size */
   --breakpoint-xs: 0px;
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1536px;
-  --color-verdigris: #31B7BC;
+
+  /* primary colors */
+  --color-primary-verdigris: #31B7BC;
   --color-saffron: #F0C84A;
   --color-wenge: #76645C;
-  --color-liver: #675049;
+
+  /* secundary colors */
+  --color-secudary-liver: #675049;
   --color-saisin-black: #342B2B;
   --color-ivory: #FEFBE9;
   --color-seashell: #FFF8F2;
   --color-azure-web: #E9FEFF;
+
   /* semantic colors */
   --color-success: #31BC80;
   --color-warning: #F9A814;
@@ -51,4 +58,18 @@ body {
 
 h1, h2, h3 {
   font-family: var(--font-young-serif);
+}
+
+h1{
+  font-size:clamp(2.25rem, 6vw, 3.5rem);
+}
+
+h2{
+  font-size: clamp(2rem, 5.2vw, 3rem);
+}
+
+@media (max-width: var(--breakpoint-sm)){
+  h3{
+    font-size: 1.75rem;
+  }
 }
