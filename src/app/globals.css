@@ -40,7 +40,6 @@
   --color-enable: #3DBBC9;
   --color-limited: #EE853A;
   --color-disable: #D9C2C2;
-
 }
 
 @media (prefers-color-scheme: dark) {
@@ -56,7 +55,7 @@ body {
   font-family: var(--font-poppins);
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-young-serif);
 }
 
@@ -68,8 +67,6 @@ h2{
   font-size: clamp(2rem, 5.2vw, 3rem);
 }
 
-@media (max-width: var(--breakpoint-sm)){
-  h3{
-    font-size: 1.75rem;
-  }
+h3{
+  font-size: clamp(1.75rem, 4vw, 2rem);
 }
