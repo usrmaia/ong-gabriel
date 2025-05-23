@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Poppins, Young_Serif } from "next/font/google";
+import { Young_Serif, Raleway } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const raleway = Raleway({
+  variable: "--font-raleway",
   subsets: ["latin"],
   display: "swap",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -27,9 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body
-        className={`${poppins.variable} ${youngSerif.variable} antialiased`}
+        className={`${raleway.variable} ${youngSerif.variable} antialiased`}
       >
         {children}
       </body>
