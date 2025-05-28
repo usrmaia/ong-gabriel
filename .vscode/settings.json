@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "proj",
         "git",
-        "api"
+        "api",
+        "tests"
     ]
 }
