@@ -3,6 +3,7 @@
     "ms-vscode.vscode-typescript-next",
     "dbaeumer.vscode-eslint",
     "vivaxy.vscode-conventional-commits",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "Prisma.prisma"
   ]
 }
