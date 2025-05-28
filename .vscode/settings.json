@@ -2,5 +2,10 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnType": true,
-  "conventionalCommits.scopes": ["proj", "git", "prettier"]
+  "conventionalCommits.scopes": [
+    "proj",
+    "git",
+    "prettier",
+    "logs"
+  ]
 }
