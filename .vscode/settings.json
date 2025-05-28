@@ -12,6 +12,7 @@
     "git",
     "prettier",
     "logs",
-    "prisma"
+    "prisma",
+    "zod"
   ]
 }

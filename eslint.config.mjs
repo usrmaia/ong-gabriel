@@ -18,6 +18,17 @@ const eslintConfig = [
     "react-hooks",
     "prettier"
   ),
+  ...compat.config({
+    files: ["**/*.ts", "**/*.tsx"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  }),
 ];
 
 export default eslintConfig;
