@@ -1,0 +1,70 @@
+# Run: docker-compose up -d
+name: gabriel-guard
+services:
+  app:
+    container_name: gabriel-guard-app
+    image: srmaia/gabriel-guard:0.0.1
+    # image: <user>/<image>:<tag>
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - app-logs:/app/logs
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: gabriel-guard-postgres
+    image: postgres:17.5
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  nginx:
+    container_name: gabriel-guard-nginx
+    image: nginx:1.28
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+
+  duckdns:
+    container_name: gabriel-guard-duckdns
+    image: linuxserver/duckdns:latest
+    environment:
+      - TZ=America/Sao_Paulo
+      - SUBDOMAINS=${DUCKDNS_SUBDOMAINS}
+      - TOKEN=${DUCKDNS_TOKEN}
+      - LOG_FILE=true
+    restart: unless-stopped
+    networks:
+      - gabriel-guard-net
+
+volumes:
+  app-logs:
+  postgres-data:
+
+networks:
+  gabriel-guard-net:
+    driver: bridge

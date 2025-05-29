@@ -1,0 +1,16 @@
+.next
+.vscode
+coverage
+docs
+node_modules
+/src/generated/prisma
+.dockerignore
+.prettierrc
+Dockerfile
+eslint.config.js
+README.md
+
+# other common files to ignore
+npm-debug.log
+.git
+.log
