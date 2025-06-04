@@ -2,6 +2,9 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma",
     "editor.formatOnSave": true,
@@ -15,6 +18,7 @@
     "prisma",
     "zod",
     "api",
-    "tests"
+    "tests",
+    "tailwind"
   ]
 }

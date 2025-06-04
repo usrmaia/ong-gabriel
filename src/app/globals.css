@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fff8f2;
+  --foreground: #342b2b;
+  --font-raleway: "Raleway", sans-serif;
+  --font-young-serif: "Young Serif", serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Screen Size */
+  --breakpoint-xs: 0px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1536px;
+
+  /* primary colors */
+  --color-p-terracotta: #693300;
+  --color-p-xanthous: #FFB836;
+  --color-p-lemonchiffon: #FFF0C2;
+  --color-p-indigo: #353886;
+  --color-p-tealwave: #7AB8C0;
+  --color-p-periwinkle: #A7B5FF;
+  --color-p-lavendermist: #D5E0EF;
+
+  /* secondary colors */
+  --color-s-butter-100: #FFF8EB;
+  --color-s-butter-200: #FFF9C1;
+  --color-s-butter-300: #FFDEA3;
+
+  --color-s-saffron-100: #FFB836;
+  --color-s-saffron-200: #FFC65E;
+  --color-s-saffron-300: #E6A837;
+
+  --color-s-brass-100: #B58326;
+  --color-s-brass-200: #8C651E;
+  --color-s-brass-300: #543C12;
+
+  --color-s-sky-100: #F3F7FB;
+  --color-s-powder-100: #E4EBF5;
+  --color-s-crystal-100: #D5E0EF;
+  --color-s-glacier-100: #AFC6E1;
+
+  --color-s-azure-100: #89A7D1;
+  --color-s-sapphire-100: #6D8CC4;
+  --color-s-royal-100: #5A75B6;
+  --color-s-denim-100: #4F64A6;
+
+  --color-s-navy-100: #455488;
+  --color-s-midnight-100: #3B476D;
+  --color-s-onyx-100: #272D44;
+
+  --color-s-snow-100: #FDFDFD;
+  --color-s-fog-100: #DCDBDB;
+  --color-s-state-100: #959492;
+  --color-s-gunmetal-100: #53514E;
+  --color-s-graphite-100: #363530;
+  --color-s-charcoal-100: #26241F;
+  --color-s-coal-100: #13110C;
+
+  /* semantic colors */
+  --color-success: #31BC80;
+  --color-warning: #F9A814;
+  --color-error: #E93C3C;
+  --color-available: #3DBBC9;
+  --color-limited: #EE853A;
+  --color-unavailable: #D9C2C2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #342B2B;
+    --foreground: #FFF8F2;
   }
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  font-family: var(--font-raleway);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-young-serif);
+}
+
+h1 {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 5.2vw, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.75rem, 4vw, 2rem);
 }
