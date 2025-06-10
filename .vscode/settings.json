@@ -19,6 +19,7 @@
     "zod",
     "api",
     "tests",
-    "tailwind"
+    "tailwind",
+    "auth"
   ]
 }
