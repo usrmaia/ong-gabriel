@@ -6,7 +6,7 @@ export default function LoginPage() {
     <div>
       <h1>Suporte emocional para a sua vida!</h1>
       <Image
-        src="/public/gabriel-logo.svg"
+        src="../ong-gabriel-logo.svg"
         alt="Logo da ONG Gabriel"
         width={200}
         height={200}
