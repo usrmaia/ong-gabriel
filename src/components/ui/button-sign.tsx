@@ -1,37 +1,39 @@
 "use client";
 
+import { VariantProps } from "class-variance-authority";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 
 import { login, logout, Provider } from "@/lib/auth";
-import { Button } from "./button";
+import { Button, buttonVariants } from "./button";
 
-const ButtonSignInContent = ({ provider }: { provider: Provider }) => {
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
+type ButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    provider: Provider;
+  };
+
+const ButtonSignInContent = (props: ButtonProps) => {
+  const redirectTo = useSearchParams().get("redirectTo");
+  const facebookColor = "#0866FF";
 
   return (
-    <Button
-      variant="sign_outline"
-      size="lg"
-      className="flex-1"
-      onClick={() => login(provider, redirectTo)}
-    >
-      {provider === "Google" && <FcGoogle className="inline-block" />}
-      {provider === "Facebook" && (
-        <FaFacebook className="inline-block" color="#0866FF" />
+    <Button {...props} onClick={() => login(props.provider, redirectTo)}>
+      {props.provider === "Google" && <FcGoogle className="inline-block" />}
+      {props.provider === "Facebook" && (
+        <FaFacebook className="inline-block" color={facebookColor} />
       )}
-      {provider}
+      {props.provider}
     </Button>
   );
 };
 
-export const ButtonSignIn = ({ provider }: { provider: Provider }) => {
+export const ButtonSignIn = (props: ButtonProps) => {
   return (
     <Suspense fallback={<span>Loading...</span>}>
-      <ButtonSignInContent provider={provider} />
+      <ButtonSignInContent {...props} />
     </Suspense>
   );
 };

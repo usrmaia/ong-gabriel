@@ -7,8 +7,18 @@ export default function LoginPage() {
         Suporte emocional para a sua vida!
       </h3>
       <div className="flex flex-row gap-4 w-full sm:w-1/2 lg:w-130">
-        <ButtonSignIn provider="Google" />
-        <ButtonSignIn provider="Facebook" />
+        <ButtonSignIn
+          provider="Google"
+          variant="sign_outline"
+          size="lg"
+          className="flex-1"
+        />
+        <ButtonSignIn
+          provider="Facebook"
+          variant="sign_outline"
+          size="lg"
+          className="flex-1"
+        />
       </div>
     </div>
   );
