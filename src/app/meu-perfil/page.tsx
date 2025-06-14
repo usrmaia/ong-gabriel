@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { auth } from "@/auth";
-import { SignOutButton } from "@/components";
+import { ButtonSignOut } from "@/components/ui";
 
 export default async function MeuPerfilPage() {
   const session = await auth();
@@ -24,7 +24,7 @@ export default async function MeuPerfilPage() {
         />
       )}
       <p>expires: {session.expires}</p>
-      <SignOutButton />
+      <ButtonSignOut />
     </div>
   );
 }
