@@ -1,0 +1,93 @@
+type: collection.insomnia.rest/5.0
+name: ONG Gabriel
+meta:
+  id: wrk_1c8e2a9d0aab48639c52012282b1bd08
+  created: 1750240954630
+  modified: 1750240954630
+  description: ""
+collection:
+  - name: user
+    meta:
+      id: fld_7cceaf5b324843b6ae4f81656de85beb
+      created: 1750240976518
+      modified: 1750240976518
+      sortKey: -1750240976518
+      description: ""
+    children:
+      - url: "{{ _.API_URI }}/api/user"
+        name: api/user
+        meta:
+          id: req_4afc5f542c9b4d9b81807180b623d787
+          created: 1750240980068
+          modified: 1750241325835
+          isPrivate: false
+          description: ""
+          sortKey: -1750240980068
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	'name': 'data.name',
+            	'full_name': 'data',
+            	'date_of_birth': '2000-01-01',
+            	'phone': 'data.phone'
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: health
+    meta:
+      id: fld_df0573c3e89f47fea5fd317ca5c2a08d
+      created: 1750241725263
+      modified: 1750241748385
+      sortKey: -1750241725263
+      description: ""
+    children:
+      - url: "{{ _.API_URI }}/api/health"
+        name: api/health
+        meta:
+          id: req_eb475bb99ead4ceb981b0ff66ebe1e01
+          created: 1750241730879
+          modified: 1750243548644
+          isPrivate: false
+          description: ""
+          sortKey: -1750241730879
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+            id: pair_8aeff01de8e9412b863bd0b3f6a05ff2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_f337f8d0e9fbd7ef1d3f2713c04c2a6a0cb49ad0
+    created: 1750240954639
+    modified: 1750243652968
+environments:
+  name: Base Environment
+  meta:
+    id: env_f337f8d0e9fbd7ef1d3f2713c04c2a6a0cb49ad0
+    created: 1750240954633
+    modified: 1750241024084
+    isPrivate: false
+  data:
+    API_URI: http://localhost:3000/
