@@ -11,6 +11,7 @@ export const updateUserBaseInfo = async (
 
   return prisma.user.update({
     data: {
+      name: data.name,
       full_name: data.full_name,
       date_of_birth: data.date_of_birth,
       phone: data.phone,

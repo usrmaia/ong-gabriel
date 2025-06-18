@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 export const UserBaseInfoSchema = z.object({
+  name: z.string().min(1, "Nome é obrigatório."),
   full_name: z.string().min(1, "Nome completo é obrigatório."),
   date_of_birth: z
     .date()
