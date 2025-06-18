@@ -12,19 +12,19 @@ datasource db {
 }
 
 model User {
-  id              String          @id @default(ulid())
-  name            String?
-  full_name       String?
-  email           String          @unique
-  emailVerifiedAt DateTime?
-  date_of_birth   DateTime?
-  phone           String?
-  phoneVerifiedAt DateTime?
-  image           String?
-  role            Role[]          @default([USER])
-  accounts        Account[]
-  sessions        Session[]
-  Authenticators  Authenticator[]
+  id            String          @id @default(ulid())
+  name          String?
+  full_name     String?
+  email         String          @unique
+  emailVerified DateTime?
+  date_of_birth DateTime?
+  phone         String?
+  phoneVerified DateTime?
+  image         String?
+  role          Role[]          @default([USER])
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
