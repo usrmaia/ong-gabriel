@@ -11,7 +11,11 @@ export const UserBaseInfoSchema = z.object({
     ),
   phone: z
     .string()
-    .regex(/^\([1-9]{2}\) 9[7-9]{1}[0-9]{3}-[0-9]{4}$/, "Telefone inválido."),
+    .min(7, "Telefone é obrigatório.")
+    .max(24, "Telefone inválido.")
+    .transform((value) => {
+      return value.replace(/\D/g, "");
+    }),
 });
 
 export type UserBaseInfo = z.infer<typeof UserBaseInfoSchema>;
