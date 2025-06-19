@@ -72,10 +72,7 @@ export default function PersonalPage() {
                 </div>
             </section>
 
-      <Button className="w-screen max-w-sm mt-8">
-                <span className="font-bold text-foreground text-xl">Continuar</span>
-            </Button>
-
+      <Button className="w-screen max-w-sm mt-8">Continuar</Button>
         </div>
     );
 }
