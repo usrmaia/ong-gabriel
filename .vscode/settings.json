@@ -20,6 +20,7 @@
     "api",
     "tests",
     "tailwind",
-    "auth"
+    "auth",
+    "permissions"
   ]
 }
