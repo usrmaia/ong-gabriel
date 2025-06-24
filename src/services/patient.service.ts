@@ -1,10 +1,10 @@
-import prisma from "@/lib/prisma";
-
 import { FormAnamnesis, Prisma } from "@/generated/prisma";
+import prisma from "@/lib/prisma";
 import { PatientFormAnamnesisSchema } from "@/schemas";
+import { Result } from "@/types";
 
 export const getPatientFormAnamnesis = async (filter: {
-  where: Prisma.FormAnamnesisWhereInput;
+  where?: Prisma.FormAnamnesisWhereInput;
 }) => {
   return prisma.formAnamnesis.findMany({
     where: filter.where,
@@ -23,16 +23,13 @@ export const getPatientFormAnamnesisByUserId = async (filter: {
 
 export const createPatientFormAnamnesis = async (
   formAnamnesis: FormAnamnesis,
-) => {
+): Promise<Result<FormAnamnesis>> => {
   const { success, error } =
     await PatientFormAnamnesisSchema.safeParseAsync(formAnamnesis);
-  if (!success) throw new Error(error.message);
+  if (!success) return { success: false, error: error.message };
 
-  try {
-    return prisma.formAnamnesis.create({
-      data: formAnamnesis,
-    });
-  } catch (error) {
-    throw new Error("Erro ao cadastrar formulário de anamnese!");
-  }
+  const createdFormAnamnesis = await prisma.formAnamnesis.create({
+    data: formAnamnesis,
+  });
+  return { success: true, data: createdFormAnamnesis };
 };

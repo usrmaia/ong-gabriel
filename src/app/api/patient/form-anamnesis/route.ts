@@ -1,25 +1,26 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
+import logger from "@/config/logger";
 import { FormAnamnesis } from "@/generated/prisma";
 import {
   createPatientFormAnamnesis,
   getPatientFormAnamnesis,
 } from "@/services/patient.service";
+import { getParams } from "@/utils";
 
 // GET /api/patient/form-anamnesis
-export async function GET(request: Request) {
+export async function GET(req: Request) {
   try {
-    const url = new URL(request.url);
-    const where = url.searchParams.get("where");
-    const filter = where ? JSON.parse(where) : {};
+    const filter = { where: getParams(req.url) };
 
-    const formAnamnesis = await getPatientFormAnamnesis({ where: filter });
+    const formAnamnesis = await getPatientFormAnamnesis(filter);
     return NextResponse.json(formAnamnesis, { status: 200 });
   } catch (error: any) {
+    logger.error("Erro ao buscar formulários de anamnese:", error);
     return NextResponse.json(
-      { error: "Erro ao buscar formulários de anamnese" },
-      { status: 400 },
+      { error: "Erro ao buscar formulários de anamnese!" },
+      { status: 500 },
     );
   }
 }
@@ -27,19 +28,19 @@ export async function GET(request: Request) {
 // POST /api/patient/form-anamnesis
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user?.id)
-      return NextResponse.json(
-        { error: "Usuário não autenticado" },
-        { status: 401 },
-      );
+    const formAnamnesis = (await request.json()) as FormAnamnesis;
+    formAnamnesis.userId = (await auth())?.user.id!;
 
-    const data = (await request.json()) as FormAnamnesis;
-    data.userId = session.user.id;
+    const { success, data, error } =
+      await createPatientFormAnamnesis(formAnamnesis);
 
-    const formAnamnesis = await createPatientFormAnamnesis(data);
-    return NextResponse.json(formAnamnesis, { status: 201 });
+    if (!success) return NextResponse.json({ error }, { status: 400 });
+    return NextResponse.json(data, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    logger.error("Erro ao criar formulário de anamnese:", error);
+    return NextResponse.json(
+      { error: "Erro ao criar formulário de anamnese!" },
+      { status: 500 },
+    );
   }
 }
