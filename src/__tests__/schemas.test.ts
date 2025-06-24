@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { UserBaseInfoSchema } from "../schemas";
+import { PatientFormAnamnesisSchema, UserBaseInfoSchema } from "../schemas";
+import { WhoLivesWith } from "@/generated/prisma";
 
 const userMock = {
   name: "Gabriel",
@@ -60,6 +61,38 @@ describe("UserBaseInfoSchema", () => {
       const user = { ...userMock, phone };
       const result = UserBaseInfoSchema.safeParse(user);
       expect(result.success).toBe(false);
+    });
+  });
+
+  describe("PatientFormAnamnesisSchema", () => {
+    it("deve validar quando whoLivesWith contém apenas um valor permitido", async () => {
+      const valoresPermitidos = [
+        WhoLivesWith.sozinho,
+        WhoLivesWith.outras_pessoas,
+        WhoLivesWith.familia,
+        WhoLivesWith.amigos,
+      ];
+
+      for (const valor of valoresPermitidos) {
+        const data = { whoLivesWith: [valor] };
+        const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
+
+        expect(result.success).toBe(true);
+        expect(result.data?.whoLivesWith).toEqual([valor]);
+      }
+    });
+
+    it("deve falhar quando whoLivesWith contém 'sozinho' e outras opções", async () => {
+      const data = {
+        whoLivesWith: [WhoLivesWith.sozinho, WhoLivesWith.familia],
+      };
+      const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
+      expect(result.success).toBe(false);
+
+      const errorMessage = result.error?.issues?.[0]?.message;
+      expect(errorMessage).toBe(
+        "Se 'sozinho' é selecionado, não pode haver outros valores!",
+      );
     });
   });
 });

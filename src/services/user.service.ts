@@ -15,7 +15,7 @@ export const updateUserBaseInfo = async (
       full_name: data.full_name,
       date_of_birth: data.date_of_birth,
       phone: data.phone,
-      phoneVerifiedAt: null,
+      phoneVerified: null,
     },
     where: {
       id: userId,

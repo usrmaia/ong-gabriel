@@ -1,5 +1,7 @@
 import { z } from "zod/v4";
 
+import { WhoLivesWith } from "@/generated/prisma";
+
 export const UserBaseInfoSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório."),
   full_name: z.string().min(1, "Nome completo é obrigatório."),
@@ -19,3 +21,12 @@ export const UserBaseInfoSchema = z.object({
 });
 
 export type UserBaseInfo = z.infer<typeof UserBaseInfoSchema>;
+
+export const PatientFormAnamnesisSchema = z.object({
+  whoLivesWith: z
+    .array(z.enum(WhoLivesWith))
+    .nonoptional()
+    .refine((value) => value.includes("sozinho") && value.length === 1, {
+      message: "Se 'sozinho' é selecionado, não pode haver outros valores!",
+    }),
+});
