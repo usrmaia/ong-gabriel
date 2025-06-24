@@ -1,10 +1,11 @@
+import { NextResponse } from "next/server";
+
 import { auth } from "@/auth";
 import { FormAnamnesis } from "@/generated/prisma";
 import {
   createPatientFormAnamnesis,
   getPatientFormAnamnesis,
 } from "@/services/patient.service";
-import { NextResponse } from "next/server";
 
 // GET /api/patient/form-anamnesis
 export async function GET(request: Request) {
