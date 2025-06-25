@@ -1,15 +1,17 @@
+import { User } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { UserBaseInfo, UserBaseInfoSchema } from "@/schemas";
+import { Result } from "@/types";
 
 export const updateUserBaseInfo = async (
   userId: string,
   _data: UserBaseInfo,
-) => {
+): Promise<Result<User>> => {
   const { success, data, error } =
     await UserBaseInfoSchema.safeParseAsync(_data);
-  if (!success) throw new Error(error.message);
+  if (!success) return { success: false, error: error.message };
 
-  return prisma.user.update({
+  const updatedUser = await prisma.user.update({
     data: {
       name: data.name,
       full_name: data.full_name,
@@ -21,4 +23,6 @@ export const updateUserBaseInfo = async (
       id: userId,
     },
   });
+
+  return { success: true, data: updatedUser };
 };

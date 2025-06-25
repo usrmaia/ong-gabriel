@@ -1,1 +1,1 @@
-export { updateUserBaseInfo } from "./user.service";
+export * from "./user.service";
