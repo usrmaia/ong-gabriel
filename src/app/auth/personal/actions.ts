@@ -8,11 +8,16 @@ export async function onSubmit(
   prev: Result<UserBaseInfo>,
   formData: FormData,
 ): Promise<Result<UserBaseInfo>> {
-  const data = Object.fromEntries(formData.entries());
-  const result = await UserBaseInfoSchema.safeParseAsync(data);
+  const formDataObject = Object.fromEntries(formData.entries());
+  const validatedFormData =
+    await UserBaseInfoSchema.safeParseAsync(formDataObject);
 
-  if (!result.success)
-    return { success: false, error: z.treeifyError(result.error) };
+  if (!validatedFormData.success)
+    return {
+      success: false,
+      data: formDataObject as UserBaseInfo,
+      error: z.treeifyError(validatedFormData.error),
+    };
 
-  return { success: true, data: result.data };
+  return { success: true, data: validatedFormData.data };
 }

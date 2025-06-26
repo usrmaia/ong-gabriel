@@ -19,53 +19,59 @@ export function PersonalForm({ user }: PersonalFormProps) {
 
   return (
     <form action={formAction} className="flex flex-col items-center w-full">
-      <h1 className="text-center">Olá, {user?.name}, conte mais sobre você!</h1>
+      <h1 className="text-center">
+        Olá, {state.data?.name || user?.name}, conte mais sobre você!
+      </h1>
+
       <section className="flex w-full flex-col items-center gap-8 p-4 mt-8">
-        {/* Name */}
         <div className="grid w-full max-w-sm items-center gap-3">
           <div className="flex justify-between items-center">
-            <Label htmlFor="name" className="font-semibold">
+            <Label htmlFor="full_name" className="font-semibold">
               Qual o seu nome completo?
             </Label>
             <span className="text-xs">*Obrigatório</span>
           </div>
           <Input
             type="text"
-            id="name"
-            name="name"
+            id="full_name"
+            name="full_name"
             placeholder="Nome completo"
-            defaultValue={state.data?.name || user?.name || undefined}
+            defaultValue={state.data?.full_name}
+            aria-describedby="full_name-error"
           />
-          {state.error?.properties?.name && (
-            <span className="text-xs text-red-500">
-              {state.error.properties.name.errors.toString()}
+          {state.error?.properties?.full_name && (
+            <span
+              id="full_name-error"
+              role="alert"
+              className="text-xs text-red-500"
+            >
+              {state.error.properties.full_name.errors}
             </span>
           )}
         </div>
 
-        {/* Apelido */}
         <div className="grid w-full max-w-sm items-center gap-3">
-          <Label htmlFor="alias" className="font-semibold">
+          <Label htmlFor="name" className="font-semibold">
             Como devemos chamar você?
           </Label>
           <Input
             type="text"
-            id="full_name"
-            name="full_name"
+            id="name"
+            name="name"
             placeholder="Nome social"
-            defaultValue={state.data?.full_name}
+            defaultValue={state.data?.name || user?.name || undefined}
+            aria-describedby="name-error"
           />
-          {state.error?.properties?.full_name && (
-            <span className="text-xs text-red-500">
-              {state.error.properties.full_name.errors.toString()}
+          {state.error?.properties?.name && (
+            <span id="name-error" role="alert" className="text-xs text-red-500">
+              {state.error.properties.name.errors}
             </span>
           )}
         </div>
 
-        {/* Date of Birth */}
         <div className="grid w-full max-w-sm items-center gap-3">
           <div className="flex justify-between items-center">
-            <Label htmlFor="dateBirth" className="font-semibold">
+            <Label htmlFor="date_of_birth" className="font-semibold">
               Data de nascimento
             </Label>
             <span className="text-xs">*Obrigatório</span>
@@ -76,29 +82,39 @@ export function PersonalForm({ user }: PersonalFormProps) {
             name="date_of_birth"
             placeholder="DD/MM/AAAA"
             defaultValue={state.data?.date_of_birth}
+            aria-describedby="date_of_birth-error"
           />
           {state.error?.properties?.date_of_birth && (
-            <span className="text-xs text-red-500">
-              {state.error.properties.date_of_birth.errors[0].toString()}
+            <span
+              id="date_of_birth-error"
+              role="alert"
+              className="text-xs text-red-500"
+            >
+              {state.error.properties.date_of_birth.errors}
             </span>
           )}
         </div>
 
-        {/* Phone Number */}
         <div className="grid w-full max-w-sm items-center gap-3">
           <Label htmlFor="phone" className="font-semibold">
             Qual o seu número de telefone?
           </Label>
           <Input
-            type="text"
+            type="tel"
             id="phone"
             name="phone"
-            placeholder="Ex.: (99) 9 9999-9999"
+            placeholder="(99) 9 9999-9999"
             defaultValue={state.data?.phone}
+            aria-describedby="phone-error"
+            pattern="[\(\)\s\-\+\d]+"
           />
           {state.error?.properties?.phone && (
-            <span className="text-xs text-red-500">
-              {state.error.properties.phone.errors.toString()}
+            <span
+              id="phone-error"
+              role="alert"
+              className="text-xs text-red-500"
+            >
+              {state.error.properties.phone.errors}
             </span>
           )}
         </div>

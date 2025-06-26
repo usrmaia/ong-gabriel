@@ -15,7 +15,7 @@ export const UserBaseInfoSchema = z.object({
         new Date(date.getFullYear() - 140) < date &&
         date <= new Date()
       );
-    }, "Data de nascimento inválida. Deve ser uma data válida entre 140 anos atrás e hoje."),
+    }, "Data de nascimento inválida."),
   phone: z
     .string()
     .min(7, "Telefone é obrigatório.")
