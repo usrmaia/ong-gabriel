@@ -6,11 +6,16 @@ export const UserBaseInfoSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório."),
   full_name: z.string().min(1, "Nome completo é obrigatório."),
   date_of_birth: z
-    .date()
-    .min(
-      new Date().setFullYear(new Date().getFullYear() - 140),
-      "Data de nascimento inválida.",
-    ),
+    .string()
+    .min(1, "Data de nascimento é obrigatória.")
+    .refine((value) => {
+      const date = new Date(value);
+      return (
+        !isNaN(date.getTime()) &&
+        new Date(date.getFullYear() - 140) < date &&
+        date <= new Date()
+      );
+    }, "Data de nascimento inválida. Deve ser uma data válida entre 140 anos atrás e hoje."),
   phone: z
     .string()
     .min(7, "Telefone é obrigatório.")
