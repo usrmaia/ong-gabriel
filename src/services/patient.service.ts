@@ -1,3 +1,5 @@
+import z from "zod/v4";
+
 import { FormAnamnesis, Prisma } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { PatientFormAnamnesisSchema } from "@/schemas";
@@ -26,7 +28,7 @@ export const createPatientFormAnamnesis = async (
 ): Promise<Result<FormAnamnesis>> => {
   const { success, error } =
     await PatientFormAnamnesisSchema.safeParseAsync(formAnamnesis);
-  if (!success) return { success: false, error: error.message };
+  if (!success) return { success: false, error: z.treeifyError(error) };
 
   const createdFormAnamnesis = await prisma.formAnamnesis.create({
     data: formAnamnesis,
