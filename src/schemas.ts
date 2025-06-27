@@ -15,7 +15,8 @@ export const UserBaseInfoSchema = z.object({
         new Date(date.getFullYear() - 140) < date &&
         date <= new Date()
       );
-    }, "Data de nascimento inválida."),
+    }, "Data de nascimento inválida.")
+    .transform((value) => new Date(value)),
   phone: z
     .string()
     .min(7, "Telefone é obrigatório.")

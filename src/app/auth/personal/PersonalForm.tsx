@@ -81,7 +81,13 @@ export function PersonalForm({ user }: PersonalFormProps) {
             id="date_of_birth"
             name="date_of_birth"
             placeholder="DD/MM/AAAA"
-            defaultValue={state.data?.date_of_birth}
+            defaultValue={
+              state.data?.date_of_birth
+                ? new Date(state.data?.date_of_birth)
+                    .toISOString()
+                    .split("T")[0]
+                : ""
+            }
             aria-describedby="date_of_birth-error"
           />
           {state.error?.properties?.date_of_birth && (
