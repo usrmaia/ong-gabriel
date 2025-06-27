@@ -1,17 +1,17 @@
 "use client";
 
+import { onSubmit } from "./actions";
 import { Button } from "@/components/ui";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { onSubmit } from "./actions";
-import { User } from "next-auth";
+import { User } from "@/generated/prisma";
 import { useActionState } from "react";
 
-interface PersonalFormProps {
+interface UserBaseInfoFormProps {
   user: User;
 }
 
-export function PersonalForm({ user }: PersonalFormProps) {
+export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
   const [state, formAction] = useActionState(onSubmit, {
     success: false,
     error: { errors: [] },
@@ -36,7 +36,7 @@ export function PersonalForm({ user }: PersonalFormProps) {
             id="full_name"
             name="full_name"
             placeholder="Nome completo"
-            defaultValue={state.data?.full_name}
+            defaultValue={state.data?.full_name || user?.full_name || undefined}
             aria-describedby="full_name-error"
           />
           {state.error?.properties?.full_name && (
@@ -51,9 +51,12 @@ export function PersonalForm({ user }: PersonalFormProps) {
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-3">
-          <Label htmlFor="name" className="font-semibold">
-            Como devemos chamar você?
-          </Label>
+          <div className="flex justify-between items-center">
+            <Label htmlFor="name" className="font-semibold">
+              Como devemos chamar você?
+            </Label>
+            <span className="text-xs">*Obrigatório</span>
+          </div>
           <Input
             type="text"
             id="name"
@@ -86,7 +89,7 @@ export function PersonalForm({ user }: PersonalFormProps) {
                 ? new Date(state.data?.date_of_birth)
                     .toISOString()
                     .split("T")[0]
-                : ""
+                : user?.date_of_birth?.toISOString().split("T")[0] || undefined
             }
             aria-describedby="date_of_birth-error"
           />
@@ -102,15 +105,18 @@ export function PersonalForm({ user }: PersonalFormProps) {
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-3">
-          <Label htmlFor="phone" className="font-semibold">
-            Qual o seu número de telefone?
-          </Label>
+          <div className="flex justify-between items-center">
+            <Label htmlFor="phone" className="font-semibold">
+              Qual o seu número de telefone?
+            </Label>
+            <span className="text-xs">*Obrigatório</span>
+          </div>
           <Input
             type="tel"
             id="phone"
             name="phone"
             placeholder="(99) 9 9999-9999"
-            defaultValue={state.data?.phone}
+            defaultValue={state.data?.phone || user?.phone || undefined}
             aria-describedby="phone-error"
             pattern="[\(\)\s\-\+\d]+"
           />

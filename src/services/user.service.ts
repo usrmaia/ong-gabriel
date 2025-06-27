@@ -5,6 +5,14 @@ import prisma from "@/lib/prisma";
 import { UserBaseInfo, UserBaseInfoSchema } from "@/schemas";
 import { Result } from "@/types";
 
+export const getUserById = async (filter: { userId: string }) => {
+  return prisma.user.findUnique({
+    where: {
+      id: filter.userId,
+    },
+  });
+};
+
 export const updateUserBaseInfo = async (
   userId: string,
   _data: UserBaseInfo,
