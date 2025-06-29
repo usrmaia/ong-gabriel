@@ -4,4 +4,5 @@ export type Result<T> = {
   success: boolean;
   data?: T;
   error?: $ZodErrorTree<T>; // { errors: string[]; properties?: Record<string, { errors: string[] }> };
+  code?: number;
 };
