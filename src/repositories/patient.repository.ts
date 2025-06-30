@@ -5,17 +5,7 @@ export class PatientRepository {
   static async getPatientFormAnamnesis(filter: {
     where?: Prisma.FormAnamnesisWhereInput;
   }) {
-    return prisma.formAnamnesis.findMany({
-      where: filter.where,
-    });
-  }
-
-  static async getPatientFormAnamnesisByUserId(filter: { userId: string }) {
-    return prisma.formAnamnesis.findMany({
-      where: {
-        userId: filter.userId,
-      },
-    });
+    return prisma.formAnamnesis.findMany({ where: filter.where });
   }
 
   static async createPatientFormAnamnesis(

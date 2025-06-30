@@ -1,38 +1,37 @@
 import z from "zod/v4";
 
 import { User } from "@/generated/prisma";
-import prisma from "@/lib/prisma";
+import logger from "@/config/logger";
+import { UserRepository } from "@/repositories";
 import { UserBaseInfo, UserBaseInfoSchema } from "@/schemas";
 import { Result } from "@/types";
 
-export const getUserById = async (filter: { userId: string }) => {
-  return prisma.user.findUnique({
-    where: {
-      id: filter.userId,
-    },
-  });
-};
-
 export const updateUserBaseInfo = async (
   userId: string,
-  _data: UserBaseInfo,
+  userBaseInfo: UserBaseInfo,
 ): Promise<Result<User>> => {
-  const { success, data, error } =
-    await UserBaseInfoSchema.safeParseAsync(_data);
-  if (!success) return { success: false, error: z.treeifyError(error) };
+  try {
+    const validatedUserBaseInfo =
+      await UserBaseInfoSchema.safeParseAsync(userBaseInfo);
+    if (!validatedUserBaseInfo.success)
+      return {
+        success: false,
+        error: z.treeifyError(validatedUserBaseInfo.error),
+        code: 400,
+      };
 
-  const updatedUser = await prisma.user.update({
-    data: {
-      name: data.name,
-      full_name: data.full_name,
-      date_of_birth: data.date_of_birth,
-      phone: data.phone,
-      phoneVerified: null,
-    },
-    where: {
-      id: userId,
-    },
-  });
+    const updatedUser = await UserRepository.updateUserById(
+      { id: userId },
+      validatedUserBaseInfo.data,
+    );
 
-  return { success: true, data: updatedUser };
+    return { success: true, data: updatedUser };
+  } catch (error) {
+    logger.error("Erro ao atualizar informações do usuário:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao atualizar informações do usuário!"] },
+      code: 500,
+    };
+  }
 };
