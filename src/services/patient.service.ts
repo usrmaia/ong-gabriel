@@ -3,14 +3,42 @@ import z from "zod/v4";
 import { auth } from "@/auth";
 import logger from "@/config/logger";
 import { FormAnamnesis, Prisma } from "@/generated/prisma";
-import { PatientRepository } from "@/repositories";
+import prisma from "@/lib/prisma";
+import { can } from "@/permissions";
 import { PatientFormAnamnesisSchema } from "@/schemas";
 import { Result } from "@/types";
 
 export const getPatientFormAnamnesis = async (filter: {
   where?: Prisma.FormAnamnesisWhereInput;
-}) => {
-  return await PatientRepository.getPatientFormAnamnesis(filter);
+}): Promise<Result<FormAnamnesis[]>> => {
+  try {
+    const user = (await auth())?.user!;
+    if (!can(user, "list", "formAnamnesis"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a listar anamnese!"] },
+        code: 403,
+      };
+
+    const formAnamnesis = await prisma.formAnamnesis.findMany({
+      where: filter.where,
+    });
+
+    if (formAnamnesis.length === 0)
+      return {
+        success: false,
+        error: { errors: ["Nenhum registro de anamnese encontrado!"] },
+        code: 404,
+      };
+    return { success: true, data: formAnamnesis };
+  } catch (error) {
+    logger.error("Erro ao buscar anamneses do paciente:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao buscar anamneses do paciente!"] },
+      code: 500,
+    };
+  }
 };
 
 /**
@@ -19,9 +47,23 @@ export const getPatientFormAnamnesis = async (filter: {
  * @returns Um array de registros de anamnese para o usuário autenticado.
  * @throws Lança um erro se a autenticação falhar ou se o ID do usuário não estiver disponível.
  */
-export const getPatientFormAnamnesisFromUser = async () => {
+export const getPatientFormAnamnesisFromUser = async (): Promise<
+  Result<FormAnamnesis[]>
+> => {
   const userId = (await auth())?.user.id!;
-  return await PatientRepository.getPatientFormAnamnesis({ where: { userId } });
+  const userAnamnesisForms = await prisma.formAnamnesis.findMany({
+    where: { userId },
+  });
+
+  if (userAnamnesisForms.length === 0)
+    return {
+      success: false,
+      error: {
+        errors: ["Nenhum registro de anamnese encontrado para o usuário!"],
+      },
+      code: 404,
+    };
+  return { success: true, data: userAnamnesisForms };
 };
 
 /**
@@ -45,8 +87,9 @@ export const createPatientFormAnamnesis = async (
 
     formAnamnesis.userId = (await auth())?.user.id!;
 
-    const createdFormAnamnesis =
-      await PatientRepository.createPatientFormAnamnesis(formAnamnesis);
+    const createdFormAnamnesis = await prisma.formAnamnesis.create({
+      data: formAnamnesis,
+    });
     return { success: true, data: createdFormAnamnesis, code: 201 };
   } catch (error) {
     logger.error("Erro ao criar anamneses do paciente:", error);

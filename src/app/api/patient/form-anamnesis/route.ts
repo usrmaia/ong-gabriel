@@ -11,8 +11,10 @@ import { getParams } from "@/utils";
 export async function GET(req: Request) {
   const filter = { where: getParams(req.url) };
 
-  const formAnamnesis = await getPatientFormAnamnesis(filter);
-  return NextResponse.json(formAnamnesis);
+  const result = await getPatientFormAnamnesis(filter);
+  if (!result.success)
+    return NextResponse.json({ error: result.error }, { status: result.code });
+  return NextResponse.json(result.data);
 }
 
 // POST /api/patient/form-anamnesis
