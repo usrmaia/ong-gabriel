@@ -99,6 +99,7 @@ model FormAnamnesis {
   whoLivesWith                      WhoLivesWith[]
   occupation                        String
   monthlyIncomeCents                BigInt
+  monthlyFamilyIncomeCents          BigInt
   difficultiesBasic                 DifficultiesBasic
   socialBenefits                    String?
   emotionalState                    EmotionalState

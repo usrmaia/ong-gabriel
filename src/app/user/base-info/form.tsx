@@ -19,9 +19,9 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
 
   return (
     <form action={formAction} className="flex flex-col items-center w-full">
-      <h1 className="text-center">
+      <h3 className="text-center">
         Olá, {state.data?.name || user?.name}, conte mais sobre você!
-      </h1>
+      </h3>
 
       <section className="flex w-full flex-col items-center gap-8 p-4 mt-8">
         <div className="grid w-full max-w-sm items-center gap-3">
@@ -36,18 +36,21 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
             id="full_name"
             name="full_name"
             placeholder="Nome completo"
-            defaultValue={state.data?.full_name || user?.full_name || undefined}
+            defaultValue={
+              state.data?.full_name ||
+              user?.full_name ||
+              user?.name ||
+              undefined
+            }
             aria-describedby="full_name-error"
           />
-          {state.error?.properties?.full_name && (
-            <span
-              id="full_name-error"
-              role="alert"
-              className="text-xs text-red-500"
-            >
-              {state.error.properties.full_name.errors}
-            </span>
-          )}
+          <span
+            id="full_name-error"
+            role="alert"
+            className="text-xs text-red-500"
+          >
+            {state.error?.properties?.full_name?.errors}
+          </span>
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-3">
@@ -65,11 +68,9 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
             defaultValue={state.data?.name || user?.name || undefined}
             aria-describedby="name-error"
           />
-          {state.error?.properties?.name && (
-            <span id="name-error" role="alert" className="text-xs text-red-500">
-              {state.error.properties.name.errors}
-            </span>
-          )}
+          <span id="name-error" role="alert" className="text-xs text-red-500">
+            {state.error?.properties?.name?.errors}
+          </span>
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-3">
@@ -93,15 +94,13 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
             }
             aria-describedby="date_of_birth-error"
           />
-          {state.error?.properties?.date_of_birth && (
-            <span
-              id="date_of_birth-error"
-              role="alert"
-              className="text-xs text-red-500"
-            >
-              {state.error.properties.date_of_birth.errors}
-            </span>
-          )}
+          <span
+            id="date_of_birth-error"
+            role="alert"
+            className="text-xs text-red-500"
+          >
+            {state.error?.properties?.date_of_birth?.errors}
+          </span>
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-3">
@@ -120,15 +119,9 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
             aria-describedby="phone-error"
             pattern="[\(\)\s\-\+\d]+"
           />
-          {state.error?.properties?.phone && (
-            <span
-              id="phone-error"
-              role="alert"
-              className="text-xs text-red-500"
-            >
-              {state.error.properties.phone.errors}
-            </span>
-          )}
+          <span id="phone-error" role="alert" className="text-xs text-red-500">
+            {state.error?.properties?.phone?.errors}
+          </span>
         </div>
       </section>
       <Button className="w-screen max-w-sm mt-8" type="submit">
