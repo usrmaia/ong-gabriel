@@ -26,7 +26,10 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
       <section className="flex w-full flex-col items-center gap-8 p-4 mt-8">
         <div className="grid w-full max-w-sm items-center gap-3">
           <div className="flex justify-between items-center">
-            <Label htmlFor="full_name" className="font-semibold">
+            <Label
+              htmlFor="full_name"
+              className="font-semibold text-foreground"
+            >
               Qual o seu nome completo?
             </Label>
             <span className="text-xs">*Obrigatório</span>
@@ -47,7 +50,7 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
           <span
             id="full_name-error"
             role="alert"
-            className="text-xs text-red-500"
+            className="text-xs text-error h-2"
           >
             {state.error?.properties?.full_name?.errors}
           </span>
@@ -55,7 +58,7 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
 
         <div className="grid w-full max-w-sm items-center gap-3">
           <div className="flex justify-between items-center">
-            <Label htmlFor="name" className="font-semibold">
+            <Label htmlFor="name" className="font-semibold text-foreground">
               Como devemos chamar você?
             </Label>
             <span className="text-xs">*Obrigatório</span>
@@ -68,14 +71,17 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
             defaultValue={state.data?.name || user?.name || undefined}
             aria-describedby="name-error"
           />
-          <span id="name-error" role="alert" className="text-xs text-red-500">
+          <span id="name-error" role="alert" className="text-xs text-error h-2">
             {state.error?.properties?.name?.errors}
           </span>
         </div>
 
         <div className="grid w-full max-w-sm items-center gap-3">
           <div className="flex justify-between items-center">
-            <Label htmlFor="date_of_birth" className="font-semibold">
+            <Label
+              htmlFor="date_of_birth"
+              className="font-semibold text-foreground"
+            >
               Data de nascimento
             </Label>
             <span className="text-xs">*Obrigatório</span>
@@ -97,7 +103,7 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
           <span
             id="date_of_birth-error"
             role="alert"
-            className="text-xs text-red-500"
+            className="text-xs text-error h-2"
           >
             {state.error?.properties?.date_of_birth?.errors}
           </span>
@@ -105,7 +111,7 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
 
         <div className="grid w-full max-w-sm items-center gap-3">
           <div className="flex justify-between items-center">
-            <Label htmlFor="phone" className="font-semibold">
+            <Label htmlFor="phone" className="font-semibold text-foreground">
               Qual o seu número de telefone?
             </Label>
             <span className="text-xs">*Obrigatório</span>
@@ -119,7 +125,11 @@ export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
             aria-describedby="phone-error"
             pattern="[\(\)\s\-\+\d]+"
           />
-          <span id="phone-error" role="alert" className="text-xs text-red-500">
+          <span
+            id="phone-error"
+            role="alert"
+            className="text-xs text-error h-2"
+          >
             {state.error?.properties?.phone?.errors}
           </span>
         </div>

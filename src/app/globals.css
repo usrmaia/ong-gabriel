@@ -84,6 +84,7 @@
   --color-s-glacier-100: #afc6e1;
 
   --color-s-azure-100: #89a7d1;
+  --color-s-azure-web-100: #eaf8f8;
   --color-s-sapphire-100: #6d8cc4;
   --color-s-royal-100: #5a75b6;
   --color-s-denim-100: #4f64a6;
@@ -102,6 +103,10 @@
 
   --color-s-eerie-black: #1a1a1a;
   --color-s-eerie-black-300: #1a1a1a4d;
+
+  --color-s-silver-100: #b3a7a4;
+  --color-s-liver-100: #675049;
+  --color-s-taupe-gray-100: #999595;
 
   /* semantic colors */
   --color-success: #31bc80;
