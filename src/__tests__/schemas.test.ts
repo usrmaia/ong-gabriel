@@ -5,7 +5,7 @@ import { WhoLivesWith } from "@/generated/prisma";
 const userMock = {
   name: "Gabriel",
   full_name: "Nome Teste",
-  date_of_birth: new Date("2000-01-01"),
+  date_of_birth: "2000-01-01",
   phone: "(11) 99765-4321",
 };
 
@@ -61,6 +61,18 @@ describe("UserBaseInfoSchema", () => {
       const user = { ...userMock, phone };
       const result = UserBaseInfoSchema.safeParse(user);
       expect(result.success).toBe(false);
+    });
+  });
+
+  it("deve validar datas válidas", () => {
+    const validDates = ["2000-01-01", "1990-12-31", "1985-06-15", "2024-01-01"];
+
+    validDates.forEach((date) => {
+      const user = { ...userMock, date_of_birth: date };
+      const result = UserBaseInfoSchema.safeParse(user);
+      expect(result.success).toBe(true);
+      expect(result.data?.date_of_birth).toBeInstanceOf(Date);
+      expect(result.data?.date_of_birth.toISOString().split("T")[0]).toBe(date);
     });
   });
 

@@ -51,17 +51,19 @@ export function PatientFormAnamnesis() {
     success: false,
     error: { errors: [] },
   });
-  const [whoLivesWith, setWhoLivesWith] = useState<string[]>([]);
-  const [emotionalState, setEmotionalState] = useState<string>("");
+  const [whoLivesWith, setWhoLivesWith] = useState<string[]>(
+    state.data?.whoLivesWith || [],
+  );
+  const [emotionalState, setEmotionalState] = useState<string>(
+    state.data?.emotionalState || "",
+  );
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     formData.append("whoLivesWith", whoLivesWith.join(","));
     console.log("Form Data:", Object.fromEntries(formData.entries()));
-    startTransition(() => {
-      formAction(formData);
-    });
+    startTransition(() => formAction(formData));
   };
 
   return (
@@ -80,6 +82,7 @@ export function PatientFormAnamnesis() {
             >
               Com quem você mora?
             </Label>
+            <span className="text-xs">*Obrigatório</span>
           </div>
           <div className="flex flex-col gap-3 w-full max-w-sm">
             <div className="flex flex-col gap-4">
@@ -195,6 +198,7 @@ export function PatientFormAnamnesis() {
               >
                 Você tem dificuldades para atender às necessidades básicas?
               </Label>
+              <span className="text-xs">*Obrigatório</span>
               <span>
                 <Label className="font-poppins text-xs text-s-liver-100">
                   Ex.: moradia, alimentação, transporte, etc
@@ -253,13 +257,14 @@ export function PatientFormAnamnesis() {
 
       <section className="flex w-full flex-col items-center gap-8 p-4 mt-4">
         <div className="flex flex-col gap-3 w-full max-w-sm">
-          <div className="flex flex-col gap-1 items-center">
+          <div className="flex justify-between items-center">
             <Label
               htmlFor="full_name"
               className="font-semibold text-foreground"
             >
               Como você descreveria seu estado emocional nos últimos dias?
             </Label>
+            <span className="text-xs">*Obrigatório</span>
           </div>
           <RadioGroup
             name="emotionalState"
@@ -275,6 +280,7 @@ export function PatientFormAnamnesis() {
                 />
                 <Label
                   htmlFor={opt.value}
+                  // TODO: Refactor this to use a more semantic className
                   // className="flex flex-col items-center gap-2 w-14 p-2 rounded-md cursor-pointer transition-all bg-s-azure-web-100 hover:bg-s-azure-web-200 focus-visible:bg-primary focus-visible:text-primary-foreground focus-visible:shadow-lg focus-visible:scale-105 focus-visible:border-2 focus-visible:border-primary"
                   className={`flex flex-col items-center gap-2 w-14 p-2 rounded-md cursor-pointer transition-all ${
                     emotionalState === opt.value
@@ -300,13 +306,14 @@ export function PatientFormAnamnesis() {
         </div>
 
         <div className="flex flex-col gap-3 w-full max-w-sm">
-          <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-center">
             <Label
               htmlFor="difficultiesSleeping"
               className="font-semibold text-foreground"
             >
               Você tem tido dificuldades para dormir?
             </Label>
+            <span className="text-xs">*Obrigatório</span>
           </div>
           <RadioGroup
             name="difficultiesSleeping"
@@ -329,10 +336,11 @@ export function PatientFormAnamnesis() {
         </div>
 
         <div className="flex flex-col gap-3 w-full max-w-sm">
-          <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-center">
             <Label htmlFor="name" className="font-semibold text-foreground">
               Dificuldade para se alimentar?
             </Label>
+            <span className="text-xs">*Obrigatório</span>
           </div>
           <RadioGroup
             name="difficultyEating"

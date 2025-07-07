@@ -10,11 +10,11 @@ export const UserBaseInfoSchema = z.object({
     .min(1, "Data de nascimento é obrigatória.")
     .refine((value) => {
       const date = new Date(value);
-      return (
-        !isNaN(date.getTime()) &&
-        new Date(date.getFullYear() - 140) < date &&
-        date <= new Date()
-      );
+      const now = new Date();
+      const minDate = new Date(now.getFullYear() - 140, 0, 1);
+
+      const isValidDate = !isNaN(date.getTime());
+      return isValidDate && date >= minDate && date <= now;
     }, "Data de nascimento inválida.")
     .transform((value) => new Date(value)),
   phone: z
@@ -30,9 +30,21 @@ export type UserBaseInfo = z.infer<typeof UserBaseInfoSchema>;
 
 export const PatientFormAnamnesisSchema = z.object({
   whoLivesWith: z
-    .array(z.enum(WhoLivesWith))
+    .transform<unknown, WhoLivesWith[]>((value) => {
+      if (typeof value === "string") value = value.split(",");
+      if (Array.isArray(value) && value.every((item) => item in WhoLivesWith)) {
+        return value.map(
+          (item: keyof typeof WhoLivesWith) => WhoLivesWith[item],
+        );
+      }
+      return [];
+    })
     .nonoptional()
-    .refine((value) => value.includes("sozinho") && value.length === 1, {
+    .refine((value) => !value.includes("sozinho") || value.length === 1, {
       message: "Se 'sozinho' é selecionado, não pode haver outros valores!",
     }),
+  difficultiesBasic: z.string().nonempty("Selecione pelo menos uma opção."),
+  emotionalState: z.string().nonempty("Selecione pelo menos uma opção."),
+  difficultiesSleeping: z.string().nonempty("Selecione pelo menos uma opção."),
+  difficultyEating: z.string().nonempty("Selecione pelo menos uma opção."),
 });
