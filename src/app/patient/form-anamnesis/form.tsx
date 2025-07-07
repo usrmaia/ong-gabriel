@@ -62,7 +62,6 @@ export function PatientFormAnamnesis() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     formData.append("whoLivesWith", whoLivesWith.join(","));
-    console.log("Form Data:", Object.fromEntries(formData.entries()));
     startTransition(() => formAction(formData));
   };
 
@@ -92,6 +91,7 @@ export function PatientFormAnamnesis() {
                     name="whoLivesWith"
                     value={opt.value}
                     checked={whoLivesWith.includes(opt.value)}
+                    aria-describedby="whoLivesWith-error"
                     onCheckedChange={(checked: boolean) => {
                       if (checked) {
                         setWhoLivesWith((prev) => [...prev, opt.value]);
@@ -106,14 +106,14 @@ export function PatientFormAnamnesis() {
                 </div>
               ))}
             </div>
+            <span
+              id="whoLivesWith-error"
+              role="alert"
+              className="text-xs text-error h-2"
+            >
+              {state.error?.properties?.whoLivesWith?.errors}
+            </span>
           </div>
-          <span
-            id="whoLivesWith-error"
-            role="alert"
-            className="text-xs text-error h-2"
-          >
-            {state.error?.properties?.whoLivesWith?.errors}
-          </span>
 
           <div className="flex flex-col gap-3 w-full max-w-sm">
             <div className="flex justify-between items-center">
@@ -150,7 +150,9 @@ export function PatientFormAnamnesis() {
               </Label>
             </div>
             <Input
-              type="text"
+              type="number"
+              min={0}
+              defaultValue={0}
               id="monthlyIncomeCents"
               name="monthlyIncomeCents"
               placeholder="Ex.: R$ 2000,00"
@@ -175,7 +177,9 @@ export function PatientFormAnamnesis() {
               </Label>
             </div>
             <Input
-              type="text"
+              type="number"
+              min={0}
+              defaultValue={0}
               id="monthlyFamilyIncomeCents"
               name="monthlyFamilyIncomeCents"
               placeholder="Ex.: R$ 4000,00"
@@ -211,7 +215,10 @@ export function PatientFormAnamnesis() {
             >
               {DIFFICULTIES_BASIC_OPTIONS.map((opt) => (
                 <div key={opt.value} className="flex items-center gap-2">
-                  <RadioGroupItem value={opt.value} />
+                  <RadioGroupItem
+                    aria-describedby="difficultiesBasic-error"
+                    value={opt.value}
+                  />
                   <Label htmlFor={opt.value}>{opt.label}</Label>
                 </div>
               ))}
@@ -277,6 +284,7 @@ export function PatientFormAnamnesis() {
                   id={opt.value}
                   value={opt.value}
                   className="sr-only"
+                  aria-describedby="emotionalState-error"
                 />
                 <Label
                   htmlFor={opt.value}
@@ -318,6 +326,7 @@ export function PatientFormAnamnesis() {
           <RadioGroup
             name="difficultiesSleeping"
             className="flex flex-row justify-between"
+            aria-describedby="difficultiesSleeping-error"
           >
             {DIFFICULTIES_SLEEPING_OPTIONS.map((opt) => (
               <div key={opt.value} className="flex items-center gap-2">
@@ -348,19 +357,22 @@ export function PatientFormAnamnesis() {
           >
             {DIFFICULTIES_EATING_OPTIONS.map((opt) => (
               <div key={opt.value} className="flex items-center gap-2">
-                <RadioGroupItem value={opt.value} />
+                <RadioGroupItem
+                  aria-describedby="difficultyEating-error"
+                  value={opt.value}
+                />
                 <Label>{opt.label}</Label>
               </div>
             ))}
           </RadioGroup>
+          <span
+            id="difficultyEating-error"
+            role="alert"
+            className="text-xs text-error h-2"
+          >
+            {state.error?.properties?.difficultyEating?.errors}
+          </span>
         </div>
-        <span
-          id="difficultyEating-error"
-          role="alert"
-          className="text-xs text-error h-2"
-        >
-          {state.error?.properties?.difficultyEating?.errors}
-        </span>
 
         <div className="flex flex-col gap-3 w-full max-w-sm">
           <div className="flex justify-between items-center">
@@ -575,6 +587,24 @@ export function PatientFormAnamnesis() {
       <Button className="w-screen max-w-sm mt-8" type="submit">
         Continuar
       </Button>
+
+      <span
+        id="currentlyTakingMedication-error"
+        role="alert"
+        className="text-xs text-error h-2 p-2"
+      >
+        {state.error?.errors}
+      </span>
+
+      <span
+        id="currentlyTakingMedication-error"
+        role="alert"
+        className="text-xs text-success h-2"
+      >
+        {state.success
+          ? "Vamos reservar um horário na agenda. Nossa equipe de assistência social irá falar com você o quanto antes!"
+          : null}
+      </span>
     </form>
   );
 }

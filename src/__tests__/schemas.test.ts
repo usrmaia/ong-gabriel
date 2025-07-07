@@ -75,36 +75,47 @@ describe("UserBaseInfoSchema", () => {
       expect(result.data?.date_of_birth.toISOString().split("T")[0]).toBe(date);
     });
   });
+});
 
-  describe("PatientFormAnamnesisSchema", () => {
-    it("deve validar quando whoLivesWith contém apenas um valor permitido", async () => {
-      const valoresPermitidos = [
-        WhoLivesWith.sozinho,
-        WhoLivesWith.outras_pessoas,
-        WhoLivesWith.familia,
-        WhoLivesWith.amigos,
-      ];
+describe("PatientFormAnamnesisSchema", () => {
+  const formAnamnesisMock = {
+    whoLivesWith: [WhoLivesWith.familia],
+    monthlyIncomeCents: BigInt(50000),
+    monthlyFamilyIncomeCents: BigInt(100000),
+    difficultiesBasic: "as_vezes",
+    emotionalState: "neutro",
+    difficultiesSleeping: "as_vezes",
+    difficultyEating: "as_vezes",
+  };
 
-      for (const valor of valoresPermitidos) {
-        const data = { whoLivesWith: [valor] };
-        const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
+  it("deve validar quando whoLivesWith contém apenas um valor permitido", async () => {
+    const valoresPermitidos = [
+      WhoLivesWith.sozinho,
+      WhoLivesWith.outras_pessoas,
+      WhoLivesWith.familia,
+      WhoLivesWith.amigos,
+    ];
 
-        expect(result.success).toBe(true);
-        expect(result.data?.whoLivesWith).toEqual([valor]);
-      }
-    });
-
-    it("deve falhar quando whoLivesWith contém 'sozinho' e outras opções", async () => {
-      const data = {
-        whoLivesWith: [WhoLivesWith.sozinho, WhoLivesWith.familia],
-      };
+    for (const valor of valoresPermitidos) {
+      const data = { ...formAnamnesisMock, whoLivesWith: [valor] };
       const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
-      expect(result.success).toBe(false);
 
-      const errorMessage = result.error?.issues?.[0]?.message;
-      expect(errorMessage).toBe(
-        "Se 'sozinho' é selecionado, não pode haver outros valores!",
-      );
-    });
+      expect(result.success).toBe(true);
+      expect(result.data?.whoLivesWith).toEqual([valor]);
+    }
+  });
+
+  it("deve falhar quando whoLivesWith contém 'sozinho' e outras opções", async () => {
+    const data = {
+      ...formAnamnesisMock,
+      whoLivesWith: [WhoLivesWith.sozinho, WhoLivesWith.familia],
+    };
+    const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
+    expect(result.success).toBe(false);
+
+    const errorMessage = result.error?.issues?.[0]?.message;
+    expect(errorMessage).toBe(
+      "Se 'sozinho' é selecionado, não pode haver outros valores.",
+    );
   });
 });

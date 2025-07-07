@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { number, z } from "zod/v4";
 
 import { WhoLivesWith } from "@/generated/prisma";
 
@@ -31,20 +31,37 @@ export type UserBaseInfo = z.infer<typeof UserBaseInfoSchema>;
 export const PatientFormAnamnesisSchema = z.object({
   whoLivesWith: z
     .transform<unknown, WhoLivesWith[]>((value) => {
-      if (typeof value === "string") value = value.split(",");
-      if (Array.isArray(value) && value.every((item) => item in WhoLivesWith)) {
-        return value.map(
-          (item: keyof typeof WhoLivesWith) => WhoLivesWith[item],
-        );
-      }
-      return [];
+      if (typeof value === "string")
+        return value.split(",").map((item) => item.trim() as WhoLivesWith);
+      return value as WhoLivesWith[];
     })
-    .nonoptional()
+    .refine((value) => value.length !== 0, {
+      message: "Selecione pelo menos uma opção.",
+    })
+    .refine((value) => value.every((item) => item in WhoLivesWith), {
+      message: "Opção inválida selecionada.",
+    })
     .refine((value) => !value.includes("sozinho") || value.length === 1, {
-      message: "Se 'sozinho' é selecionado, não pode haver outros valores!",
+      message: "Se 'sozinho' é selecionado, não pode haver outros valores.",
     }),
-  difficultiesBasic: z.string().nonempty("Selecione pelo menos uma opção."),
-  emotionalState: z.string().nonempty("Selecione pelo menos uma opção."),
-  difficultiesSleeping: z.string().nonempty("Selecione pelo menos uma opção."),
-  difficultyEating: z.string().nonempty("Selecione pelo menos uma opção."),
+  monthlyIncomeCents: z
+    .transform<unknown, bigint>((value) => {
+      if (typeof value === "string") return BigInt(value.trim());
+      return value as bigint;
+    })
+    .refine((value) => value >= 0, {
+      message: "Renda mensal é obrigatória.",
+    }),
+  monthlyFamilyIncomeCents: z
+    .transform<unknown, bigint>((value) => {
+      if (typeof value === "string") return BigInt(value.trim());
+      return value as bigint;
+    })
+    .refine((value) => value >= 0, {
+      message: "Renda familiar mensal é obrigatória.",
+    }),
+  difficultiesBasic: z.any().nonoptional("Selecione pelo menos uma opção."),
+  emotionalState: z.any().nonoptional("Selecione pelo menos uma opção."),
+  difficultiesSleeping: z.any().nonoptional("Selecione pelo menos uma opção."),
+  difficultyEating: z.any().nonoptional("Selecione pelo menos uma opção."),
 });

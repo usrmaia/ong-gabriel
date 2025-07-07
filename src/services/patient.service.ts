@@ -88,7 +88,7 @@ export const createPatientFormAnamnesis = async (
     formAnamnesis.userId = (await auth())?.user.id!;
 
     const createdFormAnamnesis = await prisma.formAnamnesis.create({
-      data: formAnamnesis,
+      data: { ...formAnamnesis, ...validatedAnamnesis.data },
     });
     return { success: true, data: createdFormAnamnesis, code: 201 };
   } catch (error) {
