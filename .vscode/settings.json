@@ -21,6 +21,8 @@
     "tests",
     "tailwind",
     "auth",
-    "permissions"
+    "permissions",
+    "types",
+    "form"
   ]
 }

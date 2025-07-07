@@ -5,6 +5,7 @@
     "vivaxy.vscode-conventional-commits",
     "esbenp.prettier-vscode",
     "Prisma.prisma",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "vitest.explorer"
   ]
 }
