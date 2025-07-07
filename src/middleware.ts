@@ -22,5 +22,5 @@ export default async function middleware(req: NextRequest) {
 
 // Protect routes
 export const config = {
-  matcher: ["/meu-perfil/:path*"],
+  matcher: ["/user/:path*", "/patient/:path", "/api/((?!auth|health).*)"],
 };

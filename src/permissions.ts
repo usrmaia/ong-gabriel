@@ -1,13 +1,13 @@
 import { Role } from "./generated/prisma";
 
 type User = {
-  id: string;
-  role: Role[];
+  id?: string;
+  role: Role[] | string[];
 };
 
 type Action = "view" | "list" | "create" | "update" | "delete";
 
-type Resource = "users"; // e.g., "posts", "comments", models/entity names
+type Resource = "users" | "formAnamnesis"; // e.g., "posts", "comments", models/entity names
 
 export type PolicyStatement = {
   action: Action;
@@ -15,9 +15,14 @@ export type PolicyStatement = {
   condition?: (user: User, targetResource: any) => boolean; // Optional condition function
 };
 
-export const policies: Readonly<Record<Role, PolicyStatement[]>> = {
+export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
   ADMIN: [],
-  EMPLOYEE: [],
+  EMPLOYEE: [
+    {
+      action: "list",
+      resource: "formAnamnesis",
+    },
+  ],
   USER: [],
 };
 

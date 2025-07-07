@@ -14,13 +14,18 @@ datasource db {
 model User {
   id            String          @id @default(ulid())
   name          String?
+  full_name     String?
   email         String          @unique
   emailVerified DateTime?
+  date_of_birth DateTime?
+  phone         String?
+  phoneVerified DateTime?
   image         String?
   role          Role[]          @default([USER])
   accounts      Account[]
   sessions      Session[]
   Authenticator Authenticator[]
+  FormAnamneses FormAnamnesis[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -84,4 +89,65 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+model FormAnamnesis {
+  id     String @id @default(ulid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  whoLivesWith                      WhoLivesWith[]
+  occupation                        String
+  monthlyIncomeCents                BigInt
+  monthlyFamilyIncomeCents          BigInt
+  difficultiesBasic                 DifficultiesBasic
+  socialBenefits                    String?
+  emotionalState                    EmotionalState
+  difficultiesSleeping              DifficultiesSleeping
+  difficultyEating                  DifficultiesEating
+  canNotDealWithProblems            String?
+  selfDestructiveThoughts           String?
+  haveSomeoneToTrust                String?
+  haveEmotionalSupport              String?
+  haveFinancialSupport              String?
+  hasMedicalDiagnosis               String?
+  currentlyUndergoingPsychTreatment String?
+  currentlyTakingMedication         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum WhoLivesWith {
+  familia
+  amigos
+  outras_pessoas
+  sozinho
+}
+
+enum DifficultiesBasic {
+  sim
+  as_vezes
+  nao
+}
+
+enum EmotionalState {
+  feliz
+  neutro
+  triste
+  raiva
+  ansioso
+  choroso
+}
+
+enum DifficultiesSleeping {
+  sim
+  as_vezes
+  nao
+}
+
+enum DifficultiesEating {
+  sim
+  as_vezes
+  nao
 }
