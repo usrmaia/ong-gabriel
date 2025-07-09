@@ -152,7 +152,6 @@ export function PatientFormAnamnesis() {
             <Input
               type="number"
               min={0}
-              defaultValue={0}
               id="monthlyIncomeCents"
               name="monthlyIncomeCents"
               placeholder="Ex.: R$ 2000,00"
@@ -179,7 +178,6 @@ export function PatientFormAnamnesis() {
             <Input
               type="number"
               min={0}
-              defaultValue={0}
               id="monthlyFamilyIncomeCents"
               name="monthlyFamilyIncomeCents"
               placeholder="Ex.: R$ 4000,00"

@@ -22,6 +22,7 @@
     "tailwind",
     "auth",
     "permissions",
-    "types"
+    "types",
+    "form"
   ]
 }
