@@ -7,6 +7,8 @@ import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
 import { PatientFormAnamnesisSchema } from "@/schemas";
 import { Result } from "@/types";
+import { addRoleToUser } from "./role.service";
+import { Role } from "@/generated/prisma";
 
 export const getPatientFormAnamnesis = async (filter: {
   where?: Prisma.FormAnamnesisWhereInput;
@@ -90,6 +92,20 @@ export const createPatientFormAnamnesis = async (
     const createdFormAnamnesis = await prisma.formAnamnesis.create({
       data: { ...formAnamnesis, ...validatedAnamnesis.data },
     });
+
+    if (formAnamnesis.userId) {
+      const roleResult = await addRoleToUser(
+        formAnamnesis.userId,
+        Role.PATIENT,
+      );
+      if (!roleResult.success) {
+        logger.warn(
+          "Erro ao adicionar role Patient ao usuário:",
+          roleResult.error,
+        );
+      }
+    }
+
     return { success: true, data: createdFormAnamnesis, code: 201 };
   } catch (error) {
     logger.error("Erro ao criar anamneses do paciente:", error);
