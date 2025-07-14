@@ -93,18 +93,7 @@ export const createPatientFormAnamnesis = async (
       data: { ...formAnamnesis, ...validatedAnamnesis.data },
     });
 
-    if (formAnamnesis.userId) {
-      const roleResult = await addRoleToUser(
-        formAnamnesis.userId,
-        Role.PATIENT,
-      );
-      if (!roleResult.success) {
-        logger.warn(
-          "Erro ao adicionar role Patient ao usuário:",
-          roleResult.error,
-        );
-      }
-    }
+    addRoleToUser(formAnamnesis.userId, Role.PATIENT);
 
     return { success: true, data: createdFormAnamnesis, code: 201 };
   } catch (error) {

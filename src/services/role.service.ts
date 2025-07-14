@@ -1,6 +1,6 @@
+import logger from "@/config/logger";
 import { Role, User } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
-import logger from "@/config/logger";
 import { Result } from "@/types";
 
 export const addRoleToUser = async (
@@ -13,7 +13,11 @@ export const addRoleToUser = async (
       select: { id: true, role: true },
     });
     if (!user)
-      return { success: false, error: { errors: ["Usuário não encontrado!"] }, code: 404 };
+      return {
+        success: false,
+        error: { errors: ["Usuário não encontrado!"] },
+        code: 404,
+      };
 
     if (user.role.includes(role))
       return { success: true, data: user as User, code: 200 };
@@ -26,6 +30,10 @@ export const addRoleToUser = async (
     return { success: true, data: updatedUser, code: 200 };
   } catch (error) {
     logger.error("Erro ao adicionar role ao usuário:", error);
-    return { success: false, error: { errors: ["Erro ao adicionar role ao usuário!"] }, code: 500 };
+    return {
+      success: false,
+      error: { errors: ["Erro ao adicionar role ao usuário!"] },
+      code: 500,
+    };
   }
 };
