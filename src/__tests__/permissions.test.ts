@@ -27,6 +27,7 @@ const mockPolicies: Record<Role, PolicyStatement[]> = {
     },
   ],
   EMPLOYEE: [],
+  PATIENT: [],
 };
 
 describe("can", () => {
