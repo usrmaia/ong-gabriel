@@ -1,11 +1,33 @@
 import z from "zod/v4";
 
 import { auth } from "@/auth";
-import { User } from "@/generated/prisma";
+import { User, Prisma } from "@/generated/prisma";
 import logger from "@/config/logger";
 import prisma from "@/lib/prisma";
 import { UserBaseInfo, UserBaseInfoSchema } from "@/schemas";
 import { Result } from "@/types";
+
+export const getUsers = async (filter?: {
+  include?: Prisma.UserInclude;
+  where?: Prisma.UserWhereInput;
+  orderBy?: Prisma.UserOrderByWithRelationInput;
+}): Promise<Result<User[]>> => {
+  try {
+    const usersData = await prisma.user.findMany({
+      include: { ...filter?.include },
+      where: filter?.where,
+      orderBy: { createdAt: "asc", ...filter?.orderBy },
+    });
+    return { success: true, data: usersData };
+  } catch (error) {
+    logger.error("Erro ao buscar usuários:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao buscar usuários!"] },
+      code: 500,
+    };
+  }
+};
 
 export const getUserById = async (userId: string): Promise<Result<User>> => {
   try {

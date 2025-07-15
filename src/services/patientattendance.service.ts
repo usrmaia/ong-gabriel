@@ -1,0 +1,83 @@
+import z from "zod/v4";
+
+import logger from "@/config/logger";
+import { PatientAttendance, Prisma } from "@/generated/prisma";
+import prisma from "@/lib/prisma";
+import { PatientAttendanceSchema } from "@/schemas";
+import { Result } from "@/types";
+import { getUserById } from "./user.service";
+
+export const createPatientAttendance = async (
+  patientAttendance: Prisma.PatientAttendanceUncheckedCreateInput,
+): Promise<Result<PatientAttendance>> => {
+  try {
+    const validatedPatientAttendance =
+      await PatientAttendanceSchema.safeParseAsync(patientAttendance);
+    if (!validatedPatientAttendance.success)
+      return {
+        success: false,
+        error: z.treeifyError(validatedPatientAttendance.error),
+        code: 400,
+      };
+
+    const patientUser = await getUserById(patientAttendance.patientId);
+    if (!patientUser || !patientUser.data?.role.includes("PATIENT"))
+      return {
+        success: false,
+        error: { errors: ["Usuário paciente não encontrado ou inválido."] },
+        code: 404,
+      };
+
+    const professionalUser = await getUserById(
+      patientAttendance.professionalId!,
+    );
+    if (!professionalUser || !professionalUser.data?.role.includes("EMPLOYEE"))
+      return {
+        success: false,
+        error: { errors: ["Usuário profissional não encontrado ou inválido."] },
+        code: 404,
+      };
+
+    const createdPatientAttendance = await prisma.patientAttendance.create({
+      data: { ...patientAttendance, ...validatedPatientAttendance },
+    });
+    return { success: true, data: createdPatientAttendance };
+  } catch (error) {
+    logger.error("Erro ao criar atendimento do paciente:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao criar atendimento do paciente!"] },
+      code: 500,
+    };
+  }
+};
+
+export const updatePatientAttendance = async (
+  patientAttendance: Prisma.PatientAttendanceUncheckedUpdateWithoutPatientInput & {
+    id: string;
+  },
+): Promise<Result<PatientAttendance>> => {
+  try {
+    const validatedPatientAttendance =
+      await PatientAttendanceSchema.safeParseAsync(patientAttendance);
+    if (!validatedPatientAttendance.success)
+      return {
+        success: false,
+        error: z.treeifyError(validatedPatientAttendance.error),
+        code: 400,
+      };
+
+    const updatedPatientAttendance = await prisma.patientAttendance.update({
+      data: { ...patientAttendance, ...validatedPatientAttendance },
+      where: { id: patientAttendance.id },
+    });
+    return { success: true, data: updatedPatientAttendance };
+  } catch (error) {
+    logger.error("Erro ao atualizar atendimento do paciente:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao atualizar atendimento do paciente!"] },
+      code: 500,
+    };
+  }
+};
