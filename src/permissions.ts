@@ -24,6 +24,7 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
     },
   ],
   USER: [],
+  PATIENT: [],
 };
 
 /**

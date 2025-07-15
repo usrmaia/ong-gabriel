@@ -23,6 +23,7 @@
     "auth",
     "permissions",
     "types",
-    "form"
+    "form",
+    "role"
   ]
 }
