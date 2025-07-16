@@ -2,19 +2,19 @@ import z from "zod/v4";
 
 import { auth } from "@/auth";
 import logger from "@/config/logger";
-import { FormAnamnesis, Prisma } from "@/generated/prisma";
+import { FormAnamnesis, Prisma, Role } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
+import { addRoleToUser } from "./role.service";
 import { PatientFormAnamnesisSchema } from "@/schemas";
 import { Result } from "@/types";
-import { addRoleToUser } from "./role.service";
-import { Role } from "@/generated/prisma";
+import { getUserAuthenticated } from "@/utils/auth";
 
 export const getPatientFormAnamnesis = async (filter: {
   where?: Prisma.FormAnamnesisWhereInput;
 }): Promise<Result<FormAnamnesis[]>> => {
   try {
-    const user = (await auth())?.user!;
+    const user = await getUserAuthenticated();
     if (!can(user, "list", "formAnamnesis"))
       return {
         success: false,

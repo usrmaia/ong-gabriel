@@ -53,9 +53,9 @@ const PatientAttendanceCard = ({
               hour12: false,
             })}
           </span>
-          <h4 className="font-raleway text-xl text-s-van-dyke">
+          <p className="font-raleway font-bold text-lg text-s-van-dyke">
             {attendance.patient.name}
-          </h4>
+          </p>
         </div>
       </CardContent>
       <CardAction className="flex flex-row items-center justify-between w-full">
@@ -95,7 +95,7 @@ export const PatientScheduleList = ({
     const past = patients.filter(
       (patient) => !!patient.dateAt && patient.dateAt < new Date(),
     );
-    setPastPatientAttendaces(past);
+    setPastPatientAttendaces(past.reverse());
   }, [patients]);
 
   return (
@@ -123,7 +123,10 @@ export const PatientScheduleList = ({
             Consultas realizadas
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="upcoming" className="flex flex-col items-center">
+        <TabsContent
+          value="upcoming"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full justify-items-center"
+        >
           {upcomingPatientAttendaces.map((patientAttendance) => (
             <PatientAttendanceCard
               key={patientAttendance.id}
@@ -131,7 +134,10 @@ export const PatientScheduleList = ({
             />
           ))}
         </TabsContent>
-        <TabsContent value="past" className="flex flex-col items-center">
+        <TabsContent
+          value="past"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full justify-items-center"
+        >
           {pastPatientAttendaces.map((patientAttendance) => (
             <PatientAttendanceCard
               key={patientAttendance.id}

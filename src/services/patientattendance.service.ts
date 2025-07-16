@@ -1,6 +1,5 @@
 import z from "zod/v4";
 
-import { auth } from "@/auth";
 import logger from "@/config/logger";
 import { PatientAttendance, Prisma } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
@@ -8,6 +7,7 @@ import { can } from "@/permissions";
 import { PatientAttendanceSchema } from "@/schemas";
 import { Result } from "@/types";
 import { getUserById } from "./user.service";
+import { getUserAuthenticated } from "@/utils/auth";
 
 export const getPatientAttendances = async (filter?: {
   where?: Prisma.PatientAttendanceWhereInput;
@@ -15,7 +15,7 @@ export const getPatientAttendances = async (filter?: {
   orderBy?: Prisma.PatientAttendanceOrderByWithRelationInput;
 }): Promise<Result<PatientAttendance[]>> => {
   try {
-    const user = (await auth())?.user!;
+    const user = await getUserAuthenticated();
     if (!can(user, "list", "patientAttendance"))
       return {
         success: false,
@@ -43,7 +43,7 @@ export const createPatientAttendance = async (
   patientAttendance: Prisma.PatientAttendanceUncheckedCreateInput,
 ): Promise<Result<PatientAttendance>> => {
   try {
-    const user = (await auth())?.user!;
+    const user = await getUserAuthenticated();
     if (!can(user, "create", "patientAttendance"))
       return {
         success: false,
@@ -98,7 +98,7 @@ export const updatePatientAttendance = async (
   },
 ): Promise<Result<PatientAttendance>> => {
   try {
-    const user = (await auth())?.user!;
+    const user = await getUserAuthenticated();
     if (!can(user, "update", "patientAttendance"))
       return {
         success: false,
