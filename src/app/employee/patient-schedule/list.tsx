@@ -1,85 +1,145 @@
 "use client";
 
-import { Button } from "@/components/ui";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { TbPhoneCall } from "react-icons/tb";
 import {
+  LuCalendarCheck,
+  LuChevronLeft,
+  LuMessageSquareMore,
+} from "react-icons/lu";
+
+import {
+  Button,
   Card,
   CardAction,
   CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { User } from "@/generated/prisma";
-import { PatientAttendance } from "@/generated/prisma";
-import Image from "next/image";
-import { TbPhoneCall } from "react-icons/tb";
-import { LuCalendarCheck, LuMessageSquareMore } from "react-icons/lu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui";
+import { PatientAttendance, User } from "@/generated/prisma";
 
-const PatientCard = ({ patient }: { patient: User }) => {
+const PatientAttendanceCard = ({
+  attendance,
+}: {
+  attendance: PatientAttendance & { patient: User };
+}) => {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="shadow-lg w-67 px-2 py-4 border-0">
+      {/* <CardHeader>
         <CardTitle>[TIPO]</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Image
-          src={patient.image || "/images/default-avatar.png"}
-          alt={`${patient.name}'s avatar`}
-          width={100}
-          height={100}
-          className="rounded-full"
-        />
-        <h2>{patient.name}</h2>
+      </CardHeader> */}
+      <CardContent className="flex flex-row items-center gap-5 w-full">
+        {attendance.patient.image && (
+          <Image
+            // TODO: Imagem default caso não tenha imagem
+            src={attendance.patient.image}
+            alt={`${attendance.patient.name}'s avatar`}
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+        )}
+        <div className="flex flex-col">
+          <span className="text-sm text-gray-500">
+            {attendance.dateAt?.toLocaleString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })}
+          </span>
+          <h4 className="font-raleway text-xl text-s-van-dyke">
+            {attendance.patient.name}
+          </h4>
+        </div>
       </CardContent>
-      <CardAction>
-        <Button variant="outline" size="sm">
-          <TbPhoneCall className="mr-2" />
+      <CardAction className="flex flex-row items-center justify-between w-full">
+        <Button variant="outline" size="icon" className="rounded-full border-0">
+          <TbPhoneCall />
         </Button>
-        <Button variant="outline" size="sm">
-          <LuMessageSquareMore className="mr-2" />
+
+        <Button variant="outline" size="icon" className="rounded-full border-0">
+          <LuMessageSquareMore />
         </Button>
-        <Button variant="outline" size="sm">
-          <LuCalendarCheck className="mr-2" />
+        <Button variant="outline" size="icon" className="rounded-full border-0">
+          <LuCalendarCheck />
         </Button>
       </CardAction>
     </Card>
   );
 };
+
 export const PatientScheduleList = ({
   patients,
 }: {
-  patients: (User & { PatientAttendancePatient: PatientAttendance[] })[];
+  patients: (PatientAttendance & { patient: User })[];
 }) => {
-  const upcomingPatients = patients.filter((patient) =>
-    patient.PatientAttendancePatient.some(
-      (attendance) => !!attendance.dateAt && attendance.dateAt >= new Date(),
-    ),
-  );
-  const pastPatients = patients.filter((patient) =>
-    patient.PatientAttendancePatient.some(
-      (attendance) => !!attendance.dateAt && attendance.dateAt < new Date(),
-    ),
-  );
+  const [upcomingPatientAttendaces, setUpcomingPatientAttendaces] = useState<
+    (PatientAttendance & { patient: User })[]
+  >([]);
+  const [pastPatientAttendaces, setPastPatientAttendaces] = useState<
+    (PatientAttendance & { patient: User })[]
+  >([]);
+
+  useEffect(() => {
+    const upcoming = patients.filter(
+      (patient) => !!patient.dateAt && patient.dateAt >= new Date(),
+    );
+    setUpcomingPatientAttendaces(upcoming);
+
+    const past = patients.filter(
+      (patient) => !!patient.dateAt && patient.dateAt < new Date(),
+    );
+    setPastPatientAttendaces(past);
+  }, [patients]);
 
   return (
-    <>
-      <h3>Agenda</h3>
-      <Tabs defaultValue="upcoming" className="w-[400px]">
-        <TabsList>
-          <TabsTrigger value="upcoming">Próximas consultas</TabsTrigger>
-          <TabsTrigger value="past">Consultas realizadas</TabsTrigger>
+    <section className="flex w-full flex-col items-center px-4">
+      <div className="flex items-center w-full">
+        <Button size="icon" variant="ghost">
+          <LuChevronLeft />
+        </Button>
+        <p className="font-raleway font-bold text-xl !text-s-taupe-secondary">
+          Agenda
+        </p>
+      </div>
+      <Tabs defaultValue="upcoming" className="w-full">
+        <TabsList className="w-full">
+          <TabsTrigger
+            value="upcoming"
+            className="data-[state=inactive]:text-gray-500"
+          >
+            Próximas consultas
+          </TabsTrigger>
+          <TabsTrigger
+            value="past"
+            className="data-[state=inactive]:text-gray-500"
+          >
+            Consultas realizadas
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="upcoming">
-          {upcomingPatients.map((patient) => (
-            <PatientCard key={patient.id} patient={patient} />
+        <TabsContent value="upcoming" className="flex flex-col items-center">
+          {upcomingPatientAttendaces.map((patientAttendance) => (
+            <PatientAttendanceCard
+              key={patientAttendance.id}
+              attendance={patientAttendance}
+            />
           ))}
         </TabsContent>
-        <TabsContent value="past">
-          {pastPatients.map((patient) => (
-            <PatientCard key={patient.id} patient={patient} />
+        <TabsContent value="past" className="flex flex-col items-center">
+          {pastPatientAttendaces.map((patientAttendance) => (
+            <PatientAttendanceCard
+              key={patientAttendance.id}
+              attendance={patientAttendance}
+            />
           ))}
         </TabsContent>
       </Tabs>
-    </>
+    </section>
   );
 };

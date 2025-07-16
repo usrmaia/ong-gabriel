@@ -1,16 +1,56 @@
 import z from "zod/v4";
 
+import { auth } from "@/auth";
 import logger from "@/config/logger";
 import { PatientAttendance, Prisma } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
+import { can } from "@/permissions";
 import { PatientAttendanceSchema } from "@/schemas";
 import { Result } from "@/types";
 import { getUserById } from "./user.service";
+
+export const getPatientAttendances = async (filter?: {
+  where?: Prisma.PatientAttendanceWhereInput;
+  include?: Prisma.PatientAttendanceInclude;
+  orderBy?: Prisma.PatientAttendanceOrderByWithRelationInput;
+}): Promise<Result<PatientAttendance[]>> => {
+  try {
+    const user = (await auth())?.user!;
+    if (!can(user, "list", "patientAttendance"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a listar atendimentos!"] },
+        code: 403,
+      };
+
+    const patientAttendances = await prisma.patientAttendance.findMany({
+      include: { ...filter?.include },
+      where: filter?.where,
+      orderBy: { dateAt: "asc", ...filter?.orderBy },
+    });
+    return { success: true, data: patientAttendances };
+  } catch (error) {
+    logger.error("Erro ao buscar lista de atendimentos:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao buscar lista de atendimentos!"] },
+      code: 500,
+    };
+  }
+};
 
 export const createPatientAttendance = async (
   patientAttendance: Prisma.PatientAttendanceUncheckedCreateInput,
 ): Promise<Result<PatientAttendance>> => {
   try {
+    const user = (await auth())?.user!;
+    if (!can(user, "create", "patientAttendance"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a criar atendimentos!"] },
+        code: 403,
+      };
+
     const validatedPatientAttendance =
       await PatientAttendanceSchema.safeParseAsync(patientAttendance);
     if (!validatedPatientAttendance.success)
@@ -58,6 +98,14 @@ export const updatePatientAttendance = async (
   },
 ): Promise<Result<PatientAttendance>> => {
   try {
+    const user = (await auth())?.user!;
+    if (!can(user, "update", "patientAttendance"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a atualizar atendimentos!"] },
+        code: 403,
+      };
+
     const validatedPatientAttendance =
       await PatientAttendanceSchema.safeParseAsync(patientAttendance);
     if (!validatedPatientAttendance.success)
