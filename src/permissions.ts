@@ -23,6 +23,10 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       resource: "formAnamnesis",
     },
     {
+      action: "view",
+      resource: "patientAttendance",
+    },
+    {
       action: "list",
       resource: "patientAttendance",
     },

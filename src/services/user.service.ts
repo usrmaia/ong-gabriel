@@ -29,10 +29,16 @@ export const getUsers = async (filter?: {
   }
 };
 
-export const getUserById = async (userId: string): Promise<Result<User>> => {
+export const getUserById = async (
+  userId: string,
+  filter?: {
+    include?: Prisma.UserInclude;
+  },
+): Promise<Result<User>> => {
   try {
     const userData = await prisma.user.findUnique({
       where: { id: userId },
+      include: { ...filter?.include },
     });
 
     if (!userData)
