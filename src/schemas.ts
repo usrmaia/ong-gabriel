@@ -68,13 +68,13 @@ export const PatientFormAnamnesisSchema = z.object({
 
 export const PatientAttendanceSchema = z.object({
   patientId: z.string().min(1, "ID do paciente é obrigatório."),
-  professionalId: z.string().min(1, "ID do profissional é obrigatório."),
   dateAt: z
     .string()
-    .min(1, "Data do atendimento é obrigatória.")
+    .optional()
     .refine((value) => {
+      if (!value) return true;
+
       const date = new Date(value);
-      const now = new Date();
       const rangeDay = 30;
 
       const isValidDate = !isNaN(date.getTime());
@@ -82,7 +82,7 @@ export const PatientAttendanceSchema = z.object({
       minDate.setDate(minDate.getDate() - rangeDay);
       const maxDate = new Date();
       maxDate.setDate(maxDate.getDate() + rangeDay);
-      return isValidDate && date >= minDate && date <= maxDate;
+      return isValidDate && minDate >= date && date <= maxDate;
     }, "Data do atendimento inválida.")
-    .transform((value) => new Date(value)),
+    .transform((value) => (value ? new Date(value) : undefined)),
 });

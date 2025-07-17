@@ -593,16 +593,6 @@ export function PatientFormAnamnesis() {
       >
         {state.error?.errors}
       </span>
-
-      <span
-        id="currentlyTakingMedication-error"
-        role="alert"
-        className="text-xs text-success h-2"
-      >
-        {state.success
-          ? "Vamos reservar um horário na agenda. Nossa equipe de assistência social irá falar com você o quanto antes!"
-          : null}
-      </span>
     </form>
   );
 }

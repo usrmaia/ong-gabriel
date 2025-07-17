@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { redirect, RedirectType } from "next/navigation";
 import { useEffect, useState } from "react";
 import { TbPhoneCall } from "react-icons/tb";
 import {
@@ -31,7 +32,15 @@ const PatientAttendanceCard = ({
       {/* <CardHeader>
         <CardTitle>[TIPO]</CardTitle>
       </CardHeader> */}
-      <CardContent className="flex flex-row items-center gap-5 w-full">
+      <CardContent
+        className="flex flex-row items-center gap-5 w-full"
+        onClick={() =>
+          redirect(
+            `/patient/details/${attendance.patientId}`,
+            RedirectType.push,
+          )
+        }
+      >
         {attendance.patient.image && (
           <Image
             // TODO: Imagem default caso não tenha imagem
@@ -62,7 +71,6 @@ const PatientAttendanceCard = ({
         <Button variant="outline" size="icon" className="rounded-full border-0">
           <TbPhoneCall />
         </Button>
-
         <Button variant="outline" size="icon" className="rounded-full border-0">
           <LuMessageSquareMore />
         </Button>
@@ -85,6 +93,9 @@ export const PatientScheduleList = ({
   const [pastPatientAttendaces, setPastPatientAttendaces] = useState<
     (PatientAttendance & { patient: User })[]
   >([]);
+  const [undefinedPatientAttendaces, setUndefinedPatientAttendaces] = useState<
+    (PatientAttendance & { patient: User })[]
+  >([]);
 
   useEffect(() => {
     const upcoming = patients.filter(
@@ -96,6 +107,9 @@ export const PatientScheduleList = ({
       (patient) => !!patient.dateAt && patient.dateAt < new Date(),
     );
     setPastPatientAttendaces(past.reverse());
+
+    const undefinedAttendances = patients.filter((patient) => !patient.dateAt);
+    setUndefinedPatientAttendaces(undefinedAttendances);
   }, [patients]);
 
   return (
@@ -122,6 +136,12 @@ export const PatientScheduleList = ({
           >
             Consultas realizadas
           </TabsTrigger>
+          <TabsTrigger
+            value="undefined"
+            className="data-[state=inactive]:text-gray-500"
+          >
+            Não definidas
+          </TabsTrigger>
         </TabsList>
         <TabsContent
           value="upcoming"
@@ -139,6 +159,17 @@ export const PatientScheduleList = ({
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full justify-items-center"
         >
           {pastPatientAttendaces.map((patientAttendance) => (
+            <PatientAttendanceCard
+              key={patientAttendance.id}
+              attendance={patientAttendance}
+            />
+          ))}
+        </TabsContent>
+        <TabsContent
+          value="undefined"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full justify-items-center"
+        >
+          {undefinedPatientAttendaces.map((patientAttendance) => (
             <PatientAttendanceCard
               key={patientAttendance.id}
               attendance={patientAttendance}

@@ -68,18 +68,26 @@ export const createPatientAttendance = async (
         code: 404,
       };
 
-    const professionalUser = await getUserById(
-      patientAttendance.professionalId!,
-    );
-    if (!professionalUser || !professionalUser.data?.role.includes("EMPLOYEE"))
-      return {
-        success: false,
-        error: { errors: ["Usuário profissional não encontrado ou inválido."] },
-        code: 404,
-      };
+    // professionalId não é obrigatório, mas se fornecido, deve ser um usuário válido
+    if (!!patientAttendance.professionalId) {
+      const professionalUser = await getUserById(
+        patientAttendance.professionalId,
+      );
+      if (
+        !professionalUser ||
+        !professionalUser.data?.role.includes("EMPLOYEE")
+      )
+        return {
+          success: false,
+          error: {
+            errors: ["Usuário profissional não encontrado ou inválido."],
+          },
+          code: 404,
+        };
+    }
 
     const createdPatientAttendance = await prisma.patientAttendance.create({
-      data: { ...patientAttendance, ...validatedPatientAttendance },
+      data: { ...patientAttendance, ...validatedPatientAttendance.data },
     });
     return { success: true, data: createdPatientAttendance };
   } catch (error) {
