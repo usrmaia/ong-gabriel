@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach, MockInstance } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import prisma from "../__mock__/prisma";
 
 vi.mock("../../lib/prisma", () => ({ default: prisma }));
 
-import { Role, User } from "@/generated/prisma";
+import { Role, User } from "@prisma/client";
 import { addRoleToUser } from "@/services/role.service";
 
 const mockUser: User = {

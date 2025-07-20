@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
+import { FormAnamnesis } from "@prisma/client";
 
-import { FormAnamnesis } from "@/generated/prisma";
 import {
   createPatientFormAnamnesis,
   getPatientFormAnamnesis,

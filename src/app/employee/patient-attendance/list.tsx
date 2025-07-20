@@ -1,5 +1,6 @@
 "use client";
 
+import { PatientAttendance, User } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 import {
@@ -9,7 +10,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui";
-import { PatientAttendance, User } from "@/generated/prisma";
 
 export const ListPatientAttendances = ({
   patientAttendances,
