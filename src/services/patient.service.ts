@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import logger from "@/config/logger";
 import { FormAnamnesis, Prisma } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
+import { createPatientAttendance } from "./patientAttendance.service";
 import { can } from "@/permissions";
 import { PatientFormAnamnesisSchema } from "@/schemas";
 import { Result } from "@/types";
@@ -94,6 +95,7 @@ export const createPatientFormAnamnesis = async (
     });
 
     addRoleToUser(formAnamnesis.userId, Role.PATIENT);
+    createPatientAttendance({ patientId: formAnamnesis.userId });
 
     return { success: true, data: createdFormAnamnesis, code: 201 };
   } catch (error) {

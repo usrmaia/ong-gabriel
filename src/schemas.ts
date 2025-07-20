@@ -1,4 +1,4 @@
-import { number, z } from "zod/v4";
+import { date, number, z } from "zod/v4";
 
 import { WhoLivesWith } from "@/generated/prisma";
 
@@ -26,7 +26,7 @@ export const UserBaseInfoSchema = z.object({
     }),
 });
 
-export type UserBaseInfo = z.infer<typeof UserBaseInfoSchema>;
+export type UserBaseInfo = z.input<typeof UserBaseInfoSchema>;
 
 export const PatientFormAnamnesisSchema = z.object({
   whoLivesWith: z
@@ -64,4 +64,40 @@ export const PatientFormAnamnesisSchema = z.object({
   emotionalState: z.any().nonoptional("Selecione pelo menos uma opção."),
   difficultiesSleeping: z.any().nonoptional("Selecione pelo menos uma opção."),
   difficultyEating: z.any().nonoptional("Selecione pelo menos uma opção."),
+});
+
+const PatientAttendanceDateAtSchema = z
+  .string()
+  .optional()
+  .refine((value) => {
+    if (!value) return true;
+
+    const date = new Date(value);
+    const rangeDay = 30;
+
+    const isValidDate = !isNaN(date.getTime());
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() - rangeDay);
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + rangeDay);
+    return isValidDate && minDate <= date && date <= maxDate;
+  }, "Data do atendimento inválida.")
+  .transform((value) => (value ? new Date(value) : undefined));
+
+const PatientAttendanceDurationMinutesSchema = z
+  .number()
+  .optional()
+  .refine((value) => !value || value >= 0, {
+    message: "Duração deve ser um número positivo.",
+  });
+
+export const CreatePatientAttendanceSchema = z.object({
+  patientId: z.string().min(1, "ID do paciente é obrigatório."),
+  durationMinutes: PatientAttendanceDurationMinutesSchema,
+  dateAt: PatientAttendanceDateAtSchema,
+});
+
+export const UpdatePatientAttendanceSchema = z.object({
+  dateAt: PatientAttendanceDateAtSchema,
+  durationMinutes: PatientAttendanceDurationMinutesSchema,
 });
