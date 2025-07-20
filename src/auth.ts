@@ -18,8 +18,11 @@ declare module "next-auth" {
   }
 }
 
-const providers = [GoogleProvider, FacebookProvider];
-
+const providers = [
+  GoogleProvider({ allowDangerousEmailAccountLinking: true }),
+  FacebookProvider,
+];
+// allowDangerousEmailAccountLinking
 const authConfig: NextAuthConfig = {
   providers: providers,
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 }, // 7 days

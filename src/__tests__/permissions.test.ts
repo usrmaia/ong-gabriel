@@ -1,7 +1,7 @@
+import { Role } from "@prisma/client";
 import { beforeAll, describe, it, expect } from "vitest";
 
 import { can, policies, PolicyStatement } from "@/permissions";
-import { Role } from "@/generated/prisma";
 
 const mockPolicies: Record<Role, PolicyStatement[]> = {
   ADMIN: [
