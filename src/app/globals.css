@@ -48,6 +48,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-raleway: var(--font-raleway);
+  --font-young-serif: var(--font-young-serif);
   --font-poppins: var(--font-poppins);
 
   /* Screen Size */
@@ -56,6 +57,8 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1536px;
+
+  --container-sm: 428px;
 
   /* primary colors */
   --color-p-terracotta: #693300;

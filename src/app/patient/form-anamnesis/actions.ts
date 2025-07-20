@@ -3,6 +3,7 @@
 import { createPatientFormAnamnesis } from "@/services/patient.service";
 import { Result } from "@/types";
 import { FormAnamnesis } from "@/generated/prisma";
+import { redirect } from "next/navigation";
 
 export async function onSubmit(
   prev: Result<FormAnamnesis>,
@@ -14,5 +15,6 @@ export async function onSubmit(
   const result = await createPatientFormAnamnesis(formDataObject);
 
   if (!result.success) return { ...result, data: formDataObject };
-  return result;
+
+  redirect("/patient/form-anamnesis/success");
 }
