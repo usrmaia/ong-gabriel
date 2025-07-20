@@ -12,20 +12,22 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(ulid())
-  name          String?
-  full_name     String?
-  email         String          @unique
-  emailVerified DateTime?
-  date_of_birth DateTime?
-  phone         String?
-  phoneVerified DateTime?
-  image         String?
-  role          Role[]          @default([USER])
-  accounts      Account[]
-  sessions      Session[]
-  Authenticator Authenticator[]
-  FormAnamneses FormAnamnesis[]
+  id                            String              @id @default(ulid())
+  name                          String?
+  full_name                     String?
+  email                         String              @unique
+  emailVerified                 DateTime?
+  date_of_birth                 DateTime?
+  phone                         String?
+  phoneVerified                 DateTime?
+  image                         String?
+  role                          Role[]              @default([USER])
+  accounts                      Account[]
+  sessions                      Session[]
+  Authenticator                 Authenticator[]
+  FormAnamneses                 FormAnamnesis[]
+  PatientAttendancePatient      PatientAttendance[] @relation("PatientAttendancePatient")
+  PatientAttendanceProfessional PatientAttendance[] @relation("PatientAttendanceProfessional")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -151,4 +153,19 @@ enum DifficultiesEating {
   sim
   as_vezes
   nao
+}
+
+model PatientAttendance {
+  id        String @id @default(ulid())
+  patientId String
+  patient   User   @relation("PatientAttendancePatient", fields: [patientId], references: [id], onDelete: Cascade)
+
+  dateAt          DateTime?
+  note            String?
+  durationMinutes Int?
+  professionalId  String?
+  professional    User?     @relation("PatientAttendanceProfessional", fields: [professionalId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
