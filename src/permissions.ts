@@ -7,7 +7,7 @@ type User = {
 
 type Action = "view" | "list" | "create" | "update" | "delete";
 
-type Resource = "users" | "formAnamnesis"; // e.g., "posts", "comments", models/entity names
+type Resource = "users" | "formAnamnesis" | "patientAttendance"; // e.g., "posts", "comments", models/entity names
 
 export type PolicyStatement = {
   action: Action;
@@ -21,6 +21,10 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
     {
       action: "list",
       resource: "formAnamnesis",
+    },
+    {
+      action: "list",
+      resource: "patientAttendance",
     },
   ],
   USER: [],
