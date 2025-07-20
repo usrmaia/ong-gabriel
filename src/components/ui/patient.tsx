@@ -1,9 +1,9 @@
 import { Mail, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { PatientAttendance, User } from "@prisma/client";
 
 import { Card, CardContent } from "@/components/ui";
-import { PatientAttendance, User } from "@/generated/prisma";
 
 export const CardPatientProfile = ({ patient }: { patient: User }) => (
   <Card className="shadow-lg w-full py-4 border-0 rounded-lg">

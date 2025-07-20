@@ -1,5 +1,6 @@
+import { PatientAttendance, User } from "@prisma/client";
+
 import { BackNavigationHeader } from "@/components/ui";
-import { PatientAttendance, User } from "@/generated/prisma";
 import { ListPatientAttendances } from "./list";
 import { getPatientAttendances } from "@/services";
 import { getUserAuthenticated } from "@/utils/auth";
