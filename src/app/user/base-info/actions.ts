@@ -6,7 +6,7 @@ import { updateUserBaseInfo } from "@/services";
 import { Result } from "@/types";
 
 export async function onSubmit(
-  prev: Result<UserBaseInfo>,
+  initialState: Result<UserBaseInfo>,
   formData: FormData,
 ): Promise<Result<UserBaseInfo>> {
   try {
@@ -14,10 +14,18 @@ export async function onSubmit(
       formData.entries(),
     ) as unknown as UserBaseInfo;
 
-    const { success, data, error } = await updateUserBaseInfo(formDataObject);
+    const updatedUserResult = await updateUserBaseInfo(formDataObject);
 
-    if (!success) return { success, data: formDataObject, error };
-    return { success, data: data as UserBaseInfo };
+    if (!updatedUserResult.success)
+      return {
+        success: false,
+        data: formDataObject,
+        error: updatedUserResult.error,
+      };
+    return {
+      success: true,
+      data: updatedUserResult.data as unknown as UserBaseInfo,
+    };
   } catch (error: any) {
     logger.error("Erro ao atualizar usuário:", error);
     return {
