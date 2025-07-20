@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { PatientFormAnamnesisSchema, UserBaseInfoSchema } from "../schemas";
+import {
+  CreatePatientAttendanceSchema,
+  PatientFormAnamnesisSchema,
+  UserBaseInfoSchema,
+} from "../schemas";
 import { WhoLivesWith } from "@/generated/prisma";
 
 const userMock = {
@@ -117,5 +121,87 @@ describe("PatientFormAnamnesisSchema", () => {
     expect(errorMessage).toBe(
       "Se 'sozinho' é selecionado, não pode haver outros valores.",
     );
+  });
+
+  describe("PatientAttendanceSchema", () => {
+    it("deve validar uma data dentro do intervalo permitido", () => {
+      const now = new Date();
+      const validDate = now.toISOString();
+
+      const result = CreatePatientAttendanceSchema.safeParse({
+        patientId: "123",
+        dateAt: validDate,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.data?.dateAt).toBeInstanceOf(Date);
+      expect(result.data?.dateAt?.toISOString()).toBe(validDate);
+    });
+
+    it("deve falhar se a data for inválida", () => {
+      const result = CreatePatientAttendanceSchema.safeParse({
+        patientId: "123",
+        dateAt: "data-invalida",
+      });
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0]?.message).toBe(
+        "Data do atendimento inválida.",
+      );
+    });
+
+    it("deve falhar se a data estiver fora do intervalo permitido (muito antiga)", () => {
+      const now = new Date();
+      const pastDate = new Date(now);
+      pastDate.setDate(now.getDate() - 31);
+
+      const result = CreatePatientAttendanceSchema.safeParse({
+        patientId: "123",
+        dateAt: pastDate.toISOString(),
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0]?.message).toBe(
+        "Data do atendimento inválida.",
+      );
+    });
+
+    it("deve falhar se a data estiver fora do intervalo permitido (muito futura)", () => {
+      const now = new Date();
+      const futureDate = new Date(now);
+      futureDate.setDate(now.getDate() + 31);
+
+      const result = CreatePatientAttendanceSchema.safeParse({
+        patientId: "123",
+        dateAt: futureDate.toISOString(),
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0]?.message).toBe(
+        "Data do atendimento inválida.",
+      );
+    });
+
+    it("deve validar datas nos limites do intervalo permitido", () => {
+      const now = new Date();
+      const minDate = new Date(now);
+      minDate.setDate(now.getDate() - 29);
+      const maxDate = new Date(now);
+      maxDate.setDate(now.getDate() + 29);
+
+      const minDateStr = minDate.toISOString();
+      const maxDateStr = maxDate.toISOString();
+
+      const resultMin = CreatePatientAttendanceSchema.safeParse({
+        patientId: "123",
+        dateAt: minDateStr,
+      });
+      const resultMax = CreatePatientAttendanceSchema.safeParse({
+        patientId: "123",
+        dateAt: maxDateStr,
+      });
+
+      expect(resultMin.success).toBe(true);
+      expect(resultMax.success).toBe(true);
+    });
   });
 });
