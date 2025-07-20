@@ -1,5 +1,6 @@
 import { CalendarDays, ClipboardPlus } from "lucide-react";
 import Link from "next/link";
+import { PatientAttendance, User } from "@prisma/client";
 
 import {
   Card,
@@ -8,7 +9,6 @@ import {
   CardPatientAttendance,
   CardTitle,
 } from "@/components/ui";
-import { PatientAttendance, User } from "@/generated/prisma";
 import { getPatientAttendances } from "@/services";
 import { getUserAuthenticated } from "@/utils/auth";
 

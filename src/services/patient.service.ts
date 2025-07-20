@@ -1,8 +1,9 @@
 import z from "zod/v4";
 
+import { FormAnamnesis, Prisma, Role } from "@prisma/client";
+
 import { auth } from "@/auth";
 import logger from "@/config/logger";
-import { FormAnamnesis, Prisma, Role } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { createPatientAttendance } from "./patientAttendance.service";
 import { can } from "@/permissions";

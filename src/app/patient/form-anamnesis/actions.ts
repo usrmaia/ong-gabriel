@@ -1,9 +1,10 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { FormAnamnesis } from "@prisma/client";
+
 import { createPatientFormAnamnesis } from "@/services/patient.service";
 import { Result } from "@/types";
-import { FormAnamnesis } from "@/generated/prisma";
-import { redirect } from "next/navigation";
 
 export async function onSubmit(
   prev: Result<FormAnamnesis>,

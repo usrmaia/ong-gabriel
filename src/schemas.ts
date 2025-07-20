@@ -1,6 +1,5 @@
-import { date, number, z } from "zod/v4";
-
-import { WhoLivesWith } from "@/generated/prisma";
+import { WhoLivesWith } from "@prisma/client";
+import { z } from "zod/v4";
 
 export const UserBaseInfoSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório."),

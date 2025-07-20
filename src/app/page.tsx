@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Role } from "@prisma/client";
 
 import { auth } from "@/auth";
 import { getUserAuthenticated } from "@/utils/auth";

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma";
+import { PrismaClient } from "@prisma/client";
 // Não alterar a ordem de importação, pois é importante para o mock funcionar corretamente.
 import { beforeEach } from "vitest";
 import { mockDeep, mockReset } from "vitest-mock-extended";

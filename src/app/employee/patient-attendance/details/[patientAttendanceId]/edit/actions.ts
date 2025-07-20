@@ -1,7 +1,8 @@
 "use server";
 
+import { PatientAttendance } from "@prisma/client";
+
 import logger from "@/config/logger";
-import { PatientAttendance } from "@/generated/prisma";
 import { updatePatientAttendance } from "@/services";
 import { Result } from "@/types";
 

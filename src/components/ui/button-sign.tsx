@@ -3,8 +3,8 @@
 import { VariantProps } from "class-variance-authority";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
 
 import { login, logout, Provider } from "@/lib/auth";
 import { Button, buttonVariants } from "./button";

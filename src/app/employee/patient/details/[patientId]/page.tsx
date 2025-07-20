@@ -1,5 +1,7 @@
 import { Edit } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { PatientAttendance, User } from "@prisma/client";
 
 import {
   BackNavigationHeader,
@@ -10,9 +12,7 @@ import {
   CardHeader,
   CardPatientProfile,
 } from "@/components/ui";
-import { PatientAttendance, User } from "@/generated/prisma";
 import { getUserById } from "@/services";
-import Link from "next/link";
 
 export default async function PatientDetailsPage({
   params,

@@ -1,10 +1,11 @@
+import { WhoLivesWith } from "@prisma/client";
 import { describe, it, expect } from "vitest";
+
 import {
   CreatePatientAttendanceSchema,
   PatientFormAnamnesisSchema,
   UserBaseInfoSchema,
 } from "../schemas";
-import { WhoLivesWith } from "@/generated/prisma";
 
 const userMock = {
   name: "Gabriel",

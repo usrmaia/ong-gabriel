@@ -1,9 +1,10 @@
 "use client";
 
+import { format } from "date-fns";
 import { useActionState } from "react";
+import { PatientAttendance, User } from "@prisma/client";
 
 import { onSubmit } from "./actions";
-import { format } from "date-fns";
 import {
   autoResizeTextarea,
   Button,
@@ -11,7 +12,6 @@ import {
   Label,
   Textarea,
 } from "@/components/ui";
-import { PatientAttendance, User } from "@/generated/prisma";
 
 export function PatientAttendanceEditForm({
   patientAttendance,

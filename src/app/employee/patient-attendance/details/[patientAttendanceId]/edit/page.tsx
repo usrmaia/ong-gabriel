@@ -1,6 +1,7 @@
+import { PatientAttendance, User } from "@prisma/client";
+
 import { BackNavigationHeader, CardPatientProfile } from "@/components/ui";
 import { PatientAttendanceEditForm } from "./form";
-import { PatientAttendance, User } from "@/generated/prisma";
 import { getPatientAttendanceById } from "@/services";
 
 export default async function PatientAttendanceEditPage({
