@@ -1,5 +1,6 @@
+import { Role, User } from "@prisma/client";
+
 import logger from "@/config/logger";
-import { Role, User } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { Result } from "@/types";
 

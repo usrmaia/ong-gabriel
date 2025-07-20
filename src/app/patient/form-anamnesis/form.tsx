@@ -1,5 +1,6 @@
 "use client";
 
+import { $Enums } from "@prisma/client";
 import React, { startTransition, useActionState, useState } from "react";
 
 import { onSubmit } from "./actions";
@@ -11,7 +12,6 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/ui";
-import { $Enums } from "@/generated/prisma";
 
 const WHO_LIVES_WITH_OPTIONS: { value: $Enums.WhoLivesWith; label: string }[] =
   [

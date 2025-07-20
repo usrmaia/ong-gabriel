@@ -1,5 +1,6 @@
+import { User } from "@prisma/client";
+
 import { auth } from "@/auth";
-import { User } from "@/generated/prisma";
 import { getUserById } from "@/services";
 
 export const getUserAuthenticated = async (): Promise<User> => {

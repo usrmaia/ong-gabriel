@@ -1,7 +1,7 @@
+import { User, Prisma } from "@prisma/client";
 import z from "zod/v4";
 
 import { auth } from "@/auth";
-import { User, Prisma } from "@/generated/prisma";
 import logger from "@/config/logger";
 import prisma from "@/lib/prisma";
 import { UserBaseInfo, UserBaseInfoSchema } from "@/schemas";

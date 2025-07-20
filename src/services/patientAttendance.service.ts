@@ -1,7 +1,7 @@
+import { PatientAttendance, Prisma } from "@prisma/client";
 import z from "zod/v4";
 
 import logger from "@/config/logger";
-import { PatientAttendance, Prisma } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
 import {

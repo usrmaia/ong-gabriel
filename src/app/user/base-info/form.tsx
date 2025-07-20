@@ -1,12 +1,10 @@
 "use client";
 
+import { User } from "@prisma/client";
 import { useActionState } from "react";
 
 import { onSubmit } from "./actions";
-import { Button } from "@/components/ui";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { User } from "@/generated/prisma";
+import { Button, Label, Input } from "@/components/ui";
 
 interface UserBaseInfoFormProps {
   user: User;
