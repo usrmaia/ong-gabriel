@@ -13,20 +13,18 @@ const eslintConfig = [
   ...compat.extends(
     "next/core-web-vitals",
     "next/typescript",
-    "next/recommended",
+    "plugin:@next/next/recommended",
     "plugin:react/recommended",
-    "react-hooks",
-    "prettier"
+    "plugin:react-hooks/recommended",
+    "prettier",
   ),
   ...compat.config({
-    files: ["**/*.ts", "**/*.tsx"],
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-      },
-    },
     rules: {
-      "@typescript-eslint/no-explicit-any": "warn",
+      "react/react-in-jsx-scope": "off",
+
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-non-null-asserted-optional-chain": "warn",
     },
   }),
 ];

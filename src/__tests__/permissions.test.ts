@@ -42,9 +42,9 @@ describe("can", () => {
   });
 
   it("deve retornar false para usuário indefinido", () => {
-    // @ts-expect-error
+    // @ts-expect-error: Testing behavior when user is undefined
     expect(can(undefined, "view", "users")).toBe(false);
-    // @ts-expect-error
+    // @ts-expect-error: Testing behavior when user is an empty object
     expect(can({}, "view", "users")).toBe(false);
   });
 
@@ -86,7 +86,7 @@ describe("can", () => {
   });
 
   it("deve retornar false para função indefinida", () => {
-    // @ts-expect-error
+    // @ts-expect-error: Testing behavior when user has no role property
     expect(can({ id: "5" }, "view", "users")).toBe(false);
   });
 

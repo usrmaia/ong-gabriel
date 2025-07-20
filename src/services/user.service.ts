@@ -1,11 +1,12 @@
 import z from "zod/v4";
 
-import { auth } from "@/auth";
 import { User, Prisma } from "@/generated/prisma";
+
 import logger from "@/config/logger";
 import prisma from "@/lib/prisma";
 import { UserBaseInfo, UserBaseInfoSchema } from "@/schemas";
 import { Result } from "@/types";
+import { getUserIdAuthenticated } from "@/utils/auth";
 
 export const getUsers = async (filter?: {
   include?: Prisma.UserInclude;
@@ -72,7 +73,7 @@ export const updateUserBaseInfo = async (
         code: 400,
       };
 
-    const userId = (await auth())?.user.id!;
+    const userId = await getUserIdAuthenticated();
 
     const updatedUser = await prisma.user.update({
       data: validatedUserBaseInfo.data,

@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-import { auth } from "@/auth";
+import { getUserAuthenticated } from "@/utils/auth";
 
 export default async function SuccessPage() {
-  const user = (await auth())?.user;
+  const user = await getUserAuthenticated();
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
@@ -11,7 +11,7 @@ export default async function SuccessPage() {
         {user?.name}, estamos com você!
       </h2>
       <p className="font-young-serif text-xl text-center">
-        Jajá entraremos em contato, aguarde.
+        Já já entraremos em contato, aguarde.
       </p>
       <Image
         src="/agendado.svg"

@@ -1,7 +1,5 @@
-import NextAuth from "next-auth";
-
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { DefaultSession, NextAuthConfig } from "next-auth";
+import NextAuth, { DefaultSession, NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 
@@ -26,6 +24,7 @@ const authConfig: NextAuthConfig = {
   providers: providers,
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 }, // 7 days
   adapter: PrismaAdapter(prisma),
+  useSecureCookies: env.SECURE_COOKIES_ENABLED,
   callbacks: {
     jwt({ token, user }) {
       if (user) {
@@ -40,7 +39,7 @@ const authConfig: NextAuthConfig = {
       return session;
     },
   },
-  debug: env.NODE_ENV === "development",
+  debug: env.DEBUG,
   pages: {
     signIn: "/auth/login",
   },

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+import { env } from "./config/env";
+
 // TODO: Use middleware = auth
 // FIX: next-auth v5-beta with bug: PrismaClient is unable to run in this browser environment, or has been bundled for the browser
 export default async function middleware(req: NextRequest) {
@@ -8,7 +10,8 @@ export default async function middleware(req: NextRequest) {
 
   const token = await getToken({
     req,
-    secret: process.env.AUTH_SECRET,
+    secret: env.AUTH_SECRET,
+    secureCookie: env.SECURE_COOKIES_ENABLED,
   });
   const isAuthenticated = !!token;
 
