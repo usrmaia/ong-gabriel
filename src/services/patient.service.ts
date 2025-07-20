@@ -1,15 +1,15 @@
 import z from "zod/v4";
 
-import { auth } from "@/auth";
+import { FormAnamnesis, Prisma, Role } from "@prisma/client";
+
 import logger from "@/config/logger";
-import { FormAnamnesis, Prisma, Role } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { createPatientAttendance } from "./patientAttendance.service";
 import { can } from "@/permissions";
 import { addRoleToUser } from "./role.service";
 import { PatientFormAnamnesisSchema } from "@/schemas";
 import { Result } from "@/types";
-import { getUserAuthenticated } from "@/utils/auth";
+import { getUserAuthenticated, getUserIdAuthenticated } from "@/utils/auth";
 
 export const getPatientFormAnamnesis = async (filter: {
   where?: Prisma.FormAnamnesisWhereInput;
@@ -53,7 +53,7 @@ export const getPatientFormAnamnesis = async (filter: {
 export const getPatientFormAnamnesisFromUser = async (): Promise<
   Result<FormAnamnesis[]>
 > => {
-  const userId = (await auth())?.user.id!;
+  const userId = await getUserIdAuthenticated();
   const userAnamnesisForms = await prisma.formAnamnesis.findMany({
     where: { userId },
   });
@@ -88,7 +88,7 @@ export const createPatientFormAnamnesis = async (
         code: 400,
       };
 
-    formAnamnesis.userId = (await auth())?.user.id!;
+    formAnamnesis.userId = await getUserIdAuthenticated();
 
     const createdFormAnamnesis = await prisma.formAnamnesis.create({
       data: { ...formAnamnesis, ...validatedAnamnesis.data },

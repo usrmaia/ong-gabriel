@@ -28,6 +28,21 @@ export const UserBaseInfoSchema = z.object({
 
 export type UserBaseInfo = z.input<typeof UserBaseInfoSchema>;
 
+const PatientFormAnamnesisSalarySchema = z
+  .union([z.string(), z.number(), z.bigint()])
+  .transform<bigint | undefined>((value) => {
+    if (typeof value === "string") {
+      const cleanValue = value.trim().replace(",", ".");
+      try {
+        const floatValue = parseFloat(cleanValue);
+        return BigInt(Math.round(floatValue * 100));
+      } catch {
+        return undefined;
+      }
+    }
+    return BigInt(value);
+  });
+
 export const PatientFormAnamnesisSchema = z.object({
   whoLivesWith: z
     .transform<unknown, WhoLivesWith[]>((value) => {
@@ -44,22 +59,18 @@ export const PatientFormAnamnesisSchema = z.object({
     .refine((value) => !value.includes("sozinho") || value.length === 1, {
       message: "Se 'sozinho' é selecionado, não pode haver outros valores.",
     }),
-  monthlyIncomeCents: z
-    .transform<unknown, bigint>((value) => {
-      if (typeof value === "string") return BigInt(value.trim());
-      return value as bigint;
-    })
-    .refine((value) => value >= 0, {
+  monthlyIncomeCents: PatientFormAnamnesisSalarySchema.refine(
+    (value) => !!value && value >= 0,
+    {
       message: "Renda mensal é obrigatória.",
-    }),
-  monthlyFamilyIncomeCents: z
-    .transform<unknown, bigint>((value) => {
-      if (typeof value === "string") return BigInt(value.trim());
-      return value as bigint;
-    })
-    .refine((value) => value >= 0, {
+    },
+  ),
+  monthlyFamilyIncomeCents: PatientFormAnamnesisSalarySchema.refine(
+    (value) => !!value && value >= 0,
+    {
       message: "Renda familiar mensal é obrigatória.",
-    }),
+    },
+  ),
   difficultiesBasic: z.any().nonoptional("Selecione pelo menos uma opção."),
   emotionalState: z.any().nonoptional("Selecione pelo menos uma opção."),
   difficultiesSleeping: z.any().nonoptional("Selecione pelo menos uma opção."),

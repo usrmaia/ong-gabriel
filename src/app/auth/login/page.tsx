@@ -2,7 +2,7 @@ import { ButtonSignIn } from "@/components/ui";
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center">
       <h3 className="text-center px-8 py-4">
         Suporte emocional para a sua vida!
       </h3>

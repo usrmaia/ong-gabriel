@@ -203,5 +203,79 @@ describe("PatientFormAnamnesisSchema", () => {
       expect(resultMin.success).toBe(true);
       expect(resultMax.success).toBe(true);
     });
+
+    it("deve validar monthlyIncomeCents e monthlyFamilyIncomeCents como BigInt positivos", async () => {
+      const data = {
+        ...formAnamnesisMock,
+        monthlyIncomeCents: BigInt(123456),
+        monthlyFamilyIncomeCents: BigInt(654321),
+      };
+      const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
+      expect(result.success).toBe(true);
+      expect(result.data?.monthlyIncomeCents).toBe(BigInt(123456));
+      expect(result.data?.monthlyFamilyIncomeCents).toBe(BigInt(654321));
+    });
+
+    it("deve aceitar monthlyIncomeCents e monthlyFamilyIncomeCents como string numérica", async () => {
+      const data = {
+        ...formAnamnesisMock,
+        monthlyIncomeCents: "1234.56",
+        monthlyFamilyIncomeCents: "6543.21",
+      };
+      const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
+      expect(result.success).toBe(true);
+      expect(result.data?.monthlyIncomeCents).toBe(BigInt(123456));
+      expect(result.data?.monthlyFamilyIncomeCents).toBe(BigInt(654321));
+    });
+
+    it("deve aceitar monthlyIncomeCents e monthlyFamilyIncomeCents como string com vírgula", async () => {
+      const data = {
+        ...formAnamnesisMock,
+        monthlyIncomeCents: "1234,56",
+        monthlyFamilyIncomeCents: "6543,21",
+      };
+      const result = await PatientFormAnamnesisSchema.safeParseAsync(data);
+      expect(result.success).toBe(true);
+      expect(result.data?.monthlyIncomeCents).toBe(BigInt(123456));
+      expect(result.data?.monthlyFamilyIncomeCents).toBe(BigInt(654321));
+    });
+
+    it("deve falhar se monthlyIncomeCents e monthlyFamilyIncomeCents forem negativos", async () => {
+      const data1 = {
+        ...formAnamnesisMock,
+        monthlyIncomeCents: BigInt(-100),
+      };
+      const result1 = await PatientFormAnamnesisSchema.safeParseAsync(data1);
+      expect(result1.success).toBe(false);
+      expect(result1.error?.issues[0]?.message).toBe(
+        "Renda mensal é obrigatória.",
+      );
+
+      const data2 = {
+        ...formAnamnesisMock,
+        monthlyFamilyIncomeCents: BigInt(-100),
+      };
+      const result2 = await PatientFormAnamnesisSchema.safeParseAsync(data2);
+      expect(result2.success).toBe(false);
+      expect(result2.error?.issues[0]?.message).toBe(
+        "Renda familiar mensal é obrigatória.",
+      );
+    });
+
+    it("deve falhar se monthlyIncomeCents e monthlyFamilyIncomeCents não forem números válidos", async () => {
+      const data1 = {
+        ...formAnamnesisMock,
+        monthlyIncomeCents: "abc",
+      };
+      const result1 = await PatientFormAnamnesisSchema.safeParseAsync(data1);
+      expect(result1.success).toBe(false);
+
+      const data2 = {
+        ...formAnamnesisMock,
+        monthlyFamilyIncomeCents: "xyz",
+      };
+      const result2 = await PatientFormAnamnesisSchema.safeParseAsync(data2);
+      expect(result2.success).toBe(false);
+    });
   });
 });
