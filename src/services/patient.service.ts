@@ -1,6 +1,5 @@
-import z from "zod/v4";
-
 import { FormAnamnesis, Prisma, Role } from "@prisma/client";
+import z from "zod/v4";
 
 import { auth } from "@/auth";
 import logger from "@/config/logger";
@@ -13,7 +12,9 @@ import { Result } from "@/types";
 import { getUserAuthenticated } from "@/utils/auth";
 
 export const getPatientFormAnamnesis = async (filter: {
+  include?: Prisma.FormAnamnesisInclude;
   where?: Prisma.FormAnamnesisWhereInput;
+  orderBy?: Prisma.FormAnamnesisOrderByWithRelationInput;
 }): Promise<Result<FormAnamnesis[]>> => {
   try {
     const user = await getUserAuthenticated();
@@ -25,7 +26,9 @@ export const getPatientFormAnamnesis = async (filter: {
       };
 
     const formAnamnesis = await prisma.formAnamnesis.findMany({
+      include: { ...filter.include },
       where: filter.where,
+      orderBy: filter.orderBy,
     });
 
     if (formAnamnesis.length === 0)

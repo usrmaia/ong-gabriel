@@ -1,4 +1,9 @@
-import { WhoLivesWith } from "@prisma/client";
+import {
+  DifficultiesBasic,
+  DifficultiesEating,
+  DifficultiesSleeping,
+  WhoLivesWith,
+} from "@prisma/client";
 import { z } from "zod/v4";
 
 export const UserBaseInfoSchema = z.object({
@@ -29,17 +34,73 @@ export type UserBaseInfo = z.input<typeof UserBaseInfoSchema>;
 
 const PatientFormAnamnesisSalarySchema = z
   .union([z.string(), z.number(), z.bigint()])
-  .transform<bigint | undefined>((value) => {
+  .transform<bigint>((value) => {
     if (typeof value === "string") {
       const cleanValue = value.trim().replace(",", ".");
       try {
         const floatValue = parseFloat(cleanValue);
         return BigInt(Math.round(floatValue * 100));
       } catch {
-        return undefined;
+        return BigInt(-1);
       }
     }
     return BigInt(value);
+  });
+
+export const WhoLivesWithSchema = z
+  .array(z.enum(WhoLivesWith))
+  .transform((value) =>
+    value.map((item) => {
+      switch (item) {
+        case "amigos":
+          return "Amigos";
+        case "familia":
+          return "Família";
+        case "outras_pessoas":
+          return "Outras pessoas";
+        case "sozinho":
+          return "Sozinho";
+      }
+    }),
+  );
+
+export const DifficultiesBasicSchema = z
+  .enum(DifficultiesBasic)
+  .transform((value) => {
+    switch (value) {
+      case "sim":
+        return "Sim";
+      case "as_vezes":
+        return "Às vezes";
+      case "nao":
+        return "Não";
+    }
+  });
+
+export const DifficultiesSleepingSchema = z
+  .enum(DifficultiesSleeping)
+  .transform((value) => {
+    switch (value) {
+      case "sim":
+        return "Sim";
+      case "as_vezes":
+        return "Às vezes";
+      case "nao":
+        return "Não";
+    }
+  });
+
+export const DifficultiesEatingSchema = z
+  .enum(DifficultiesEating)
+  .transform((value) => {
+    switch (value) {
+      case "sim":
+        return "Sim";
+      case "as_vezes":
+        return "Às vezes";
+      case "nao":
+        return "Não";
+    }
   });
 
 export const PatientFormAnamnesisSchema = z.object({
