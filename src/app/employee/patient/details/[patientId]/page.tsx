@@ -1,18 +1,13 @@
-import { Edit } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { PatientAttendance, User } from "@prisma/client";
 
 import {
   BackNavigationHeader,
-  Button,
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
+  CardAttendance,
+  CardFormAnamnesis,
   CardPatientProfile,
 } from "@/components/ui";
-import { getUserById } from "@/services";
+import { getPatientFormAnamnesis, getUserById } from "@/services";
 
 export default async function PatientDetailsPage({
   params,
@@ -37,6 +32,14 @@ export default async function PatientDetailsPage({
     return 0;
   });
 
+  const formAnamnesisResult = await getPatientFormAnamnesis({
+    include: { user: true },
+    where: { userId: patientId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const formAnamnesis = formAnamnesisResult.data || [];
+
   return (
     <>
       <BackNavigationHeader title="Paciente" href="/employee/patient/list" />
@@ -56,41 +59,13 @@ export default async function PatientDetailsPage({
           Histórico de Atendimento(s)
         </p>
         {patientAttendances.map((attendance) => (
-          <Card
-            key={attendance.id}
-            className="shadow-lg w-full py-4 border-0 rounded-lg relative"
-          >
-            <CardHeader className="flex justify-center absolute top-2 right-2">
-              <CardAction>
-                <Link
-                  href={`/employee/patient-attendance/details/${attendance.id}/edit`}
-                >
-                  <Button size="icon" variant="ghost">
-                    <Edit />
-                  </Button>
-                </Link>
-              </CardAction>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2">
-              <p className="font-poppins text-sm text-s-van-dyke">
-                Data:{" "}
-                {attendance.dateAt?.toLocaleString("pt-BR", {
-                  dateStyle: "short",
-                  timeStyle: "short",
-                }) ?? "A definir"}
-              </p>
-              <p className="text-sm font-poppins text-s-van-dyke">
-                <span>Duração: </span>
-                {attendance.durationMinutes
-                  ? `${attendance.durationMinutes} minutos`
-                  : "A definir"}
-              </p>
-              <p className="text-sm font-poppins text-s-van-dyke">
-                <span className="font-bold">Anotações: </span>
-                {attendance.note}
-              </p>
-            </CardContent>
-          </Card>
+          <CardAttendance key={attendance.id} patientAttendance={attendance} />
+        ))}
+        <p className="font-raleway font-bold text-lg text-s-van-dyke mt-2">
+          Histórico de Anamneses
+        </p>
+        {formAnamnesis.map((anamnesis) => (
+          <CardFormAnamnesis key={anamnesis.id} anamnesis={anamnesis} />
         ))}
       </section>
     </>
