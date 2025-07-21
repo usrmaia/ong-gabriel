@@ -1,9 +1,21 @@
-import { Mail, Phone } from "lucide-react";
+import { Edit, Mail, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { PatientAttendance, User } from "@prisma/client";
+import { FormAnamnesis, PatientAttendance, User } from "@prisma/client";
 
-import { Card, CardContent } from "@/components/ui";
+import {
+  Button,
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+} from "@/components/ui";
+import {
+  DifficultiesBasicSchema,
+  DifficultiesEatingSchema,
+  DifficultiesSleepingSchema,
+  WhoLivesWithSchema,
+} from "@/schemas";
 
 export const CardPatientProfile = ({ patient }: { patient: User }) => (
   <Card className="shadow-lg w-full py-4 border-0 rounded-lg">
@@ -61,5 +73,173 @@ export const CardPatientAttendance = ({
         </CardContent>
       </Card>
     </Link>
+  );
+};
+
+export const CardFormAnamnesis = ({
+  anamnesis,
+}: {
+  anamnesis: FormAnamnesis;
+}) => {
+  return (
+    <Card className="shadow-lg w-full py-4 border-0 rounded-lg">
+      <CardHeader className="font-bold">
+        <p className="text-sm text-right">
+          {anamnesis.createdAt.toLocaleString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
+        </p>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3 text-s-van-dyke text-sm font-poppins">
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Quem mora com você?</p>
+          <p>
+            {WhoLivesWithSchema.parse(anamnesis.whoLivesWith).join(", ") ||
+              "N/A"}
+          </p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Qual sua ocupação atual?</p>
+          <p>{anamnesis.occupation || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Qual a sua renda mensal?</p>
+          <p>
+            {Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }).format(Number(anamnesis.monthlyIncomeCents) / 100)}
+          </p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Qual a sua renda familiar?</p>
+          <p>
+            {Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }).format(Number(anamnesis.monthlyFamilyIncomeCents) / 100)}
+          </p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Você tem dificuldades para atender às necessidades básicas?
+          </p>
+          <p>{DifficultiesBasicSchema.parse(anamnesis.difficultiesBasic)}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Recebe algum benefício do governo ou apoio social? Se sim, descreva!
+          </p>
+          <p>{anamnesis.socialBenefits || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Como você descreveria seu estado emocional nos últimos dias?
+          </p>
+          <p>{anamnesis.emotionalState || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Vocês têm dificuldades para dormir?</p>
+          <p>
+            {DifficultiesSleepingSchema.parse(anamnesis.difficultiesSleeping)}
+          </p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Dificuldade para se alimentar?</p>
+          <p>{DifficultiesEatingSchema.parse(anamnesis.difficultyEating)}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Você já sentiu que não consegue lidar com os seus problemas?
+          </p>
+          <p>{anamnesis.canNotDealWithProblems || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Já pensou em machucar a si mesmo?</p>
+          <p>{anamnesis.selfDestructiveThoughts || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Você tem alguém com quem confiar e conversar?
+          </p>
+          <p>{anamnesis.haveSomeoneToTrust || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Entre familiares ou amigos, há alguém que te apoie emocionalmente?
+          </p>
+          <p>{anamnesis.haveEmotionalSupport || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Algum familiar ou amigo te apoia financeiramente?
+          </p>
+          <p>{anamnesis.haveFinancialSupport || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Você tem algum diagnóstico de saúde (física ou mental) feito por um
+            médico?
+          </p>
+          <p>{anamnesis.hasMedicalDiagnosis || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Já acompanha ou trata com psicológico/psiquiátrico atualmente?
+          </p>
+          <p>{anamnesis.currentlyUndergoingPsychTreatment || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">Usa algum tipo de medicamento?</p>
+          <p>{anamnesis.currentlyTakingMedication || "N/A"}</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export const CardAttendance = ({
+  patientAttendance,
+}: {
+  patientAttendance: PatientAttendance;
+}) => {
+  return (
+    <Card className="shadow-lg w-full py-4 border-0 rounded-lg relative">
+      <CardHeader className="flex justify-center absolute top-2 right-2">
+        <CardAction>
+          <Link
+            href={`/employee/patient-attendance/details/${patientAttendance.id}/edit`}
+          >
+            <Button size="icon" variant="ghost">
+              <Edit />
+            </Button>
+          </Link>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        <p className="font-poppins text-sm text-s-van-dyke">
+          Data:{" "}
+          {patientAttendance.dateAt?.toLocaleString("pt-BR", {
+            dateStyle: "short",
+            timeStyle: "short",
+          }) ?? "A definir"}
+        </p>
+        <p className="text-sm font-poppins text-s-van-dyke">
+          <span>Duração: </span>
+          {patientAttendance.durationMinutes
+            ? `${patientAttendance.durationMinutes} minutos`
+            : "A definir"}
+        </p>
+        <p className="text-sm font-poppins text-s-van-dyke">
+          <span className="font-bold">Anotações: </span>
+          {patientAttendance.note}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
