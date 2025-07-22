@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
 
 import { env } from "@/config/env";
 
@@ -14,7 +13,7 @@ const prisma =
       env.NODE_ENV === "development"
         ? ["query", "info", "warn", "error"]
         : ["error"],
-  }).$extends(withAccelerate());
+  });
 
 if (env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
