@@ -25,6 +25,7 @@ export default async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/api/((?!auth|health).*)",
+    "/auth/logout",
     "/employee/:path*",
     "/patient/:path*",
     "/user/:path*",
