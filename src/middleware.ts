@@ -11,7 +11,6 @@ export default async function middleware(req: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
   const isAuthenticated = !!token;
-  console.log("Authenticated user:", isAuthenticated);
 
   if (!isAuthenticated) {
     const loginUrl = new URL(`/auth/login?redirectTo=${pathname}`, req.url);
