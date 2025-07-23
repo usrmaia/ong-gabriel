@@ -1,6 +1,7 @@
 "use client";
 
 import { User } from "@prisma/client";
+import { useSearchParams } from "next/navigation";
 import { useActionState } from "react";
 
 import { onSubmit } from "./actions";
@@ -11,7 +12,9 @@ interface UserBaseInfoFormProps {
 }
 
 export function UserBaseInfoForm({ user }: UserBaseInfoFormProps) {
-  const [state, formAction] = useActionState(onSubmit, {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
+  const [state, formAction] = useActionState(onSubmit.bind(null, redirectTo), {
     data: {
       name: user.name || "",
       full_name: user.full_name || "",

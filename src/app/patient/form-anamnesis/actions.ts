@@ -7,6 +7,7 @@ import { createPatientFormAnamnesis } from "@/services/patient.service";
 import { Result } from "@/types";
 
 export async function onSubmit(
+  redirectTo: string | null,
   prev: Result<FormAnamnesis>,
   formData: FormData,
 ): Promise<Result<FormAnamnesis>> {
@@ -17,5 +18,9 @@ export async function onSubmit(
 
   if (!result.success) return { ...result, data: formDataObject };
 
-  redirect("/patient/form-anamnesis/success");
+  redirect(
+    redirectTo
+      ? `${redirectTo}?redirectTo=/patient/form-anamnesis/success`
+      : "/patient/form-anamnesis/success",
+  );
 }

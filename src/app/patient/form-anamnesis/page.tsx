@@ -1,5 +1,5 @@
 import { PatientFormAnamnesis } from "./form";
 
-export default function PatientFormAnamnesisPage() {
+export default async function PatientFormAnamnesisPage() {
   return <PatientFormAnamnesis />;
 }

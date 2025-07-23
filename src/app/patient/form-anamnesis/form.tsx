@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { $Enums } from "@prisma/client";
 import React, { startTransition, useActionState, useState } from "react";
 
@@ -47,7 +48,9 @@ const DIFFICULTIES_SLEEPING_OPTIONS = DIFFICULTIES_BASIC_OPTIONS;
 const DIFFICULTIES_EATING_OPTIONS = DIFFICULTIES_BASIC_OPTIONS;
 
 export function PatientFormAnamnesis() {
-  const [state, formAction] = useActionState(onSubmit, {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
+  const [state, formAction] = useActionState(onSubmit.bind(null, redirectTo), {
     success: false,
     error: { errors: [] },
   });

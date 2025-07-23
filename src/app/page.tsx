@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
 
 import { auth } from "@/auth";
 import { getUserAuthenticated } from "@/utils/auth";
@@ -12,5 +11,5 @@ export default async function Home() {
   const user = await getUserAuthenticated();
 
   if (user.role.includes("EMPLOYEE")) redirect("/employee/home");
-  redirect("/patient/form-anamnesis");
+  redirect("/patient/form-anamnesis?redirectTo=/user/base-info");
 }
