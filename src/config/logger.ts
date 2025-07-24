@@ -1,9 +1,12 @@
-import DailyRotateFile from "winston-daily-rotate-file";
 import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 
-export default winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
+import { env } from "./env";
+
+const transports: winston.transport[] = [new winston.transports.Console()];
+
+if (env.LOG_FILE_ENABLED)
+  transports.push(
     new DailyRotateFile({
       createSymlink: true,
       dirname: "logs",
@@ -11,8 +14,8 @@ export default winston.createLogger({
       level: "debug",
       maxFiles: "7",
       maxSize: "20m",
-      silent: process.env.NODE_ENV === "production", // Disable file logging in production
       zippedArchive: true,
     }),
-  ],
-});
+  );
+
+export default winston.createLogger({ transports: transports });

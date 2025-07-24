@@ -8,15 +8,13 @@ const envSchema = z.object({
   AUTH_GOOGLE_SECRET: z.string().nonempty(),
   AUTH_FACEBOOK_ID: z.string().nonempty(),
   AUTH_FACEBOOK_SECRET: z.string().nonempty(),
+
+  LOG_FILE_ENABLED: z
+    .string()
+    .optional()
+    .transform((val) => val?.trim().toLowerCase() === "true"),
 });
 
-function validateEnv(_data: any) {
-  const { success, data, error } = envSchema.safeParse(_data);
+const env = await envSchema.parseAsync(process.env);
 
-  if (!success)
-    throw new Error(`❌ Invalid environment variables: ${error.message}`);
-
-  return data;
-}
-
-export const env = validateEnv(process.env);
+export { env };
