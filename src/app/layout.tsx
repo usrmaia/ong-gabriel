@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Young_Serif, Raleway, Poppins } from "next/font/google";
-import "./globals.css";
 import Image from "next/image";
+
+import { Analytics } from "@/components/analytics";
+import "./globals.css";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -40,6 +42,7 @@ export default function RootLayout({
       <body
         className={`${raleway.variable} ${youngSerif.variable} ${poppins.variable} antialiased flex flex-col min-w-screen min-h-screen`}
       >
+        <Analytics />
         <header className="w-full p-4">
           <Image
             className="mx-auto"

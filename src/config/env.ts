@@ -18,6 +18,7 @@ const envSchema = z.object({
     .string()
     .optional()
     .transform((val) => val?.trim().toLowerCase() === "true"),
+  NEXT_PUBLIC_HOTJAR_ID: z.string().optional(),
 });
 
 const env = await envSchema.parseAsync(process.env);
