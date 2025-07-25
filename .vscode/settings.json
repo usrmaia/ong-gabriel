@@ -25,6 +25,7 @@
     "types",
     "form",
     "role",
-    "attendance"
+    "attendance",
+    "analytics"
   ]
 }
