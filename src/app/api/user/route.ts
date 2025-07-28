@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import logger from "@/config/logger";
+import { withApiRateLimit } from "@/middlewares/rate-limit";
 import { updateUserBaseInfo } from "@/services";
 
-// PUT /api/user
-export async function PUT(req: NextRequest) {
+// PUT /api/user - Com rate limiting aplicado
+async function putHandler(req: NextRequest) {
   try {
     const body = await req.json();
     const result = await updateUserBaseInfo(body);
@@ -20,3 +21,6 @@ export async function PUT(req: NextRequest) {
     );
   }
 }
+
+// Exporta o handler com rate limiting aplicado
+export const PUT = withApiRateLimit(putHandler);

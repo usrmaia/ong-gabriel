@@ -19,6 +19,25 @@ const envSchema = z.object({
     .optional()
     .transform((val) => val?.trim().toLowerCase() === "true"),
   NEXT_PUBLIC_HOTJAR_ID: z.string().optional(),
+
+  // Rate Limiting Configuration
+  UPSTASH_REDIS_REST_URL: z.string().optional(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+  RATE_LIMIT_ENABLED: z
+    .string()
+    .optional()
+    .default("true")
+    .transform((val) => val?.trim().toLowerCase() === "true"),
+  RATE_LIMIT_REQUESTS_PER_WINDOW: z
+    .string()
+    .optional()
+    .default("100")
+    .transform((val) => parseInt(val!, 10)),
+  RATE_LIMIT_WINDOW_MS: z
+    .string()
+    .optional()
+    .default("60000")
+    .transform((val) => parseInt(val!, 10)),
 });
 
 const env = await envSchema.parseAsync(process.env);
