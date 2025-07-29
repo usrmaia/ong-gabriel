@@ -11,6 +11,7 @@
     "editor.formatOnType": true
   },
   "conventionalCommits.scopes": [
+    "env",
     "proj",
     "git",
     "prettier",

@@ -138,7 +138,7 @@ export const PatientFormAnamnesisSchema = z.object({
 });
 
 const PatientAttendanceDateAtSchema = z
-  .string()
+  .union([z.string(), z.date()])
   .optional()
   .refine((value) => {
     if (!value) return true;
@@ -152,7 +152,7 @@ const PatientAttendanceDateAtSchema = z
     const maxDate = new Date();
     maxDate.setDate(maxDate.getDate() + rangeDay);
     return isValidDate && minDate <= date && date <= maxDate;
-  }, "Data do atendimento inválida.")
+  }, "Data do atendimento inválida. Deve estar entre 30 dias atrás e 30 dias à frente.")
   .transform((value) => (value ? new Date(value) : undefined));
 
 const PatientAttendanceDurationMinutesSchema = z

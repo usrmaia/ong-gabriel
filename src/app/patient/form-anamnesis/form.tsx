@@ -2,7 +2,12 @@
 
 import { useSearchParams } from "next/navigation";
 import { $Enums } from "@prisma/client";
-import React, { startTransition, useActionState, useState } from "react";
+import React, {
+  startTransition,
+  useActionState,
+  useEffect,
+  useState,
+} from "react";
 
 import { onSubmit } from "./actions";
 import {
@@ -68,6 +73,23 @@ export function PatientFormAnamnesis() {
     startTransition(() => formAction(formData));
   };
 
+  useEffect(() => {
+    if (state.success) return;
+
+    const timeout = setTimeout(() => {
+      const firstErrorKey = Object.keys(state.error?.properties || {})[0];
+      if (firstErrorKey) {
+        const errorElement = document.getElementById(`${firstErrorKey}-label`);
+        if (errorElement) {
+          errorElement.focus();
+          errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    }, 100);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.error]);
+
   return (
     <form onSubmit={handleFormSubmit} className="flex flex-col">
       <h3 className="text-center">Como está seu financeiro?</h3>
@@ -75,6 +97,7 @@ export function PatientFormAnamnesis() {
       <section className="flex flex-col gap-3 mt-4">
         <div className="flex w-full justify-between items-center">
           <Label
+            id="whoLivesWith-label"
             htmlFor="whoLivesWith"
             className="font-semibold text-foreground"
           >
@@ -112,7 +135,11 @@ export function PatientFormAnamnesis() {
           {state.error?.properties?.whoLivesWith?.errors}
         </span>
 
-        <Label htmlFor="occupation" className="font-semibold text-foreground">
+        <Label
+          id="occupation-label"
+          htmlFor="occupation"
+          className="font-semibold text-foreground"
+        >
           Qual sua ocupação atual?
         </Label>
         <Input
@@ -131,6 +158,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="monthlyIncomeCents-label"
           htmlFor="monthlyIncomeCents"
           className="font-semibold text-foreground"
         >
@@ -154,6 +182,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="monthlyFamilyIncomeCents-label"
           htmlFor="monthlyFamilyIncomeCents"
           className="font-semibold text-foreground"
         >
@@ -178,6 +207,7 @@ export function PatientFormAnamnesis() {
 
         <div className="flex flex-col gap-1">
           <Label
+            id="difficultiesBasic-label"
             htmlFor="difficultiesBasic"
             className="font-semibold text-foreground items-center"
           >
@@ -210,6 +240,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="socialBenefits-label"
           htmlFor="socialBenefits"
           className="font-semibold text-foreground"
         >
@@ -235,7 +266,11 @@ export function PatientFormAnamnesis() {
 
       <section className="flex flex-col gap-3 mt-4">
         <div className="flex flex-col gap-1">
-          <Label htmlFor="full_name" className="font-semibold text-foreground">
+          <Label
+            id="emotionalState-label"
+            htmlFor="full_name"
+            className="font-semibold text-foreground"
+          >
             Como você descreveria seu estado emocional nos últimos dias?
           </Label>
           <span className="text-xs">*Obrigatório</span>
@@ -281,6 +316,7 @@ export function PatientFormAnamnesis() {
 
         <div className="flex justify-between items-center">
           <Label
+            id="difficultiesSleeping-label"
             htmlFor="difficultiesSleeping"
             className="font-semibold text-foreground"
           >
@@ -309,7 +345,11 @@ export function PatientFormAnamnesis() {
         </span>
 
         <div className="flex justify-between items-center">
-          <Label htmlFor="name" className="font-semibold text-foreground">
+          <Label
+            id="difficultyEating-label"
+            htmlFor="name"
+            className="font-semibold text-foreground"
+          >
             Dificuldade para se alimentar?
           </Label>
           <span className="text-xs">*Obrigatório</span>
@@ -337,6 +377,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="canNotDealWithProblems-label"
           htmlFor="canNotDealWithProblems"
           className="font-semibold text-foreground"
         >
@@ -358,6 +399,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="selfDestructiveThoughts-label"
           htmlFor="selfDestructiveThoughts"
           className="font-semibold text-foreground"
         >
@@ -383,6 +425,7 @@ export function PatientFormAnamnesis() {
 
       <section className="flex flex-col gap-3 mt-4">
         <Label
+          id="haveSomeoneToTrust-label"
           htmlFor="haveSomeoneToTrust"
           className="font-semibold text-foreground"
         >
@@ -404,6 +447,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="haveEmotionalSupport-label"
           htmlFor="haveEmotionalSupport"
           className="font-semibold text-foreground"
         >
@@ -425,6 +469,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="haveFinancialSupport-label"
           htmlFor="haveFinancialSupport"
           className="font-semibold text-foreground"
         >
@@ -450,6 +495,7 @@ export function PatientFormAnamnesis() {
 
       <section className="flex flex-col gap-3 mt-4">
         <Label
+          id="hasMedicalDiagnosis-label"
           htmlFor="hasMedicalDiagnosis"
           className="font-semibold text-foreground"
         >
@@ -472,6 +518,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="currentlyUndergoingPsychTreatment-label"
           htmlFor="currentlyUndergoingPsychTreatment"
           className="font-semibold text-foreground"
         >
@@ -493,6 +540,7 @@ export function PatientFormAnamnesis() {
         </span>
 
         <Label
+          id="currentlyTakingMedication-label"
           htmlFor="currentlyTakingMedication"
           className="font-semibold text-foreground"
         >
@@ -518,11 +566,7 @@ export function PatientFormAnamnesis() {
         Continuar
       </Button>
 
-      <span
-        id="currentlyTakingMedication-error"
-        role="alert"
-        className="text-xs text-error text-center h-2"
-      >
+      <span role="alert" className="text-xs text-error text-center h-2">
         {state.error?.errors}
       </span>
     </form>

@@ -146,7 +146,7 @@ describe("PatientFormAnamnesisSchema", () => {
       });
       expect(result.success).toBe(false);
       expect(result.error?.issues[0]?.message).toBe(
-        "Data do atendimento inválida.",
+        "Data do atendimento inválida. Deve estar entre 30 dias atrás e 30 dias à frente.",
       );
     });
 
@@ -162,7 +162,7 @@ describe("PatientFormAnamnesisSchema", () => {
 
       expect(result.success).toBe(false);
       expect(result.error?.issues[0]?.message).toBe(
-        "Data do atendimento inválida.",
+        "Data do atendimento inválida. Deve estar entre 30 dias atrás e 30 dias à frente.",
       );
     });
 
@@ -178,7 +178,7 @@ describe("PatientFormAnamnesisSchema", () => {
 
       expect(result.success).toBe(false);
       expect(result.error?.issues[0]?.message).toBe(
-        "Data do atendimento inválida.",
+        "Data do atendimento inválida. Deve estar entre 30 dias atrás e 30 dias à frente.",
       );
     });
 

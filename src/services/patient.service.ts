@@ -97,7 +97,7 @@ export const createPatientFormAnamnesis = async (
       data: { ...formAnamnesis, ...validatedAnamnesis.data },
     });
 
-    addRoleToUser(formAnamnesis.userId, Role.PATIENT);
+    await addRoleToUser(formAnamnesis.userId, Role.PATIENT);
     createPatientAttendance({ patientId: formAnamnesis.userId });
 
     return { success: true, data: createdFormAnamnesis, code: 201 };
