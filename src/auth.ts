@@ -42,7 +42,7 @@ const authConfig: NextAuthConfig = {
       return session;
     },
   },
-  debug: env.NODE_ENV === "development",
+  debug: env.DEBUG,
   pages: {
     signIn: "/auth/login",
   },

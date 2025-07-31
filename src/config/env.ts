@@ -2,12 +2,16 @@ import { z } from "zod";
 
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]),
-  NEXT_PUBLIC_APP_URL: z.string().url(),
+  DEBUG: z
+    .string()
+    .optional()
+    .transform((val) => val?.trim().toLowerCase() === "true"),
 
-  AUTH_GOOGLE_ID: z.string().nonempty(),
-  AUTH_GOOGLE_SECRET: z.string().nonempty(),
-  AUTH_FACEBOOK_ID: z.string().nonempty(),
-  AUTH_FACEBOOK_SECRET: z.string().nonempty(),
+  AUTH_SECRET: z.string().optional(),
+  AUTH_GOOGLE_ID: z.string().optional(),
+  AUTH_GOOGLE_SECRET: z.string().optional(),
+  AUTH_FACEBOOK_ID: z.string().optional(),
+  AUTH_FACEBOOK_SECRET: z.string().optional(),
 
   SECURE_COOKIES_ENABLED: z
     .string()
@@ -21,6 +25,6 @@ const envSchema = z.object({
   NEXT_PUBLIC_HOTJAR_ID: z.string().optional(),
 });
 
-const env = await envSchema.parseAsync(process.env);
+const env = envSchema.parse(process.env);
 
 export { env };

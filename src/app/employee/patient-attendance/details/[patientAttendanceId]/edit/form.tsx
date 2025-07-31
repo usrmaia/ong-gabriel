@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import { TZDateMini } from "@date-fns/tz";
 import { useActionState } from "react";
 import { PatientAttendance, User } from "@prisma/client";
 
@@ -24,8 +25,15 @@ export function PatientAttendanceEditForm({
     error: { errors: [] },
   });
 
+  const handleSubmit = (formData: FormData) => {
+    const dateAtRaw = formData.get("dateAt") as string;
+    if (dateAtRaw)
+      formData.set("dateAt", new TZDateMini(dateAtRaw, "UTC").toISOString());
+    formAction(formData);
+  };
+
   return (
-    <form action={formAction} className="flex flex-col gap-3">
+    <form action={handleSubmit} className="flex flex-col gap-3">
       <div className="flex justify-between">
         <Label htmlFor="dateAt" className="font-semibold text-foreground">
           Data
@@ -38,9 +46,13 @@ export function PatientAttendanceEditForm({
         name="dateAt"
         defaultValue={
           state.data?.dateAt
-            ? format(new Date(state.data.dateAt), "yyyy-MM-dd'T'HH:mm")
+            ? format(
+                new TZDateMini(state.data.dateAt, "America/Sao_Paulo"),
+                "yyyy-MM-dd'T'HH:mm",
+              )
             : undefined
         }
+        required
       />
       <span id="dateAt-error" role="alert" className="text-xs text-error h-2">
         {state.error?.properties?.dateAt?.errors}

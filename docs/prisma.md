@@ -5,3 +5,6 @@
 
 🙌 Enviando o estado do seu esquema Prisma para seu banco de dados
 `npx prisma db push`
+
+👷‍♂️ Generando o cliente Prisma
+`npx prisma generate`

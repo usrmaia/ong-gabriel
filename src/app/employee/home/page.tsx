@@ -33,16 +33,17 @@ const CardMenu = (props: {
 
 export default async function HomePage() {
   const user = await getUserAuthenticated();
+  const isAdmin = user.role.includes("ADMIN");
   const thirtyMinutesAgo = new Date(new Date().getTime() - 30 * 60 * 1000);
   const upcomingPatientAttendancesResult = await getPatientAttendances({
     where: {
-      professionalId: { equals: user.id },
+      professionalId: isAdmin ? undefined : { equals: user.id },
       dateAt: { gte: thirtyMinutesAgo },
     },
     include: {
       patient: true,
     },
-    orderBy: { dateAt: "desc" },
+    orderBy: { dateAt: "asc" },
   });
   const upcomingPatientAttendances =
     (upcomingPatientAttendancesResult.data as (PatientAttendance & {

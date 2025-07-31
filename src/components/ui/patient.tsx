@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+import { TZDateMini } from "@date-fns/tz";
 import { Edit, Mail, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,7 +32,9 @@ export const CardPatientProfile = ({ patient }: { patient: User }) => (
       </div>
       <p>
         <span className="font-bold">Data de Nascimento: </span>
-        {patient.date_of_birth?.toLocaleDateString("pt-BR") ?? "N/A"}
+        {patient.date_of_birth
+          ? format(new TZDateMini(patient.date_of_birth, "UTC"), "dd/MM/yyyy")
+          : "N/A"}
       </p>
     </CardContent>
   </Card>
@@ -57,14 +61,11 @@ export const CardPatientAttendance = ({
           />
           <div className="flex flex-col">
             <span className="text-sm text-gray-500">
-              {attendance.dateAt?.toLocaleString("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              })}
+              {attendance.dateAt &&
+                format(
+                  new TZDateMini(attendance.dateAt, "America/Sao_Paulo"),
+                  "dd/MM/yyyy, HH:mm",
+                )}
             </span>
             <p className="font-raleway font-bold text-lg text-s-van-dyke">
               {attendance.patient.name}
@@ -85,14 +86,10 @@ export const CardFormAnamnesis = ({
     <Card className="shadow-lg w-full py-4 border-0 rounded-lg">
       <CardHeader className="font-bold">
         <p className="text-sm text-right">
-          {anamnesis.createdAt.toLocaleString("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          })}
+          {format(
+            new TZDateMini(anamnesis.createdAt, "America/Sao_Paulo"),
+            "dd/MM/yyyy, HH:mm",
+          )}
         </p>
       </CardHeader>
       <CardContent className="flex flex-col gap-3 text-s-van-dyke text-sm font-poppins">
@@ -224,10 +221,12 @@ export const CardAttendance = ({
       <CardContent className="flex flex-col gap-2">
         <p className="font-poppins text-sm text-s-van-dyke">
           Data:{" "}
-          {patientAttendance.dateAt?.toLocaleString("pt-BR", {
-            dateStyle: "short",
-            timeStyle: "short",
-          }) ?? "A definir"}
+          {patientAttendance.dateAt
+            ? format(
+                new TZDateMini(patientAttendance.dateAt, "America/Sao_Paulo"),
+                "dd/MM/yyyy, HH:mm",
+              )
+            : "A definir"}
         </p>
         <p className="text-sm font-poppins text-s-van-dyke">
           <span>Duração: </span>
