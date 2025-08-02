@@ -8,16 +8,22 @@ import { Result } from "@/types";
 import { getUserIdAuthenticated } from "@/utils/auth";
 
 export const getUsers = async (filter?: {
+  select?: Prisma.UserSelect;
   include?: Prisma.UserInclude;
   where?: Prisma.UserWhereInput;
   orderBy?: Prisma.UserOrderByWithRelationInput;
 }): Promise<Result<User[]>> => {
   try {
-    const usersData = await prisma.user.findMany({
-      include: { ...filter?.include },
+    const query = {
       where: filter?.where,
       orderBy: { createdAt: "asc", ...filter?.orderBy },
-    });
+      ...(filter?.select && { select: filter.select }),
+      ...(filter?.include && !filter?.select && { include: filter.include }),
+    };
+
+    const usersData = await prisma.user.findMany(
+      query as Prisma.UserFindManyArgs,
+    );
     return { success: true, data: usersData };
   } catch (error) {
     logger.error("Erro ao buscar usuários:", error);
@@ -32,15 +38,20 @@ export const getUsers = async (filter?: {
 export const getUserById = async (
   userId: string,
   filter?: {
+    select?: Prisma.UserSelect;
     include?: Prisma.UserInclude;
   },
 ): Promise<Result<User>> => {
   try {
-    const userData = await prisma.user.findUnique({
+    const query = {
       where: { id: userId },
-      include: { ...filter?.include },
-    });
+      ...(filter?.select && { select: filter.select }),
+      ...(filter?.include && { include: filter.include }),
+    };
 
+    const userData = await prisma.user.findUnique(
+      query as Prisma.UserFindUniqueArgs,
+    );
     if (!userData)
       return {
         success: false,
