@@ -8,16 +8,18 @@ import { Result } from "@/types";
 import { getUserIdAuthenticated } from "@/utils/auth";
 
 export const getUsers = async (filter?: {
+  select?: Prisma.UserSelect;
   include?: Prisma.UserInclude;
   where?: Prisma.UserWhereInput;
   orderBy?: Prisma.UserOrderByWithRelationInput;
 }): Promise<Result<User[]>> => {
   try {
     const usersData = await prisma.user.findMany({
-      include: { ...filter?.include },
       where: filter?.where,
       orderBy: { createdAt: "asc", ...filter?.orderBy },
-    });
+      select: filter?.select,
+      include: filter?.include,
+    } as Prisma.UserFindManyArgs);
     return { success: true, data: usersData };
   } catch (error) {
     logger.error("Erro ao buscar usuários:", error);
@@ -32,14 +34,16 @@ export const getUsers = async (filter?: {
 export const getUserById = async (
   userId: string,
   filter?: {
+    select?: Prisma.UserSelect;
     include?: Prisma.UserInclude;
   },
 ): Promise<Result<User>> => {
   try {
     const userData = await prisma.user.findUnique({
       where: { id: userId },
-      include: { ...filter?.include },
-    });
+      select: filter?.select,
+      include: filter?.include,
+    } as Prisma.UserFindUniqueArgs);
 
     if (!userData)
       return {
