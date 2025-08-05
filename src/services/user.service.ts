@@ -14,16 +14,12 @@ export const getUsers = async (filter?: {
   orderBy?: Prisma.UserOrderByWithRelationInput;
 }): Promise<Result<User[]>> => {
   try {
-    const query = {
+    const usersData = await prisma.user.findMany({
       where: filter?.where,
       orderBy: { createdAt: "asc", ...filter?.orderBy },
-      ...(filter?.select && { select: filter.select }),
-      ...(filter?.include && !filter?.select && { include: filter.include }),
-    };
-
-    const usersData = await prisma.user.findMany(
-      query as Prisma.UserFindManyArgs,
-    );
+      select: filter?.select,
+      include: filter?.include,
+    } as Prisma.UserFindManyArgs);
     return { success: true, data: usersData };
   } catch (error) {
     logger.error("Erro ao buscar usuários:", error);
@@ -43,15 +39,12 @@ export const getUserById = async (
   },
 ): Promise<Result<User>> => {
   try {
-    const query = {
+    const userData = await prisma.user.findUnique({
       where: { id: userId },
-      ...(filter?.select && { select: filter.select }),
-      ...(filter?.include && { include: filter.include }),
-    };
+      select: filter?.select,
+      include: filter?.include,
+    } as Prisma.UserFindUniqueArgs);
 
-    const userData = await prisma.user.findUnique(
-      query as Prisma.UserFindUniqueArgs,
-    );
     if (!userData)
       return {
         success: false,
