@@ -9,11 +9,15 @@ export const getUserIdAuthenticated = async (): Promise<string> => {
   return userId;
 };
 
-export const getUserAuthenticated = async (): Promise<User> => {
+export const getUserAuthenticated = async (): Promise<
+  Pick<User, "id" | "name" | "role" | "email">
+> => {
   const userId = (await auth())?.user.id;
   if (!userId) throw new Error("User not authenticated");
 
-  const userResult = await getUserById(userId);
+  const userResult = await getUserById(userId, {
+    select: { id: true, name: true, role: true, email: true },
+  });
   if (!userResult.success || !userResult.data)
     throw new Error("User not found");
 
