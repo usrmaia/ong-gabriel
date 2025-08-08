@@ -2,6 +2,8 @@ import nodemailer, { SendMailOptions } from "nodemailer";
 
 import { env } from "@/config/env";
 import logger from "@/config/logger";
+import { applyHtmlTemplate } from "./template";
+import { Template } from "./types";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -25,8 +27,8 @@ transporter.verify((err, success) => {
 });
 
 export type sendEmailProps = SendMailOptions & {
-  htmlTemplate?: string;
-  htmlContext?: Record<string, string>;
+  template?: Template;
+  context?: Record<string, string>;
 };
 
 /**
@@ -37,35 +39,18 @@ export type sendEmailProps = SendMailOptions & {
  * @param props - As propriedades necessárias para enviar o email, incluindo template HTML e contexto opcionais.
  */
 export const sendEmail = (props: sendEmailProps) => {
-  const { htmlTemplate, htmlContext } = props;
+  const { template, context } = props;
 
   let formattedHtml: string | undefined;
-  if (htmlTemplate && htmlContext)
-    formattedHtml = applyHtmlTemplate(htmlTemplate, htmlContext);
+  if (template && context) formattedHtml = applyHtmlTemplate(template, context);
 
-  transporter.sendMail({
-    ...props,
-    from: env.EMAIL_GOOGLE_USER,
-    html: formattedHtml ?? props.html,
-  });
-};
-
-/**
- * Aplica um objeto de contexto a um template HTML substituindo os espaços reservados pelos seus valores correspondentes.
- *
- * Cada chave no objeto `htmlContext` é usada para substituir todas as ocorrências de `{{key}}` na string `htmlTemplate`
- * pelo seu valor associado.
- *
- * @param htmlTemplate - A string do template HTML contendo espaços reservados no formato `{{key}}`.
- * @param htmlContext - Um objeto que mapeia chaves de espaços reservados para seus valores de string de substituição.
- * @returns A string HTML com todos os espaços reservados substituídos pelos seus valores correspondentes do `htmlContext`.
- */
-export const applyHtmlTemplate = (
-  htmlTemplate: string,
-  htmlContext: Record<string, string>,
-): string => {
-  Object.entries(htmlContext).forEach(([key, value]) => {
-    htmlTemplate = htmlTemplate.replace(new RegExp(`{{${key}}}`, "g"), value);
-  });
-  return htmlTemplate;
+  transporter
+    .sendMail({
+      ...props,
+      from: env.EMAIL_GOOGLE_USER,
+      html: formattedHtml ?? props.html,
+    })
+    .catch((error) => {
+      logger.error("Error sending email", error);
+    });
 };
