@@ -16,6 +16,8 @@ const envSchema = z.object({
   EMAIL_GOOGLE_USER: z.string().optional(),
   EMAIL_GOOGLE_ID: z.string().optional(),
   EMAIL_GOOGLE_SECRET: z.string().optional(),
+  EMAIL_GOOGLE_REFRESH_TOKEN: z.string().optional(),
+  EMAIL_GOOGLE_ACCESS_TOKEN: z.string().optional(),
 
   SECURE_ENABLED: z
     .string()
