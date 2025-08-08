@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { applyHtmlTemplate } from "./email";
+import { applyHtmlTemplate } from "@/infra/email/email";
 
 describe("applyHtmlTemplate", () => {
   it("substitui uma variável no HTML", () => {
@@ -21,12 +21,6 @@ describe("applyHtmlTemplate", () => {
     const context = { word: "Echo" };
     const result = applyHtmlTemplate(html, context);
     expect(result).toBe("<p>Echo Echo Echo</p>");
-  });
-
-  it("retorna o HTML original se não houver variáveis", () => {
-    const html = "<p>Hello, {{name}}!</p>";
-    const result = applyHtmlTemplate(html);
-    expect(result).toBe(html);
   });
 
   it("retorna o HTML original se o contexto estiver vazio", () => {

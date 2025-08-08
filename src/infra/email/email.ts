@@ -8,23 +8,20 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
   debug: env.DEBUG,
+  secure: env.SECURE_ENABLED,
   auth: {
     type: "OAuth2",
     user: env.EMAIL_GOOGLE_USER,
     serviceClient: env.EMAIL_GOOGLE_ID,
     privateKey: env.EMAIL_GOOGLE_SECRET,
+    accessToken: env.EMAIL_GOOGLE_ACCESS_TOKEN,
+    refreshToken: env.EMAIL_GOOGLE_REFRESH_TOKEN,
   },
 });
 
-// transporter.set("oauth2_provision_cb", (user, renew, cb) => {
-//   const token = userTokens[user];
-//   if (!token) return cb(new Error("Unknown user"));
-//   cb(null, token);
-// });
-
 transporter.verify((err, success) => {
-  if (success) logger.info("Email transporter is ready");
-  else logger.error("Email transporter error", err);
+  if (!err && success) logger.info("Email transporter is ready");
+  else if (err) logger.error("Email transporter error", err);
 });
 
 export type sendEmailProps = SendMailOptions & {
@@ -46,17 +43,11 @@ export const sendEmail = (props: sendEmailProps) => {
   if (htmlTemplate && htmlContext)
     formattedHtml = applyHtmlTemplate(htmlTemplate, htmlContext);
 
-  try {
-    logger.info("Sending email");
-
-    transporter.sendMail({
-      ...props,
-      from: env.EMAIL_GOOGLE_USER,
-      html: formattedHtml ?? props.html,
-    });
-  } catch (error) {
-    logger.error("Error sending email", error);
-  }
+  transporter.sendMail({
+    ...props,
+    from: env.EMAIL_GOOGLE_USER,
+    html: formattedHtml ?? props.html,
+  });
 };
 
 /**
