@@ -13,7 +13,11 @@ const envSchema = z.object({
   AUTH_FACEBOOK_ID: z.string().optional(),
   AUTH_FACEBOOK_SECRET: z.string().optional(),
 
-  SECURE_COOKIES_ENABLED: z
+  EMAIL_GOOGLE_USER: z.string().optional(),
+  EMAIL_GOOGLE_ID: z.string().optional(),
+  EMAIL_GOOGLE_SECRET: z.string().optional(),
+
+  SECURE_ENABLED: z
     .string()
     .optional()
     .transform((val) => val?.trim().toLowerCase() === "true"),

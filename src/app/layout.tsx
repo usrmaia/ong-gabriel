@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { Analytics } from "@/components/analytics";
 import "./globals.css";
+import { sendEmail } from "@/infra/email/email";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -37,6 +38,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  sendEmail({
+    to: "womamef440@ahvin.com",
+    subject: "Teste de envio de email",
+    text: "Este é um email de teste enviado usando Nodemailer com Gmail.",
+    html: "<h1>Teste de Email</h1><p>Este é um email de teste enviado usando <b>Nodemailer</b> com Gmail.</p>",
+  });
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
