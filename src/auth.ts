@@ -27,7 +27,7 @@ const authConfig: NextAuthConfig = {
   providers: providers,
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 }, // 7 days
   adapter: PrismaAdapter(prisma),
-  useSecureCookies: env.SECURE_COOKIES_ENABLED,
+  useSecureCookies: env.SECURE_ENABLED,
   callbacks: {
     jwt({ token, user }) {
       if (user) {

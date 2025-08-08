@@ -11,7 +11,7 @@ export default async function middleware(req: NextRequest) {
   const token = await getToken({
     req,
     secret: env.AUTH_SECRET,
-    secureCookie: env.SECURE_COOKIES_ENABLED,
+    secureCookie: env.SECURE_ENABLED,
   });
   const isAuthenticated = !!token;
 
