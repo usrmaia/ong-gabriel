@@ -4,12 +4,10 @@ import { env } from "@/config/env";
 import logger from "@/config/logger";
 import { applyTemplate, getTemplates } from "./template";
 import { Template, TemplateContext } from "./types";
-import { Result } from "@/types";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  port: 465,
   debug: env.DEBUG,
   secure: env.SECURE_ENABLED,
   auth: {
@@ -27,21 +25,22 @@ transporter.verify((err, success) => {
   else if (err) logger.error("Email transporter error", err);
 });
 
-export type sendEmailProps<T extends Template = Template> = {
+export type SendEmailProps<T extends Template = Template> = {
   template: T;
   context?: TemplateContext[T];
 } & SendMailOptions;
 
 /**
- * Envia um email usando as propriedades fornecidas. Se um template HTML e contexto forem fornecidos,
- * aplica o template para gerar o conteúdo HTML do email. Caso contrário, usa o HTML fornecido.
- * Registra o resultado da operação de envio do email.
+ * Envia um e-mail usando o template e contexto fornecidos.
  *
- * @param props - As propriedades necessárias para enviar o email, incluindo template HTML e contexto opcionais.
+ * Esta função aplica o template especificado com o contexto dado para gerar
+ * o conteúdo do e-mail em HTML e texto simples. Em seguida, envia o e-mail e retorna o resultado.
+ *
+ * @param props - As propriedades necessárias para enviar o e-mail, incluindo o nome do template e o contexto.
+ * @returns Uma promessa que resolve para um `Result<string>` indicando se o e-mail foi enviado com sucesso,
+ *          junto com a resposta ou detalhes do erro.
  */
-export const sendEmail = async (
-  props: sendEmailProps,
-): Promise<Result<string>> => {
+export const sendEmail = (props: SendEmailProps) => {
   const { template, context } = props;
   const { templateHTML, templateTXT } = getTemplates(template);
 
@@ -51,18 +50,17 @@ export const sendEmail = async (
   const textContent = applyTemplate(templateTXT, context);
   props.text = textContent;
 
-  const sentMessageInfo = await transporter.sendMail({
-    ...props,
-    from: env.EMAIL_GOOGLE_USER,
-  });
-
-  return {
-    error: {
-      errors: sentMessageInfo.rejected.map((error) =>
-        typeof error === "string" ? error : `${error.name} - ${error.address}`,
-      ),
+  transporter.sendMail(
+    {
+      ...props,
+      from: env.EMAIL_GOOGLE_USER,
     },
-    success: sentMessageInfo.accepted.length > 0,
-    data: sentMessageInfo.response,
-  };
+    (err, info) => {
+      if (err)
+        logger.error(
+          `Error sending email: ${err.name} - ${err.message} - ${err.stack}`,
+        );
+      else logger.log("Email sent successfully", info.accepted);
+    },
+  );
 };
