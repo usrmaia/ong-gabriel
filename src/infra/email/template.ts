@@ -7,7 +7,7 @@ import { Template } from "./types";
 export const getTemplates = (
   templateName: Template,
 ): { templateHTML: string; templateTXT: string } => {
-  const templatesPath = join(__dirname, "..", "..", "assets", "templates");
+  const templatesPath = join(process.cwd(), "src", "assets", "templates");
 
   const templateHTMLPath = join(templatesPath, `${templateName}.html`);
 
