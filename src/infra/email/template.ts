@@ -31,10 +31,8 @@ export const getTemplates = (
 };
 
 /**
- * Aplica um objeto de contexto a um template substituindo os espaços reservados pelos seus valores correspondentes.
- *
- * Cada chave no objeto `context` é usada para substituir todas as ocorrências de `{{key}}` na string `template`
- * pelo seu valor associado.
+ * Cada chave no objeto `context` é usada para substituir todas as ocorrências de `{{key}}`
+ * na string `template` pelo seu valor associado.
  *
  * @param template - A string do template contendo espaços reservados no formato `{{key}}`.
  * @param context - Um objeto que mapeia chaves de espaços reservados para seus valores de string de substituição.
