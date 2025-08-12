@@ -10,7 +10,7 @@ export async function testSendEmail() {
       context: {
         title: "Teste de Email - ONG Gabriel",
       },
-      to: "yavin35794@bizmud.com", // Email de teste - substitua por um email válido
+      to: "womamef440@ahvin.com", // Email de teste - substitua por um email válido
       subject: "Email de Teste - ONG Gabriel",
     });
 
