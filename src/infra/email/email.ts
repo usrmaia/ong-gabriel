@@ -25,20 +25,16 @@ transporter.verify((err, success) => {
   else if (err) logger.error("Email transporter error", err);
 });
 
-export type SendEmailProps<T extends Template = Template> = {
+type SendEmailProps<T extends Template = Template> = {
   template: T;
   context?: TemplateContext[T];
 } & SendMailOptions;
 
 /**
  * Envia um e-mail usando o template e contexto fornecidos.
- *
- * Esta função aplica o template especificado com o contexto dado para gerar
- * o conteúdo do e-mail em HTML e texto simples. Em seguida, envia o e-mail e retorna o resultado.
+ * Aplica o template especificado com o contexto dado para gerar o conteúdo do e-mail em HTML e texto simples.
  *
  * @param props - As propriedades necessárias para enviar o e-mail, incluindo o nome do template e o contexto.
- * @returns Uma promessa que resolve para um `Result<string>` indicando se o e-mail foi enviado com sucesso,
- *          junto com a resposta ou detalhes do erro.
  */
 export const sendEmail = (props: SendEmailProps) => {
   const { template, context } = props;
