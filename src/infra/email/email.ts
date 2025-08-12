@@ -2,8 +2,9 @@ import nodemailer, { SendMailOptions } from "nodemailer";
 
 import { env } from "@/config/env";
 import logger from "@/config/logger";
-import { applyHtmlTemplate } from "./template";
-import { Template } from "./types";
+import { applyTemplate, getTemplates } from "./template";
+import { Template, TemplateContext } from "./types";
+import { Result } from "@/types";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -26,10 +27,10 @@ transporter.verify((err, success) => {
   else if (err) logger.error("Email transporter error", err);
 });
 
-export type sendEmailProps = SendMailOptions & {
-  template?: Template;
-  context?: Record<string, string>;
-};
+export type sendEmailProps<T extends Template = Template> = {
+  template: T;
+  context?: TemplateContext[T];
+} & SendMailOptions;
 
 /**
  * Envia um email usando as propriedades fornecidas. Se um template HTML e contexto forem fornecidos,
@@ -38,19 +39,30 @@ export type sendEmailProps = SendMailOptions & {
  *
  * @param props - As propriedades necessárias para enviar o email, incluindo template HTML e contexto opcionais.
  */
-export const sendEmail = (props: sendEmailProps) => {
+export const sendEmail = async (
+  props: sendEmailProps,
+): Promise<Result<string>> => {
   const { template, context } = props;
+  const { templateHTML, templateTXT } = getTemplates(template);
 
-  let formattedHtml: string | undefined;
-  if (template && context) formattedHtml = applyHtmlTemplate(template, context);
+  const htmlContent = applyTemplate(templateHTML, context);
+  props.html = htmlContent;
 
-  transporter
-    .sendMail({
-      ...props,
-      from: env.EMAIL_GOOGLE_USER,
-      html: formattedHtml ?? props.html,
-    })
-    .catch((error) => {
-      logger.error("Error sending email", error);
-    });
+  const textContent = applyTemplate(templateTXT, context);
+  props.text = textContent;
+
+  const sentMessageInfo = await transporter.sendMail({
+    ...props,
+    from: env.EMAIL_GOOGLE_USER,
+  });
+
+  return {
+    error: {
+      errors: sentMessageInfo.rejected.map((error) =>
+        typeof error === "string" ? error : `${error.name} - ${error.address}`,
+      ),
+    },
+    success: sentMessageInfo.accepted.length > 0,
+    data: sentMessageInfo.response,
+  };
 };
