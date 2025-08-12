@@ -11,6 +11,7 @@ import {
 } from "@/components/ui";
 import { getPatientAttendances } from "@/services";
 import { getUserAuthenticated } from "@/utils/auth";
+import { SendEmailButton } from "./SendEmailButton";
 
 const CardMenu = (props: {
   href: string;
@@ -66,6 +67,11 @@ export default async function HomePage() {
             icon={<CalendarDays />}
           />
           <CardMenu href="/auth/logout" title="Sair" icon={<LogOut />} />
+        </div>
+
+        {/* Botão para testar envio de email */}
+        <div className="mt-4">
+          <SendEmailButton />
         </div>
       </section>
       <section className="flex flex-col gap-2">
