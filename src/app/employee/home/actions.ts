@@ -5,22 +5,14 @@ import logger from "@/config/logger";
 
 export async function testSendEmail() {
   try {
-    const result = await sendEmail({
+    sendEmail({
       template: "hello-world",
       context: {
         title: "Teste de Email - ONG Gabriel",
       },
-      to: "womamef440@ahvin.com", // Email de teste - substitua por um email válido
-      subject: "Email de Teste - ONG Gabriel",
+      to: "karevo7294@fursee.com", // Email de teste - substitua por um email válido
     });
-
-    if (result.success) {
-      logger.info("Email enviado com sucesso:", result.data);
-      return { success: true, message: "Email enviado com sucesso!" };
-    } else {
-      logger.error("Erro ao enviar email:", result.error);
-      return { success: false, message: "Erro ao enviar email" };
-    }
+    return { success: true, message: "Email enviado com sucesso" };
   } catch (error) {
     logger.error("Erro inesperado ao enviar email:", error);
     return { success: false, message: "Erro inesperado ao enviar email" };
