@@ -5,3 +5,7 @@ export type TemplateContext = {
     title: string;
   };
 };
+
+export const TemplateSubject: Record<Template, string> = {
+  "hello-world": "Email de Teste - ONG Gabriel",
+};

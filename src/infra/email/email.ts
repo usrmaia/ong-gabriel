@@ -1,9 +1,9 @@
-import nodemailer, { SendMailOptions } from "nodemailer";
+import nodemailer from "nodemailer";
 
 import { env } from "@/config/env";
 import logger from "@/config/logger";
 import { applyTemplate, getTemplates } from "./template";
-import { Template, TemplateContext } from "./types";
+import { Template, TemplateContext, TemplateSubject } from "./types";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -13,10 +13,11 @@ const transporter = nodemailer.createTransport({
   auth: {
     type: "OAuth2",
     user: env.EMAIL_GOOGLE_USER,
-    serviceClient: env.EMAIL_GOOGLE_ID,
-    privateKey: env.EMAIL_GOOGLE_SECRET,
+    clientId: env.EMAIL_GOOGLE_ID,
+    clientSecret: env.EMAIL_GOOGLE_SECRET,
     accessToken: env.EMAIL_GOOGLE_ACCESS_TOKEN,
     refreshToken: env.EMAIL_GOOGLE_REFRESH_TOKEN,
+    accessUrl: "https://oauth2.googleapis.com",
   },
 });
 
@@ -26,9 +27,10 @@ transporter.verify((err, success) => {
 });
 
 type SendEmailProps<T extends Template = Template> = {
+  to: string | string[];
   template: T;
   context?: TemplateContext[T];
-} & SendMailOptions;
+};
 
 /**
  * Envia um e-mail usando o template e contexto fornecidos.
@@ -36,27 +38,29 @@ type SendEmailProps<T extends Template = Template> = {
  *
  * @param props - As propriedades necessárias para enviar o e-mail, incluindo o nome do template e o contexto.
  */
-export const sendEmail = (props: SendEmailProps) => {
-  const { template, context } = props;
+export const sendEmail = ({ to, template, context }: SendEmailProps) => {
   const { templateHTML, templateTXT } = getTemplates(template);
 
   const htmlContent = applyTemplate(templateHTML, context);
-  props.html = htmlContent;
-
   const textContent = applyTemplate(templateTXT, context);
-  props.text = textContent;
+  const subject = TemplateSubject[template];
 
   transporter.sendMail(
     {
-      ...props,
-      from: env.EMAIL_GOOGLE_USER,
+      to,
+      subject,
+      html: htmlContent,
+      text: textContent,
     },
     (err, info) => {
       if (err)
         logger.error(
           `Error sending email: ${err.name} - ${err.message} - ${err.stack}`,
         );
-      else logger.log("Email sent successfully", info.accepted);
+      else
+        logger.info(
+          `Email sent successfully: ${info.accepted} - ${info.messageId}`,
+        );
     },
   );
 };
