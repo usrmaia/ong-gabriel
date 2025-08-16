@@ -8,6 +8,27 @@ import { env } from "./config/env";
 export default async function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
 
+  // Headers para PWA
+  const response = NextResponse.next();
+
+  // Cache headers para Service Worker e assets estáticos
+  if (pathname === "/sw.js") {
+    response.headers.set(
+      "Cache-Control",
+      "no-cache, no-store, must-revalidate",
+    );
+    response.headers.set("Content-Type", "application/javascript");
+  }
+
+  if (pathname === "/manifest.json") {
+    response.headers.set("Cache-Control", "public, max-age=31536000");
+    response.headers.set("Content-Type", "application/manifest+json");
+  }
+
+  if (pathname.startsWith("/icon-") || pathname === "/apple-touch-icon.png") {
+    response.headers.set("Cache-Control", "public, max-age=31536000");
+  }
+
   const token = await getToken({
     req,
     secret: env.AUTH_SECRET,
@@ -24,7 +45,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 // Protect routes
@@ -36,5 +57,10 @@ export const config = {
     "/patient/:path*",
     "/pre-psych/:path",
     "/user/:path*",
+    // PWA files
+    "/sw.js",
+    "/manifest.json",
+    "/icon-:path*",
+    "/apple-touch-icon.png",
   ],
 };

@@ -1,8 +1,14 @@
 import { Young_Serif, Raleway, Poppins } from "next/font/google";
+import "./globals.css";
 
 import { Analytics } from "@/components/analytics";
-import "./globals.css";
-import { metadata } from "./metadata";
+import { PWAProvider } from "@/components/pwa-provider";
+import {
+  metadata,
+  generateMedicalOrganizationSchema,
+  generateOrganizationSchema,
+  generateWebsiteSchema,
+} from "./metadata";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -33,21 +39,60 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = generateOrganizationSchema();
+  const websiteSchema = generateWebsiteSchema();
+  const medicalSchema = generateMedicalOrganizationSchema();
+
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <meta name="application-name" content="ONG Gabriel" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="ONG Gabriel" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#1e40af" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#1e40af" />
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(medicalSchema),
+          }}
+        />
+      </head>
       <body
         className={`${raleway.variable} ${youngSerif.variable} ${poppins.variable} antialiased flex flex-col min-h-screen`}
       >
-        <Analytics />
-        {children}
-        <footer className="flex items-center justify-center p-4">
-          <p className="text-sm text-center font-xs text-s-gunmetal-100">
-            <span className="font-bold">
-              &copy; {new Date().getFullYear()} ONG Gabriel.
-            </span>{" "}
-            Todos os direitos reservados. Desenvolvido por PopCorns.
-          </p>
-        </footer>
+        <PWAProvider>
+          <Analytics />
+          {children}
+          <footer className="flex items-center justify-center p-4">
+            <p className="text-sm text-center font-xs text-s-gunmetal-100">
+              <span className="font-bold">
+                &copy; {new Date().getFullYear()} ONG Gabriel.
+              </span>{" "}
+              Todos os direitos reservados. Desenvolvido por PopCorns.
+            </p>
+          </footer>
+        </PWAProvider>
       </body>
     </html>
   );

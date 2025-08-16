@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# PWA files
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /offline.html
+
+# Static assets
+Allow: /icon-*.png
+Allow: /apple-touch-icon.png
+Allow: /*.svg
+Allow: /*.jpg
+Allow: /*.png
+
+Sitemap: https://onggabriel.org.br/sitemap.xml
