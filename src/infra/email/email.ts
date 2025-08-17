@@ -27,17 +27,26 @@ transporter.verify((err, success) => {
   else if (err) logger.error("Email transporter error", err);
 });
 
-type SendEmailProps<T extends Template = Template> = {
+type SendEmailProps = {
   to: string | string[];
-  template: T;
-  context?: TemplateContext[T];
+  template: Template;
+  context?: TemplateContext[Template];
 };
 
 /**
  * Envia um e-mail usando o template e contexto fornecidos.
- * Aplica o template especificado com o contexto dado para gerar o conteúdo do e-mail em HTML e texto simples.
  *
- * @param props - As propriedades necessárias para enviar o e-mail, incluindo o nome do template e o contexto.
+ * @param {string} to - O endereço de e-mail do destinatário.
+ * @param {keyof typeof TemplateSubject} template - A chave do template a ser usada para o e-mail.
+ * @param {Record<string, any>} context - Os dados de contexto a serem aplicados ao template.
+ * @returns {Promise<Result>} Uma promise que resolve para um objeto de resultado indicando sucesso ou falha.
+ *
+ * @example
+ * const result = await sendEmail({
+ *   to: 'user@example.com',
+ *   template: 'welcome',
+ *   context: { name: 'User' }
+ * });
  */
 export const sendEmail = async ({
   to,
