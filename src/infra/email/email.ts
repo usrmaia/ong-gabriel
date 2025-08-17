@@ -4,6 +4,7 @@ import { env } from "@/config/env";
 import logger from "@/config/logger";
 import { applyTemplate, getTemplates } from "./template";
 import { Template, TemplateContext, TemplateSubject } from "./types";
+import { Result } from "@/types";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -17,7 +18,7 @@ const transporter = nodemailer.createTransport({
     clientSecret: env.EMAIL_GOOGLE_SECRET,
     accessToken: env.EMAIL_GOOGLE_ACCESS_TOKEN,
     refreshToken: env.EMAIL_GOOGLE_REFRESH_TOKEN,
-    accessUrl: "https://oauth2.googleapis.com",
+    accessUrl: "https://oauth2.googleapis.com/token",
   },
 });
 
@@ -38,29 +39,29 @@ type SendEmailProps<T extends Template = Template> = {
  *
  * @param props - As propriedades necessárias para enviar o e-mail, incluindo o nome do template e o contexto.
  */
-export const sendEmail = ({ to, template, context }: SendEmailProps) => {
+export const sendEmail = async ({
+  to,
+  template,
+  context,
+}: SendEmailProps): Promise<Result> => {
   const { templateHTML, templateTXT } = getTemplates(template);
 
   const htmlContent = applyTemplate(templateHTML, context);
   const textContent = applyTemplate(templateTXT, context);
   const subject = TemplateSubject[template];
 
-  transporter.sendMail(
-    {
-      to,
-      subject,
-      html: htmlContent,
-      text: textContent,
-    },
-    (err, info) => {
-      if (err)
-        logger.error(
-          `Error sending email: ${err.name} - ${err.message} - ${err.stack}`,
-        );
-      else
-        logger.info(
-          `Email sent successfully: ${info.accepted} - ${info.messageId}`,
-        );
-    },
-  );
+  const sentMessageInfo = await transporter.sendMail({
+    to,
+    subject,
+    html: htmlContent,
+    text: textContent,
+  });
+
+  if (sentMessageInfo.rejected) {
+    logger.error(`Error sending email: ${sentMessageInfo.rejected}`);
+    return { success: false, error: { errors: ["Erro ao enviar e-mail!"] } };
+  }
+
+  logger.info(`Email sent successfully: ${sentMessageInfo.accepted}`);
+  return { success: true };
 };
