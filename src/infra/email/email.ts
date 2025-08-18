@@ -27,32 +27,32 @@ transporter.verify((err, success) => {
   else if (err) logger.error("Email transporter error", err);
 });
 
-type SendEmailProps = {
+type SendEmailProps<T extends Template> = {
   to: string | string[];
-  template: Template;
-  context?: TemplateContext[Template];
+  template: T;
+  context: TemplateContext[T];
 };
 
 /**
  * Envia um e-mail usando o template e contexto fornecidos.
  *
  * @param {string} to - O endereço de e-mail do destinatário.
- * @param {keyof typeof TemplateSubject} template - A chave do template a ser usada para o e-mail.
- * @param {Record<string, any>} context - Os dados de contexto a serem aplicados ao template.
+ * @param {Template} template - A chave do template a ser usada para o e-mail.
+ * @param {TemplateContext[Template]} context - Os dados de contexto específicos do template.
  * @returns {Promise<Result>} Uma promise que resolve para um objeto de resultado indicando sucesso ou falha.
  *
  * @example
  * const result = await sendEmail({
  *   to: 'user@example.com',
- *   template: 'welcome',
- *   context: { name: 'User' }
+ *   template: 'hello-world',
+ *   context: { title: 'Bem-vindo!' }
  * });
  */
-export const sendEmail = async ({
+export const sendEmail = async <T extends Template>({
   to,
   template,
   context,
-}: SendEmailProps): Promise<Result> => {
+}: SendEmailProps<T>): Promise<Result> => {
   const { templateHTML, templateTXT } = getTemplates(template);
 
   const htmlContent = applyTemplate(templateHTML, context);
@@ -66,7 +66,7 @@ export const sendEmail = async ({
     text: textContent,
   });
 
-  if (sentMessageInfo.rejected) {
+  if (sentMessageInfo.rejected.length) {
     logger.error(`Error sending email: ${sentMessageInfo.rejected}`);
     return { success: false, error: { errors: ["Erro ao enviar e-mail!"] } };
   }
