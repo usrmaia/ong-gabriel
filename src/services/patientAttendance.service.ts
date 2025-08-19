@@ -73,7 +73,20 @@ export const getPatientAttendanceById = async (
   }
 };
 
-export const createPatientAttendance = async (
+/**
+ * Cria um novo registro de atendimento de paciente a partir de um funcionário.
+ *
+ * Esta função realiza os seguintes passos:
+ * - Autentica o usuário e verifica se ele tem permissão para criar um atendimento de paciente.
+ * - Valida os dados de entrada usando o `CreatePatientAttendanceSchema`.
+ * - Verifica se o paciente existe e possui o papel "PATIENT".
+ * - Garante que o ID do profissional foi informado e que o profissional possui o papel "EMPLOYEE".
+ * - Cria o registro de atendimento do paciente no banco de dados.
+ *
+ * @param patientAttendance - Os dados necessários para criar um atendimento de paciente, conforme o schema do Prisma.
+ * @returns Uma promise que resolve para um objeto `Result<PatientAttendance>`, indicando sucesso ou falha com mensagens de erro apropriadas e códigos de status HTTP.
+ */
+export const createPatientAttendanceFromEmployee = async (
   patientAttendance: Prisma.PatientAttendanceUncheckedCreateInput,
 ): Promise<Result<PatientAttendance>> => {
   try {
@@ -95,33 +108,62 @@ export const createPatientAttendance = async (
       };
 
     const patientUser = await getUserById(patientAttendance.patientId);
-    if (!patientUser || !patientUser.data?.role.includes("PATIENT"))
+    if (!patientUser.data?.role.includes("PATIENT"))
       return {
         success: false,
         error: { errors: ["Usuário paciente não encontrado ou inválido."] },
         code: 404,
       };
 
-    // professionalId não é obrigatório, mas se fornecido, deve ser um usuário válido
-    if (!!patientAttendance.professionalId) {
-      const professionalUser = await getUserById(
-        patientAttendance.professionalId,
-      );
-      if (
-        !professionalUser ||
-        !professionalUser.data?.role.includes("EMPLOYEE")
-      )
-        return {
-          success: false,
-          error: {
-            errors: ["Usuário profissional não encontrado ou inválido."],
-          },
-          code: 404,
-        };
-    }
+    const professionalUser = await getUserById(
+      validatedPatientAttendance.data.professionalId,
+    );
+    if (!professionalUser.data?.role.includes("EMPLOYEE"))
+      return {
+        success: false,
+        error: {
+          errors: ["Usuário profissional não encontrado ou inválido."],
+        },
+        code: 404,
+      };
 
     const createdPatientAttendance = await prisma.patientAttendance.create({
       data: { ...patientAttendance, ...validatedPatientAttendance.data },
+    });
+    return { success: true, data: createdPatientAttendance };
+  } catch (error) {
+    logger.error("Erro ao criar atendimento do paciente:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao criar atendimento do paciente!"] },
+      code: 500,
+    };
+  }
+};
+
+/**
+ * Sinaliza um novo registro de atendimento para o paciente autenticado.
+ *
+ * Esta função verifica se o usuário autenticado tem permissão para sinalizar um atendimento.
+ * Se autorizado, sinaliza a necessidade de um novo registro de atendimento no banco de dados usando o ID do usuário como patientId.
+ * Retorna um resultado de sucesso com o atendimento sinalizado ou um erro caso não autorizado ou ocorra algum problema.
+ *
+ * @returns {Promise<Result<PatientAttendance>>} Uma promise que resolve para um objeto de resultado contendo o atendimento criado ou um erro.
+ */
+export const createPatientAttendanceFromPatient = async (): Promise<
+  Result<PatientAttendance>
+> => {
+  try {
+    const user = await getUserAuthenticated();
+    if (!can(user, "simpleCreate", "patientAttendance"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a criar atendimentos!"] },
+        code: 403,
+      };
+
+    const createdPatientAttendance = await prisma.patientAttendance.create({
+      data: { patientId: user.id },
     });
     return { success: true, data: createdPatientAttendance };
   } catch (error) {
