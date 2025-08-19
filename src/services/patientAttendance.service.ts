@@ -108,22 +108,15 @@ export const createPatientAttendanceFromEmployee = async (
       };
 
     const patientUser = await getUserById(patientAttendance.patientId);
-    if (!patientUser || !patientUser.data?.role.includes("PATIENT"))
+    if (!patientUser.data?.role.includes("PATIENT"))
       return {
         success: false,
         error: { errors: ["Usuário paciente não encontrado ou inválido."] },
         code: 404,
       };
 
-    if (!patientAttendance.professionalId) {
-      return {
-        success: false,
-        error: { errors: ["Profissional responsável é obrigatório."] },
-        code: 400,
-      };
-    }
     const professionalUser = await getUserById(
-      patientAttendance.professionalId,
+      validatedPatientAttendance.data.professionalId,
     );
     if (!professionalUser.data?.role.includes("EMPLOYEE"))
       return {

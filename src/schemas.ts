@@ -164,6 +164,7 @@ const PatientAttendanceDurationMinutesSchema = z
 
 export const CreatePatientAttendanceSchema = z.object({
   patientId: z.string().min(1, "ID do paciente é obrigatório."),
+  professionalId: z.string().min(1, "ID do profissional é obrigatório."),
   durationMinutes: PatientAttendanceDurationMinutesSchema,
   dateAt: PatientAttendanceDateAtSchema,
 });

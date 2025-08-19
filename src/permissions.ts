@@ -39,13 +39,13 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       resource: "patientAttendance",
     },
   ],
-  USER: [
+  USER: [],
+  PATIENT: [
     {
       action: "simpleCreate",
       resource: "patientAttendance",
     },
   ],
-  PATIENT: [],
 };
 
 /**
