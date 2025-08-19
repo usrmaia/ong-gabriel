@@ -131,6 +131,7 @@ describe("PatientFormAnamnesisSchema", () => {
 
       const result = CreatePatientAttendanceSchema.safeParse({
         patientId: "123",
+        professionalId: "456",
         dateAt: validDate,
       });
 
@@ -142,6 +143,7 @@ describe("PatientFormAnamnesisSchema", () => {
     it("deve falhar se a data for inválida", () => {
       const result = CreatePatientAttendanceSchema.safeParse({
         patientId: "123",
+        professionalId: "456",
         dateAt: "data-invalida",
       });
       expect(result.success).toBe(false);
@@ -157,6 +159,7 @@ describe("PatientFormAnamnesisSchema", () => {
 
       const result = CreatePatientAttendanceSchema.safeParse({
         patientId: "123",
+        professionalId: "456",
         dateAt: pastDate.toISOString(),
       });
 
@@ -173,6 +176,7 @@ describe("PatientFormAnamnesisSchema", () => {
 
       const result = CreatePatientAttendanceSchema.safeParse({
         patientId: "123",
+        professionalId: "456",
         dateAt: futureDate.toISOString(),
       });
 
@@ -194,10 +198,12 @@ describe("PatientFormAnamnesisSchema", () => {
 
       const resultMin = CreatePatientAttendanceSchema.safeParse({
         patientId: "123",
+        professionalId: "456",
         dateAt: minDateStr,
       });
       const resultMax = CreatePatientAttendanceSchema.safeParse({
         patientId: "123",
+        professionalId: "456",
         dateAt: maxDateStr,
       });
 
