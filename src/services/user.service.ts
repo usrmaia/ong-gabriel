@@ -7,19 +7,11 @@ import { UserBaseInfo, UserBaseInfoSchema } from "@/schemas";
 import { Result } from "@/types";
 import { getUserIdAuthenticated } from "@/utils/auth";
 
-export const getUsers = async (filter?: {
-  select?: Prisma.UserSelect;
-  include?: Prisma.UserInclude;
-  where?: Prisma.UserWhereInput;
-  orderBy?: Prisma.UserOrderByWithRelationInput;
-}): Promise<Result<User[]>> => {
+export const getUsers = async (
+  filter?: Prisma.UserFindManyArgs,
+): Promise<Result<User[]>> => {
   try {
-    const usersData = await prisma.user.findMany({
-      where: filter?.where,
-      orderBy: { createdAt: "asc", ...filter?.orderBy },
-      select: filter?.select,
-      include: filter?.include,
-    } as Prisma.UserFindManyArgs);
+    const usersData = await prisma.user.findMany(filter);
     return { success: true, data: usersData };
   } catch (error) {
     logger.error("Erro ao buscar usuários:", error);
@@ -33,17 +25,13 @@ export const getUsers = async (filter?: {
 
 export const getUserById = async (
   userId: string,
-  filter?: {
-    select?: Prisma.UserSelect;
-    include?: Prisma.UserInclude;
-  },
+  filter?: Prisma.UserDefaultArgs,
 ): Promise<Result<User>> => {
   try {
     const userData = await prisma.user.findUnique({
       where: { id: userId },
-      select: filter?.select,
-      include: filter?.include,
-    } as Prisma.UserFindUniqueArgs);
+      ...filter,
+    });
 
     if (!userData)
       return {
