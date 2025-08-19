@@ -28,6 +28,7 @@
     "role",
     "attendance",
     "analytics",
-    "services"
+    "services",
+    "debug"
   ]
 }
