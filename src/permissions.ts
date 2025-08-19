@@ -5,7 +5,7 @@ type User = {
   role: Role[] | string[];
 };
 
-type Action = "view" | "list" | "create" | "update" | "delete";
+type Action = "view" | "list" | "create" | "simpleCreate" | "update" | "delete";
 
 type Resource = "users" | "formAnamnesis" | "patientAttendance"; // e.g., "posts", "comments", models/entity names
 
@@ -41,7 +41,7 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
   ],
   USER: [
     {
-      action: "create",
+      action: "simpleCreate",
       resource: "patientAttendance",
     },
   ],
