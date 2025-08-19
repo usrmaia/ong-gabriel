@@ -3,7 +3,7 @@ import z from "zod/v4";
 
 import logger from "@/config/logger";
 import prisma from "@/lib/prisma";
-import { createPatientAttendance } from "./patientAttendance.service";
+import { createPatientAttendanceFromPatient } from "./patientAttendance.service";
 import { can } from "@/permissions";
 import { addRoleToUser } from "./role.service";
 import { PatientFormAnamnesisSchema } from "@/schemas";
@@ -91,7 +91,7 @@ export const createPatientFormAnamnesis = async (
     });
 
     await addRoleToUser(formAnamnesis.userId, Role.PATIENT);
-    createPatientAttendance({ patientId: formAnamnesis.userId });
+    createPatientAttendanceFromPatient();
 
     return { success: true, data: createdFormAnamnesis, code: 201 };
   } catch (error) {
