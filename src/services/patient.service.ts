@@ -10,11 +10,9 @@ import { PatientFormAnamnesisSchema } from "@/schemas";
 import { Result } from "@/types";
 import { getUserAuthenticated, getUserIdAuthenticated } from "@/utils/auth";
 
-export const getPatientFormAnamnesis = async (filter: {
-  include?: Prisma.FormAnamnesisInclude;
-  where?: Prisma.FormAnamnesisWhereInput;
-  orderBy?: Prisma.FormAnamnesisOrderByWithRelationInput;
-}): Promise<Result<FormAnamnesis[]>> => {
+export const getPatientFormAnamnesis = async (
+  filter: Prisma.FormAnamnesisFindManyArgs,
+): Promise<Result<FormAnamnesis[]>> => {
   try {
     const user = await getUserAuthenticated();
     if (!can(user, "list", "formAnamnesis"))
@@ -24,12 +22,7 @@ export const getPatientFormAnamnesis = async (filter: {
         code: 403,
       };
 
-    const formAnamnesis = await prisma.formAnamnesis.findMany({
-      include: { ...filter.include },
-      where: filter.where,
-      orderBy: filter.orderBy,
-    });
-
+    const formAnamnesis = await prisma.formAnamnesis.findMany(filter);
     if (formAnamnesis.length === 0)
       return {
         success: false,

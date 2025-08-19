@@ -12,11 +12,9 @@ import { Result } from "@/types";
 import { getUserById } from "./user.service";
 import { getUserAuthenticated } from "@/utils/auth";
 
-export const getPatientAttendances = async (filter?: {
-  where?: Prisma.PatientAttendanceWhereInput;
-  include?: Prisma.PatientAttendanceInclude;
-  orderBy?: Prisma.PatientAttendanceOrderByWithRelationInput;
-}): Promise<Result<PatientAttendance[]>> => {
+export const getPatientAttendances = async (
+  filter?: Prisma.PatientAttendanceFindManyArgs,
+): Promise<Result<PatientAttendance[]>> => {
   try {
     const user = await getUserAuthenticated();
     if (!can(user, "list", "patientAttendance"))
@@ -26,11 +24,7 @@ export const getPatientAttendances = async (filter?: {
         code: 403,
       };
 
-    const patientAttendances = await prisma.patientAttendance.findMany({
-      include: { ...filter?.include },
-      where: filter?.where,
-      orderBy: { dateAt: "asc", ...filter?.orderBy },
-    });
+    const patientAttendances = await prisma.patientAttendance.findMany(filter);
     return { success: true, data: patientAttendances };
   } catch (error) {
     logger.error("Erro ao buscar lista de atendimentos:", error);
@@ -44,9 +38,7 @@ export const getPatientAttendances = async (filter?: {
 
 export const getPatientAttendanceById = async (
   patientAttendanceId: string,
-  filter?: {
-    include?: Prisma.PatientAttendanceInclude;
-  },
+  filter?: Prisma.PatientAttendanceDefaultArgs,
 ): Promise<Result<PatientAttendance>> => {
   try {
     const user = await getUserAuthenticated();
@@ -61,7 +53,7 @@ export const getPatientAttendanceById = async (
 
     const patientAttendance = await prisma.patientAttendance.findUnique({
       where: { id: patientAttendanceId },
-      include: { ...filter?.include },
+      ...filter,
     });
     if (!patientAttendance)
       return {
