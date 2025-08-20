@@ -29,6 +29,7 @@ const envSchema = z.object({
     .optional()
     .transform((val) => val?.trim().toLowerCase() === "true"),
   NEXT_PUBLIC_HOTJAR_ID: z.string().optional(),
+  NEXT_PUBLIC_URL: z.string().optional(),
 
   FEEDBACK_FORM: z.string().url().optional(),
 });
