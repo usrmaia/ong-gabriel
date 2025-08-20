@@ -42,7 +42,7 @@ export default async function PatientDetailsPage({
 
   return (
     <>
-      <BackNavigationHeader title="Paciente" href="/employee/patient/list" />
+      <BackNavigationHeader title="Paciente" href="" />
       <section className="flex flex-col gap-2">
         <div className="w-full flex flex-col items-center gap-2">
           <Image
