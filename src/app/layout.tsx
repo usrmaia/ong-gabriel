@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "ONG Gabriel",
     images: [
       {
-        url: "https://url-base/default-user.jpg",
+        url: "http://url-base/default-user.jpg",
         secureUrl: "https://url-base/default-user.jpg",
         width: 1200,
         height: 630,
