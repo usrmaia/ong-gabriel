@@ -28,18 +28,15 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "ONG Gabriel - Plataforma de Atendimento",
-  description:
-    "Plataforma de atendimento psicológico para profissionais e pacientes.",
+  description: "Plataforma de atendimento psicológico para profissionais e pacientes.",
   openGraph: {
     title: "ONG Gabriel - Plataforma de Atendimento",
-    description:
-      "Plataforma de atendimento psicológico para profissionais e pacientes.",
+    description: "Plataforma de atendimento psicológico para profissionais e pacientes.",
     siteName: "ONG Gabriel",
     images: [
       {
-        href: "/default-user.jpg",
-        url: "/default-user.jpg",
-        secureUrl: "/default-user.jpg",
+        url: "https://url-base/default-user.jpg",
+        secureUrl: "https://url-base/default-user.jpg",
         width: 1200,
         height: 630,
         alt: "Imagem da ONG Gabriel",
