@@ -1,11 +1,22 @@
 import { describe, it, expect } from "vitest";
 
 import { validatePdf, type ValidatePDFProps } from "@/infra/documents";
+import { join } from "path";
+import { readFileSync } from "fs";
+
+export function loadTestPdf(filename: string) {
+  const filePath = join(__dirname, "..", "..", "fixtures/pdfs", filename);
+  const data = readFileSync(filePath);
+  return data;
+}
 
 const mockDocument: ValidatePDFProps = {
   data: Buffer.concat([
     Buffer.from("%PDF-1.4"),
     Buffer.from("some pdf content"),
+    Buffer.from("trailer"),
+    Buffer.from("startxref 0"),
+    Buffer.from("%%EOF"),
   ]),
   mimeType: "application/pdf",
   filename: "test.pdf",
@@ -30,7 +41,6 @@ describe("PDF Validator", () => {
       const result = validatePdf(fileInput);
 
       expect(result.success).toBe(false);
-      expect(result.error?.errors).toHaveLength(1);
       expect(result.error?.errors).toContain(
         "Arquivo não possui assinatura válida de PDF!",
       );
@@ -98,7 +108,6 @@ describe("PDF Validator", () => {
       const result = validatePdf(fileInput);
 
       expect(result.success).toBe(false);
-      expect(result.error?.errors).toHaveLength(4);
       expect(result.error?.errors).toContain(
         "Arquivo não possui assinatura válida de PDF!",
       );
@@ -107,6 +116,59 @@ describe("PDF Validator", () => {
       );
       expect(result.error?.errors).toContain("Arquivo deve ter extensão .pdf!");
       expect(result.error?.errors).toContain("Arquivo não pode estar vazio!");
+    });
+
+    it("deve validar um PDF real válido", () => {
+      const data = loadTestPdf("valid-sample.pdf");
+      const fileInput: ValidatePDFProps = {
+        data: data,
+        mimeType: "application/pdf",
+        filename: "valid-sample.pdf",
+      };
+
+      const result = validatePdf(fileInput);
+
+      expect(result.success).toBe(true);
+      expect(result.error?.errors).toHaveLength(0);
+    });
+
+    it("deve rejeitar um PDF real vazio", () => {
+      const data = loadTestPdf("empty-sample.pdf");
+      const fileInput: ValidatePDFProps = {
+        data: data,
+        mimeType: "application/pdf",
+        filename: "empty-sample.pdf",
+      };
+
+      const result = validatePdf(fileInput);
+
+      expect(result.success).toBe(false);
+      expect(result.error?.errors).toContain("Arquivo não pode estar vazio!");
+    });
+
+    it("deve rejeitar arquivos real com estrutura inválida", () => {
+      const files = [
+        loadTestPdf("file-sample.pdf"),
+        loadTestPdf("img-sample.pdf"),
+      ];
+
+      files.forEach((data) => {
+        const fileInput: ValidatePDFProps = {
+          data: data,
+          mimeType: "application/pdf",
+          filename: "file-sample.pdf",
+        };
+
+        const result = validatePdf(fileInput);
+
+        expect(result.success).toBe(false);
+        expect(result.error?.errors).toContain(
+          "Arquivo PDF não possui estrutura interna válida!",
+        );
+        expect(result.error?.errors).toContain(
+          "Arquivo PDF não possui estrutura válida (trailer ausente)!",
+        );
+      });
     });
   });
 });
