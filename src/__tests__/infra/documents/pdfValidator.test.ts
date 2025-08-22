@@ -4,7 +4,7 @@ import { validatePdf, type ValidatePDFProps } from "@/infra/documents";
 import { join } from "path";
 import { readFileSync } from "fs";
 
-export function loadTestPdf(filename: string) {
+export function loadFile(filename: string) {
   const filePath = join(__dirname, "..", "..", "fixtures/pdfs", filename);
   const data = readFileSync(filePath);
   return data;
@@ -119,7 +119,7 @@ describe("PDF Validator", () => {
     });
 
     it("deve validar um PDF real válido", () => {
-      const data = loadTestPdf("valid-sample.pdf");
+      const data = loadFile("valid-sample.pdf");
       const fileInput: ValidatePDFProps = {
         data: data,
         mimeType: "application/pdf",
@@ -133,7 +133,7 @@ describe("PDF Validator", () => {
     });
 
     it("deve rejeitar um PDF real vazio", () => {
-      const data = loadTestPdf("empty-sample.pdf");
+      const data = loadFile("empty-sample.pdf");
       const fileInput: ValidatePDFProps = {
         data: data,
         mimeType: "application/pdf",
@@ -147,10 +147,7 @@ describe("PDF Validator", () => {
     });
 
     it("deve rejeitar arquivos real com estrutura inválida", () => {
-      const files = [
-        loadTestPdf("file-sample.pdf"),
-        loadTestPdf("img-sample.pdf"),
-      ];
+      const files = [loadFile("file-sample.pdf"), loadFile("img-sample.pdf")];
 
       files.forEach((data) => {
         const fileInput: ValidatePDFProps = {
@@ -169,6 +166,24 @@ describe("PDF Validator", () => {
           "Arquivo PDF não possui estrutura válida (trailer ausente)!",
         );
       });
+    });
+
+    it("deve rejeitar arquivos com tamanho superior ao máximo permitido", () => {
+      const data = loadFile("big-sample.pdf");
+      const fileInput: ValidatePDFProps = {
+        data: data,
+        mimeType: "application/pdf",
+        filename: "big-sample.pdf",
+        maxSizeInBytes: 18189, // Tamanho real do big-sample.pdf é 18190 bytes
+      };
+
+      const result = validatePdf(fileInput);
+
+      expect(result.success).toBe(false);
+      expect(result.error?.errors).toHaveLength(1);
+      expect(result.error?.errors).toContain(
+        `Tamanho do arquivo (${data.byteLength} bytes) não corresponde ao tamanho esperado!`,
+      );
     });
   });
 });

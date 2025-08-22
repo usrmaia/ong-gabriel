@@ -1,12 +1,7 @@
 import { Result } from "@/types";
+import { ValidateProps } from ".";
 
-export interface ValidatePDFProps {
-  data: Buffer;
-  mimeType: string;
-  filename: string;
-}
-
-export const validatePdf = (props: ValidatePDFProps): Result => {
+export const validatePdf = (props: ValidateProps): Result => {
   const result: Result = {
     success: false,
     error: { errors: [] },
@@ -43,6 +38,11 @@ export const validatePdf = (props: ValidatePDFProps): Result => {
   if (!hasXref || !hasTrailer)
     result.error?.errors.push(
       "Arquivo PDF não possui estrutura interna válida!",
+    );
+
+  if (props.maxSizeInBytes && props.data.byteLength > props.maxSizeInBytes)
+    result.error?.errors.push(
+      `Tamanho do arquivo (${props.data.byteLength} bytes) não corresponde ao tamanho esperado!`,
     );
 
   result.success = result.error?.errors.length === 0;
