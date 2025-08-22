@@ -13,6 +13,12 @@ const envSchema = z.object({
   AUTH_FACEBOOK_ID: z.string().optional(),
   AUTH_FACEBOOK_SECRET: z.string().optional(),
 
+  EMAIL_GOOGLE_USER: z.string().optional(),
+  EMAIL_GOOGLE_ID: z.string().optional(),
+  EMAIL_GOOGLE_SECRET: z.string().optional(),
+  EMAIL_GOOGLE_REFRESH_TOKEN: z.string().optional(),
+  EMAIL_GOOGLE_ACCESS_TOKEN: z.string().optional(),
+
   SECURE_COOKIES_ENABLED: z
     .string()
     .optional()
