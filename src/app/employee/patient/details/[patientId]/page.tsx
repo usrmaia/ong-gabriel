@@ -5,7 +5,7 @@ import {
   BackNavigationHeader,
   CardAttendance,
   CardFormAnamnesis,
-  CardPatientProfile,
+  CardUserProfile,
 } from "@/components/ui";
 import { getPatientFormAnamnesis, getUserById } from "@/services";
 
@@ -54,7 +54,7 @@ export default async function PatientDetailsPage({
           />
           <p className="font-poppins text-lg text-s-van-dyke">{patient.name}</p>
         </div>
-        <CardPatientProfile patient={patient} />
+        <CardUserProfile user={patient} />
         <p className="font-raleway font-bold text-lg text-s-van-dyke mt-2">
           Histórico de Atendimento(s)
         </p>
