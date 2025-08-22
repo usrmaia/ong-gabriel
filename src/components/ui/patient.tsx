@@ -19,26 +19,7 @@ import {
   WhoLivesWithSchema,
 } from "@/schemas";
 
-export const CardPatientProfile = ({ patient }: { patient: User }) => (
-  <Card className="shadow-lg w-full py-4 border-0 rounded-lg">
-    <CardContent className="flex flex-col gap-2 text-s-van-dyke text-sm font-poppins">
-      <div className="flex gap-2">
-        <Mail />
-        <span>{patient.email}</span>
-      </div>
-      <div className="flex gap-2">
-        <Phone />
-        <span>{patient.phone || "N/A"}</span>
-      </div>
-      <p>
-        <span className="font-bold">Data de Nascimento: </span>
-        {patient.date_of_birth
-          ? format(new TZDateMini(patient.date_of_birth, "UTC"), "dd/MM/yyyy")
-          : "N/A"}
-      </p>
-    </CardContent>
-  </Card>
-);
+// ...existing code...
 
 export const CardPatientAttendance = ({
   attendance,
