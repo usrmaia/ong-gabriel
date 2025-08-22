@@ -7,7 +7,7 @@ type User = {
 
 type Action = "view" | "list" | "create" | "update" | "delete";
 
-type Resource = "users" | "formAnamnesis" | "patientAttendance"; // e.g., "posts", "comments", models/entity names
+type Resource = "users" | "formAnamnesis" | "patientAttendance" | "documents"; // e.g., "posts", "comments", models/entity names
 
 export type PolicyStatement = {
   action: Action;

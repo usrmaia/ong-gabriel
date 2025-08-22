@@ -1,26 +1,14 @@
-import { Document, Prisma, MimeType } from "@prisma/client";
+import { Document, Prisma } from "@prisma/client";
+import z from "zod/v4";
 
 import logger from "@/config/logger";
+import { getValidate } from "@/infra/documents";
 import prisma from "@/lib/prisma";
+import { can } from "@/permissions";
+import { DocumentSchema, MimeTypeSchema } from "@/schemas";
 import { Result } from "@/types";
-import { validatePdf, type ValidatePDFProps } from "@/infra/documents";
+import { getUserAuthenticated } from "@/utils/auth";
 
-/**
- * Interface for creating a new document
- */
-export interface CreateDocumentInput {
-  userId: string;
-  name: string;
-  mimeType: MimeType;
-  data: Buffer;
-}
-
-/**
- * Get a document by ID
- * @param documentId - Document ID
- * @param filter - Prisma filter options
- * @returns Promise<Result<Document>>
- */
 export const getDocumentById = async (
   documentId: string,
   filter?: Prisma.DocumentDefaultArgs,
@@ -29,20 +17,27 @@ export const getDocumentById = async (
     const document = await prisma.document.findUnique({
       where: {
         id: documentId,
-        deletedAt: null, // Only return non-deleted documents
+        deletedAt: null,
       },
       ...filter,
     });
 
-    if (!document) {
+    const user = await getUserAuthenticated();
+    if (!can(user, "view", "documents", document))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a visualizar documentos!"] },
+        code: 403,
+      };
+
+    if (!document)
       return {
         success: false,
         error: { errors: ["Documento não encontrado!"] },
         code: 404,
       };
-    }
 
-    return { success: true, data: document };
+    return { success: true, data: document, code: 200 };
   } catch (error) {
     logger.error("Erro ao buscar documento:", error);
     return {
@@ -53,58 +48,54 @@ export const getDocumentById = async (
   }
 };
 
-/**
- * Create a new document
- * @param input - Document creation data
- * @returns Promise<Result<Document>>
- */
 export const createDocument = async (
-  input: CreateDocumentInput,
+  document: Document,
 ): Promise<Result<Document>> => {
   try {
-    // Validate PDF if the mime type is APPLICATION_PDF
-    if (input.mimeType === MimeType.APPLICATION_PDF) {
-      const fileValidation: ValidatePDFProps = {
-        data: input.data,
-        mimeType: "application/pdf",
-        filename: input.name,
-      };
-
-      const validationResult = validatePdf(fileValidation);
-      if (!validationResult.isValid) {
-        return {
-          success: false,
-          error: { errors: validationResult.errors },
-          code: 400,
-        };
-      }
-    }
-
-    // Validate user exists
-    const userExists = await prisma.user.findUnique({
-      where: { id: input.userId },
-      select: { id: true },
-    });
-
-    if (!userExists) {
+    const user = await getUserAuthenticated();
+    if (!can(user, "create", "documents"))
       return {
         success: false,
-        error: { errors: ["Usuário não encontrado!"] },
-        code: 404,
+        error: { errors: ["Usuário não autorizado a criar documentos!"] },
+        code: 403,
       };
-    }
 
-    // Create document
-    const document = await prisma.document.create({
+    const validatedDocument = await DocumentSchema.safeParseAsync(document);
+    if (!validatedDocument.success)
+      return {
+        success: false,
+        error: z.treeifyError(validatedDocument.error),
+        code: 400,
+      };
+
+    const mimeType = MimeTypeSchema.parse(document.mimeType);
+    const dataBuffer = Buffer.isBuffer(document.data)
+      ? document.data
+      : Buffer.from(document.data);
+    const maxSizeInBytes = getMaxSizeInBytes(mimeType);
+
+    const validate = getValidate(mimeType);
+    const validatedResult = validate({
+      data: dataBuffer,
+      mimeType,
+      filename: document.name,
+      maxSizeInBytes,
+    });
+    if (!validatedResult.success)
+      return {
+        success: false,
+        error: validatedResult.error,
+        code: 400,
+      };
+
+    const createdDocument = await prisma.document.create({
       data: {
-        userId: input.userId,
-        name: input.name,
-        mimeType: input.mimeType,
-        data: input.data,
+        ...validatedDocument.data,
+        userId: user.id,
       },
     });
 
-    return { success: true, data: document };
+    return { success: true, data: createdDocument, code: 201 };
   } catch (error) {
     logger.error("Erro ao criar documento:", error);
     return {
@@ -115,38 +106,39 @@ export const createDocument = async (
   }
 };
 
-/**
- * Soft delete a document (sets deletedAt)
- * @param documentId - Document ID to delete
- * @returns Promise<Result<Document>>
- */
 export const deleteDocument = async (
   documentId: string,
 ): Promise<Result<Document>> => {
   try {
-    // Check if document exists and is not already deleted
-    const existingDocument = await prisma.document.findUnique({
+    const user = await getUserAuthenticated();
+    if (!can(user, "delete", "documents"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a excluir documentos!"] },
+        code: 403,
+      };
+
+    const document = await prisma.document.findUnique({
       where: {
         id: documentId,
+        userId: user.id,
         deletedAt: null,
       },
     });
 
-    if (!existingDocument) {
+    if (!document)
       return {
         success: false,
         error: { errors: ["Documento não encontrado!"] },
         code: 404,
       };
-    }
 
-    // Soft delete document
     const deletedDocument = await prisma.document.update({
       where: { id: documentId },
       data: { deletedAt: new Date() },
     });
 
-    return { success: true, data: deletedDocument };
+    return { success: true, data: deletedDocument, code: 200 };
   } catch (error) {
     logger.error("Erro ao excluir documento:", error);
     return {
@@ -154,5 +146,16 @@ export const deleteDocument = async (
       error: { errors: ["Erro ao excluir documento!"] },
       code: 500,
     };
+  }
+};
+
+export const MAX_PDF_SIZE_IN_BYTES = 500 * 1024; // 500 KB
+
+const getMaxSizeInBytes = (mimeType: string): number => {
+  switch (mimeType) {
+    case "application/pdf":
+      return MAX_PDF_SIZE_IN_BYTES;
+    default:
+      return 0;
   }
 };
