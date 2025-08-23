@@ -1,4 +1,4 @@
-import { CalendarDays, ClipboardPlus, LogOut } from "lucide-react";
+import { CalendarDays, ClipboardPlus, LogOut, Stethoscope } from "lucide-react";
 import Link from "next/link";
 import { PatientAttendance, User } from "@prisma/client";
 
@@ -59,6 +59,11 @@ export default async function HomePage() {
             href="/employee/patient/list"
             title="Pacientes"
             icon={<ClipboardPlus />}
+          />
+          <CardMenu
+            href="/admin/pre-psych/list"
+            title="Psicólogos"
+            icon={<Stethoscope />}
           />
           <CardMenu
             href="/employee/patient-attendance"
