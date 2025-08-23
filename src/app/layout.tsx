@@ -45,6 +45,7 @@ export default function RootLayout({
         className={`${raleway.variable} ${youngSerif.variable} ${poppins.variable} antialiased flex flex-col min-w-screen min-h-screen`}
       >
         <Analytics />
+        {/* 
         <header className="w-full p-4">
           <Image
             className="mx-auto"
@@ -68,18 +69,18 @@ export default function RootLayout({
               </Link>
             </p>
           )}
-        </header>
-        <main className="flex flex-1 flex-col self-center max-w-sm w-full gap-10 px-6">
-          {children}
-        </main>
-        <footer className="flex items-center justify-center p-4">
+        </header> */}
+        {/* <main className="flex flex-1 flex-col self-center max-w-sm w-full gap-10 px-6"> */}
+        {children}
+        {/* </main> */}
+        {/* <footer className="flex items-center justify-center p-4">
           <p className="text-sm text-center font-xs text-s-gunmetal-100">
             <span className="font-bold">
               &copy; {new Date().getFullYear()} ONG Gabriel.
             </span>{" "}
             Todos os direitos reservados. Desenvolvido por PopCorns.
           </p>
-        </footer>
+        </footer> */}
       </body>
     </html>
   );
