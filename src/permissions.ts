@@ -16,7 +16,12 @@ export type PolicyStatement = {
 };
 
 export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
-  ADMIN: [],
+  ADMIN: [
+    {
+      action: "view",
+      resource: "documents",
+    },
+  ],
   EMPLOYEE: [
     {
       action: "list",
@@ -43,6 +48,16 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
     {
       action: "create",
       resource: "patientAttendance",
+    },
+    {
+      action: "view",
+      resource: "documents",
+      condition: (user, targetResource) => user.id === targetResource.userId,
+    },
+    {
+      action: "delete",
+      resource: "documents",
+      condition: (user, targetResource) => user.id === targetResource.userId,
     },
   ],
   PATIENT: [],

@@ -1,4 +1,4 @@
-import { Document, Prisma } from "@prisma/client";
+import { Document, MimeType, Prisma } from "@prisma/client";
 import z from "zod/v4";
 
 import logger from "@/config/logger";
@@ -72,7 +72,7 @@ export const createDocument = async (
     const dataBuffer = Buffer.isBuffer(document.data)
       ? document.data
       : Buffer.from(document.data);
-    const maxSizeInBytes = getMaxSizeInBytes(mimeType);
+    const maxSizeInBytes = getMaxSizeInBytes(document.mimeType);
 
     const validate = getValidate(mimeType);
     const validatedResult = validate({
@@ -149,11 +149,11 @@ export const deleteDocument = async (
   }
 };
 
-export const MAX_PDF_SIZE_IN_BYTES = 500 * 1024; // 500 KB
+const MAX_PDF_SIZE_IN_BYTES = 500 * 1024; // 500 KB
 
-const getMaxSizeInBytes = (mimeType: string): number => {
+const getMaxSizeInBytes = (mimeType: MimeType): number => {
   switch (mimeType) {
-    case "application/pdf":
+    case "APPLICATION_PDF":
       return MAX_PDF_SIZE_IN_BYTES;
     default:
       return 0;
