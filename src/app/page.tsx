@@ -5,11 +5,12 @@ import { getUserAuthenticated } from "@/utils/auth";
 
 import Image from "next/image";
 import { Button } from "@/components/ui";
+import Link from "next/link";
 
-const Card = ({ icon, title }: { icon: React.ReactNode; title: string }) => {
+const Card = ({ src, title }: { src: string; title: string }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-4 border rounded-lg">
-      <div className="mb-2">{icon}</div>
+    <div className="flex flex-col items-center justify-center py-4 px-2 gap-2 min-w-28">
+      <Image src={src} alt="Form Icon" width={512} height={512} />
       <p className="font-raleway text-center text-s-charcoal-100">{title}</p>
     </div>
   );
@@ -27,14 +28,23 @@ export default async function Home() {
 
   return (
     <>
-      <div>
-        <Image
-          src="/ong-gabriel-logo.svg"
-          alt="Logo ONG Gabriel"
-          width={100}
-          height={100}
-        />
-        <Button>Entrar</Button>
+      <div className="flex justify-between items-center p-6">
+        <div className="w-35.5 h-16">
+          <Image
+            src="/ong-gabriel-logo.svg"
+            alt="Logo ONG Gabriel"
+            width={1024}
+            height={1024}
+          />
+        </div>
+        <Link href="/auth/login">
+          <Button
+            variant="outline"
+            className="text-md text-s-navy-100 border-s-navy-100"
+          >
+            Entrar
+          </Button>
+        </Link>
       </div>
       <div className="flex flex-col py-12 px-4 gap-6 bg-s-powder-100">
         <h2 className="font-raleway text-center">
@@ -44,52 +54,30 @@ export default async function Home() {
           Nós, da ONG Gabriel, já impactamos centenas de vidas com o apoio de
           pessoas voluntárias prestando atendimento psicológico!
         </p>
-        <h4 className="text-center">
+        <h3 className="text-center ">
           Veja como você pode ser parte dessa transformação:
-        </h4>
+        </h3>
         {/* Carousel */}
-        <div className="flex overflow-x-auto py-4">
-          <div className="flex-shrink-0 w-64 h-64 bg-gray-200 rounded-lg mx-2">
-            <Card
-              icon={
-                <Image
-                  src="/icons/form.svg"
-                  alt="Form Icon"
-                  width={24}
-                  height={24}
-                />
-              }
-              title="Preencha o formulário"
-            />
-          </div>
-          <div className="flex-shrink-0 w-64 h-64 bg-gray-200 rounded-lg mx-2">
-            <Card
-              icon={
-                <Image
-                  src="/icons/volunteer.svg"
-                  alt="Volunteer Icon"
-                  width={24}
-                  height={24}
-                />
-              }
-              title="Seja um voluntário"
-            />
-          </div>
-          <div className="flex-shrink-0 w-64 h-64 bg-gray-200 rounded-lg mx-2">
-            <Card
-              icon={
-                <Image
-                  src="/icons/donate.svg"
-                  alt="Donate Icon"
-                  width={24}
-                  height={24}
-                />
-              }
-              title="Doe agora"
-            />
-          </div>
+        <div className="flex overflow-x-auto py-4 gap-6">
+          <Card src="/gifs/list-records.gif" title="Preencha o formulário" />
+          <Card
+            src="/gifs/user-chat.gif"
+            title="Aguarde o contado da ONG Gabriel"
+          />
+          <Card
+            src="/gifs/calendar-check.gif"
+            title="Disponibilize sua agenda online"
+          />
+          <Card
+            src="/gifs/heart-hand.gif"
+            title="Transforme a vida de uma pessoa"
+          />
         </div>
-        <Button>Quero ajudar</Button>
+        <Link href="/user/base-info?redirectTo=/pre-psych/form-registration">
+          <Button className="w-full bg-s-navy-100 text-md text-s-butter-100">
+            Quero ajudar
+          </Button>
+        </Link>
       </div>
     </>
   );
