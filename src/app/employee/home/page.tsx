@@ -60,11 +60,13 @@ export default async function HomePage() {
             title="Pacientes"
             icon={<ClipboardPlus />}
           />
-          <CardMenu
-            href="/admin/pre-psych/list"
-            title="Psicólogos"
-            icon={<Stethoscope />}
-          />
+          {isAdmin && (
+            <CardMenu
+              href="/admin/pre-psych/list"
+              title="Candidatos"
+              icon={<Stethoscope />}
+            />
+          )}
           <CardMenu
             href="/employee/patient-attendance"
             title="Agenda"
