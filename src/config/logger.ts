@@ -3,14 +3,7 @@ import DailyRotateFile from "winston-daily-rotate-file";
 
 import { env } from "./env";
 
-const transports: winston.transport[] = [
-  new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.cli(),
-      winston.format.colorize({ level: true }),
-    ),
-  }),
-];
+const transports: winston.transport[] = [new winston.transports.Console()];
 
 if (env.LOG_FILE_ENABLED)
   transports.push(

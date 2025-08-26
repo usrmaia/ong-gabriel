@@ -5,14 +5,9 @@ type User = {
   role: Role[] | string[];
 };
 
-type Action = "view" | "list" | "create" | "update" | "delete" | "simpleCreate";
+type Action = "view" | "list" | "create" | "update" | "delete";
 
-type Resource =
-  | "users"
-  | "formAnamnesis"
-  | "patientAttendance"
-  | "psychs"
-  | "documents";
+type Resource = "users" | "formAnamnesis" | "patientAttendance"; // e.g., "posts", "comments", models/entity names
 
 export type PolicyStatement = {
   action: Action;
@@ -21,12 +16,7 @@ export type PolicyStatement = {
 };
 
 export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
-  ADMIN: [
-    {
-      action: "view",
-      resource: "documents",
-    },
-  ],
+  ADMIN: [],
   EMPLOYEE: [
     {
       action: "list",
@@ -54,24 +44,8 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       action: "create",
       resource: "patientAttendance",
     },
-    {
-      action: "view",
-      resource: "documents",
-      condition: (user, targetResource) => user.id === targetResource.userId,
-    },
-    {
-      action: "delete",
-      resource: "documents",
-      condition: (user, targetResource) => user.id === targetResource.userId,
-    },
   ],
   PATIENT: [],
-  PREPSYCHO: [
-    {
-      action: "create",
-      resource: "documents",
-    },
-  ],
 };
 
 /**
