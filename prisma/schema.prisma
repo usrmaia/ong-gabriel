@@ -28,6 +28,7 @@ model User {
   PatientAttendancePatient      PatientAttendance[] @relation("PatientAttendancePatient")
   PatientAttendanceProfessional PatientAttendance[] @relation("PatientAttendanceProfessional")
   Documents                     Document[]
+  Psych                         Psych?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -172,14 +173,18 @@ model PatientAttendance {
 }
 
 model Document {
-  id        String            @id @default(ulid())
-  userId    String
-  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String
-  mimeType  MimeType
-  category  DocumentCategory?
-  data      Bytes
-  createdAt DateTime          @default(now())
+  id       String            @id @default(ulid())
+  userId   String
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name     String
+  mimeType MimeType
+  category DocumentCategory?
+  data     Bytes
+
+  PsychProofAddress    Psych? @relation("ProofAddress")
+  PsychCurriculumVitae Psych? @relation("CurriculumVitae")
+
+  createdAt DateTime  @default(now())
   deletedAt DateTime?
 }
 
@@ -190,4 +195,38 @@ enum MimeType {
 enum DocumentCategory {
   PROOF_ADDRESS
   CURRICULUM_VITAE
+}
+
+model Psych {
+  id     String @id @default(ulid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  proofAddressId    String   @unique
+  proofAddress      Document @relation("ProofAddress", fields: [proofAddressId], references: [id], onDelete: Cascade)
+  curriculumVitaeId String   @unique
+  curriculumVitae   Document @relation("CurriculumVitae", fields: [curriculumVitaeId], references: [id], onDelete: Cascade)
+
+  CRP                    String      @unique
+  note                   String?
+  hasXpSuicidePrevention Boolean
+  pendingNote            String?
+  interviewed            Boolean     @default(false)
+  status                 PsychStatus @default(PENDING)
+  street                 String
+  number                 String
+  complement             String?
+  district               String
+  city                   String
+  state                  String
+  zipCode                String
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+}
+
+enum PsychStatus {
+  APPROVED
+  FAILED
+  PENDING // Avaliação pendente
+  ADJUSTMENT // Precisa de ajuste nos documentos
 }

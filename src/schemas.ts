@@ -4,6 +4,7 @@ import {
   DifficultiesSleeping,
   DocumentCategory,
   MimeType,
+  PsychStatus,
   WhoLivesWith,
 } from "@prisma/client";
 import { z } from "zod/v4";
@@ -191,3 +192,64 @@ export const DocumentSchema = z.object({
   data: z.instanceof(Uint8Array, { error: "Dados inválidos." }),
   category: z.enum(DocumentCategory, { error: "Categoria inválida." }),
 });
+
+export const BasePsychSchema = z.object({
+  CRP: z
+    .string()
+    .refine((value) => value.replace(/\D/g, ""))
+    .length(8, "CRP deve ter exatamente 8 caracteres."),
+  note: z
+    .string()
+    .max(2048, "Campo deve ter no máximo 2048 caracteres.")
+    .optional(),
+  street: z
+    .string()
+    .min(1, "Rua é obrigatória.")
+    .max(256, "Rua deve ter no máximo 256 caracteres."),
+  number: z
+    .string()
+    .min(1, "Número é obrigatório.")
+    .max(16, "Número deve ter no máximo 16 caracteres."),
+  complement: z
+    .string()
+    .max(128, "Complemento deve ter no máximo 128 caracteres.")
+    .optional(),
+  district: z
+    .string()
+    .min(1, "Bairro é obrigatório.")
+    .max(128, "Bairro deve ter no máximo 128 caracteres."),
+  city: z
+    .string()
+    .min(1, "Cidade é obrigatória.")
+    .max(128, "Cidade deve ter no máximo 128 caracteres."),
+  state: z
+    .string()
+    .refine(
+      (value) => /^[A-Za-z]+$/.test(value),
+      "Estado deve conter apenas letras.",
+    )
+    .length(2, "Estado deve ter exatamente 2 caracteres.")
+    .transform((value) => value.toLowerCase()),
+  zipCode: z
+    .string()
+    .refine((value) => value.replace(/\D/g, ""))
+    .length(8, "CEP deve ter exatamente 8 caracteres."),
+  hasXpSuicidePrevention: z
+    .union([z.string(), z.boolean()])
+    .nonoptional("Campo obrigatório.")
+    .transform((value) =>
+      typeof value === "string" ? value === "true" : value,
+    ),
+});
+
+export type BasePsych = z.input<typeof BasePsychSchema>;
+
+export const RevisePsychSchema = BasePsychSchema.extend({
+  pendingNote: z
+    .string()
+    .max(2048, "Campo deve ter no máximo 2048 caracteres.")
+    .optional(),
+  status: z.enum(PsychStatus, { error: "Status inválido." }).optional(),
+});
+
+export type RevisePsych = z.input<typeof RevisePsychSchema>;
