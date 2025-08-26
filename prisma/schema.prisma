@@ -29,8 +29,10 @@ model User {
   PatientAttendanceProfessional PatientAttendance[] @relation("PatientAttendanceProfessional")
   Documents                     Document[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  Psychologist Psychologist?
+  Document     Document[]
 }
 
 enum Role {
@@ -148,6 +150,64 @@ enum DifficultiesSleeping {
   sim
   as_vezes
   nao
+}
+
+model Psychologist {
+  id     String @id @default(ulid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  CRP  String  @unique
+  note String?
+
+  proofAddressId String
+  proofAddress   Document @relation("ProofAddress", fields: [proofAddressId], references: [id], onDelete: Cascade)
+
+  curriculumVitaeId String
+  curriculum        Document @relation("Curriculum", fields: [curriculumVitaeId], references: [id], onDelete: Cascade)
+
+  street     String
+  number     String
+  complement String?
+  district   String
+  city       String
+  state      String
+  zipCode    String
+
+  specialty Specialty
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id     String @id @default(ulid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type     DocumentType
+  url      String
+  name     String
+  mimeType String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  proofPsychologists      Psychologist[] @relation("ProofAddress")
+  curriculumPsychologists Psychologist[] @relation("Curriculum")
+}
+
+enum DocumentType {
+  PROOF_ADDRESS
+  CURRICULUM
+  OTHER
+}
+
+enum Specialty {
+  CLINICAL
+  EDUCATIONAL
+  ORGANIZATIONAL
+  OTHER
 }
 
 enum DifficultiesEating {
