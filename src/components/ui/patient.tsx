@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { TZDateMini } from "@date-fns/tz";
-import { Edit, Mail, Phone } from "lucide-react";
+import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FormAnamnesis, PatientAttendance, User } from "@prisma/client";
@@ -29,9 +29,6 @@ export const CardPatientAttendance = ({
   return (
     <Link href={`/employee/patient/details/${attendance.patientId}`}>
       <Card className={`shadow-lg w-full px-2 py-4 border-0`}>
-        {/* <CardHeader>
-        <CardTitle>[TIPO]</CardTitle>
-      </CardHeader> */}
         <CardContent className="flex flex-row items-center gap-5 w-full">
           <Image
             src={attendance.patient.image ?? "/default-user.jpg"}
