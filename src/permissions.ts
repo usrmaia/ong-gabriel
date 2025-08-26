@@ -5,9 +5,9 @@ type User = {
   role: Role[] | string[];
 };
 
-type Action = "view" | "list" | "create" | "update" | "delete";
+type Action = "view" | "list" | "create" | "update" | "delete" | "simpleCreate";
 
-type Resource = "users" | "formAnamnesis" | "patientAttendance"; // e.g., "posts", "comments", models/entity names
+type Resource = "users" | "formAnamnesis" | "patientAttendance" | "psicologo"; // e.g., "posts", "comments", models/entity names
 
 export type PolicyStatement = {
   action: Action;
@@ -46,6 +46,8 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
     },
   ],
   PATIENT: [],
+
+  PREPSYCHO: [],
 };
 
 /**

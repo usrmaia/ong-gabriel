@@ -37,6 +37,7 @@ enum Role {
   ADMIN
   EMPLOYEE
   PATIENT
+  PREPSYCHO
 }
 
 model Account {
