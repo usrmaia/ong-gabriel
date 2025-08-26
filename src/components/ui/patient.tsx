@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { TZDateMini } from "@date-fns/tz";
-import { Edit, Mail, Phone } from "lucide-react";
+import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FormAnamnesis, PatientAttendance, User } from "@prisma/client";
