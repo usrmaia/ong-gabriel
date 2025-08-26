@@ -2,6 +2,8 @@ import {
   DifficultiesBasic,
   DifficultiesEating,
   DifficultiesSleeping,
+  DocumentCategory,
+  MimeType,
   WhoLivesWith,
 } from "@prisma/client";
 import { z } from "zod/v4";
@@ -171,4 +173,21 @@ export const CreatePatientAttendanceSchema = z.object({
 export const UpdatePatientAttendanceSchema = z.object({
   dateAt: PatientAttendanceDateAtSchema,
   durationMinutes: PatientAttendanceDurationMinutesSchema,
+});
+
+export const MimeTypeSchema = z.enum(MimeType).transform((value) => {
+  switch (value) {
+    case "APPLICATION_PDF":
+      return "application/pdf";
+  }
+});
+
+export const DocumentSchema = z.object({
+  name: z
+    .string()
+    .min(5, "Nome do documento deve ter pelo menos 5 caracteres.")
+    .max(128, "Nome do documento deve ter no máximo 128 caracteres."),
+  mimeType: z.enum(MimeType, { error: "Tipo inválido." }),
+  data: z.instanceof(Uint8Array, { error: "Dados inválidos." }),
+  category: z.enum(DocumentCategory, { error: "Categoria inválida." }),
 });
