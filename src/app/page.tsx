@@ -1,11 +1,8 @@
-import { redirect } from "next/navigation";
-
-import { auth } from "@/auth";
-import { getUserAuthenticated } from "@/utils/auth";
-
 import Image from "next/image";
-import { Button } from "@/components/ui";
 import Link from "next/link";
+
+import { Button } from "@/components/ui";
+import { getSession, getUserAuthenticated } from "@/utils/auth";
 
 const Card = ({ src, title }: { src: string; title: string }) => {
   return (
@@ -17,14 +14,15 @@ const Card = ({ src, title }: { src: string; title: string }) => {
 };
 
 export default async function Home() {
-  // const session = await auth();
-
-  // if (!session) redirect("/auth/login");
-
-  // const user = await getUserAuthenticated();
-
-  // if (user.role.includes("EMPLOYEE")) redirect("/employee/home");
-  // redirect("/patient/form-anamnesis?redirectTo=/user/base-info");
+  // Caso não haja sessão, o usuário deve ser redirecionado para a página de anamnese
+  // Caso haja sessão e o usuário seja um funcionário, ele deve ser redirecionado para a página inicial do funcionário
+  let redirectTo = "/patient/form-anamnesis?redirectTo=/user/base-info";
+  const session = await getSession();
+  if (session) {
+    const user = await getUserAuthenticated();
+    const isEmployee = user?.role.includes("EMPLOYEE");
+    if (isEmployee) redirectTo = "/employee/home";
+  }
 
   return (
     <>
@@ -37,7 +35,7 @@ export default async function Home() {
             height={1024}
           />
         </div>
-        <Link href="/auth/login">
+        <Link href={redirectTo}>
           <Button
             variant="outline"
             className="text-md text-s-navy-100 border-s-navy-100"
