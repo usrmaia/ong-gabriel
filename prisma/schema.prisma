@@ -174,8 +174,6 @@ model Psychologist {
   state      String
   zipCode    String
 
-  specialty Specialty
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

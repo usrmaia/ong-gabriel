@@ -20,12 +20,17 @@ type FixedPsychData = Omit<CreatePsychData, "userId"> & {
 
 export async function createPsychFromUser(data: FixedPsychData) {
   const user = await getUserAuthenticated();
-  if (!user) throw new Error("Usuário não autenticado");
+  if (!user) throw new Error("O usuário não está autenticado");
 
   const existing = await prisma.psychologist.findUnique({
     where: { userId: user.id },
   });
-  if (existing) throw new Error("O usuário já é um psicólogo");
+  if (existing) throw new Error("O usuário já é um psicologo");
+
+  const existingCRP = await prisma.psychologist.findUnique({
+    where: { CRP: data.CRP },
+  });
+  if (existingCRP) throw new Error("Este CRP já está cadastrado");
 
   const proofAddress = await prisma.document.findUnique({
     where: { id: data.proofAddressId },
@@ -57,11 +62,12 @@ export async function createPsychFromUser(data: FixedPsychData) {
       city: data.city,
       state: data.state,
       zipCode: data.zipCode,
-      specialty: data.specialty,
+    },
+    include: {
+      proofAddress: true,
+      curriculum: true,
     },
   });
 
-  return await prisma.psychologist.findUnique({
-    where: { id: psychologist.id },
-  });
+  return psychologist;
 }
