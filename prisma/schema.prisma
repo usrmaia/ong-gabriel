@@ -202,15 +202,17 @@ model Psych {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  CRP  String  @unique
-  note String?
-
-  proofAddressId String   @unique
-  proofAddress   Document @relation("ProofAddress", fields: [proofAddressId], references: [id], onDelete: Cascade)
-
+  proofAddressId    String   @unique
+  proofAddress      Document @relation("ProofAddress", fields: [proofAddressId], references: [id], onDelete: Cascade)
   curriculumVitaeId String   @unique
   curriculumVitae   Document @relation("CurriculumVitae", fields: [curriculumVitaeId], references: [id], onDelete: Cascade)
 
+  CRP                    String      @unique
+  note                   String?
+  hasXpSuicidePrevention Boolean
+  pendingNote            String?
+  interviewed            Boolean     @default(false)
+  status                 PsychStatus @default(PENDING)
   street                 String
   number                 String
   complement             String?
@@ -218,13 +220,8 @@ model Psych {
   city                   String
   state                  String
   zipCode                String
-  hasXpSuicidePrevention Boolean
-  pendingNote            String?
-  interviewed            Boolean     @default(false)
-  status                 PsychStatus @default(PENDING)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
 }
 
 enum PsychStatus {

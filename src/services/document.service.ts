@@ -49,7 +49,7 @@ export const getDocumentById = async (
 };
 
 export const createDocument = async (
-  document: Document,
+  document: Prisma.DocumentUncheckedCreateWithoutUserInput,
 ): Promise<Result<Document>> => {
   try {
     const user = await getUserAuthenticated();
