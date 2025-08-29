@@ -1,37 +1,19 @@
 import prisma from "@/lib/prisma";
+import { CreatePsych } from "@/schemas";
 import { getUserAuthenticated } from "@/utils/auth";
 
-type CreatePsychData = Parameters<typeof prisma.psychologist.create>[0]["data"];
-
-type RequiredFields =
-  | "CRP"
-  | "proofAddressId"
-  | "curriculumVitaeId"
-  | "street"
-  | "number"
-  | "district"
-  | "city"
-  | "state"
-  | "zipCode";
-
-type FixedPsychData = Omit<CreatePsychData, "userId"> & {
-  [K in RequiredFields]-?: NonNullable<CreatePsychData[K]>;
-};
-
-export async function createPsychFromUser(data: FixedPsychData) {
+export async function createPsychFromUser(data: CreatePsych) {
   const user = await getUserAuthenticated();
-  if (!user) throw new Error("O usuário não está autenticado");
 
-  const existing = await prisma.psychologist.findUnique({
-    where: { userId: user.id },
+  if (user.role.includes("EMPLOYEE"))
+    throw new Error("O usuário já é um psicologo");
+
+  const existingCRP = await prisma.psych.count({
+    where: { CRP: data.CRP, user: { role: { has: "EMPLOYEE" } } },
   });
-  if (existing) throw new Error("O usuário já é um psicologo");
+  if (existingCRP > 0) throw new Error("Este CRP já está cadastrado");
 
-  const existingCRP = await prisma.psychologist.findUnique({
-    where: { CRP: data.CRP },
-  });
-  if (existingCRP) throw new Error("Este CRP já está cadastrado");
-
+  // Atualizar depois para getDocumentById -> createDocument
   const proofAddress = await prisma.document.findUnique({
     where: { id: data.proofAddressId },
   });
@@ -48,13 +30,13 @@ export async function createPsychFromUser(data: FixedPsychData) {
     throw new Error("Você não tem permissão para usar este currículo");
   }
 
-  const psychologist = await prisma.psychologist.create({
+  const psycho = await prisma.psych.create({
     data: {
       userId: user.id,
       CRP: data.CRP,
       note: data.note,
-      proofAddressId: data.proofAddressId,
-      curriculumVitaeId: data.curriculumVitaeId,
+      proofAddress: {},
+      curriculum: {},
       street: data.street,
       number: data.number,
       complement: data.complement,
@@ -69,5 +51,5 @@ export async function createPsychFromUser(data: FixedPsychData) {
     },
   });
 
-  return psychologist;
+  return psycho;
 }
