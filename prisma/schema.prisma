@@ -28,11 +28,10 @@ model User {
   PatientAttendancePatient      PatientAttendance[] @relation("PatientAttendancePatient")
   PatientAttendanceProfessional PatientAttendance[] @relation("PatientAttendanceProfessional")
   Documents                     Document[]
+  Psych                         Psych?
 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  Psychologist Psych?
-  Document     Document[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
@@ -152,73 +151,6 @@ enum DifficultiesSleeping {
   nao
 }
 
-model Psych {
-  id     String @id @default(ulid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  CRP  String  @unique
-  note String?
-
-  proofAddressId String   @unique
-  proofAddress   Document @relation("ProofAddress", fields: [proofAddressId], references: [id], onDelete: Cascade)
-
-  curriculumVitaeId String   @unique
-  curriculum        Document @relation("Curriculum", fields: [curriculumVitaeId], references: [id], onDelete: Cascade)
-
-  street                 String
-  number                 String
-  complement             String?
-  district               String
-  city                   String
-  state                  String
-  zipCode                String
-  hasXpSuicidePrevention Boolean
-  pendingNote            String?
-  interviewed            Boolean     @default(false)
-  status                 PsychStatus @default(PENDING)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum PsychStatus {
-  APPROVED
-  FAILED
-  PENDING // Avaliação pendente
-  ADJUSTMENT // Precisa de ajuste nos documentos
-}
-
-model Document {
-  id     String @id @default(ulid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  type     DocumentType
-  url      String
-  name     String
-  mimeType String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  proofPsychologists      Psych[] @relation("ProofAddress")
-  curriculumPsychologists Psych[] @relation("Curriculum")
-}
-
-enum DocumentType {
-  PROOF_ADDRESS
-  CURRICULUM
-  OTHER
-}
-
-enum Specialty {
-  CLINICAL
-  EDUCATIONAL
-  ORGANIZATIONAL
-  OTHER
-}
-
 enum DifficultiesEating {
   sim
   as_vezes
@@ -241,14 +173,18 @@ model PatientAttendance {
 }
 
 model Document {
-  id        String            @id @default(ulid())
-  userId    String
-  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String
-  mimeType  MimeType
-  category  DocumentCategory?
-  data      Bytes
-  createdAt DateTime          @default(now())
+  id       String            @id @default(ulid())
+  userId   String
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name     String
+  mimeType MimeType
+  category DocumentCategory?
+  data     Bytes
+
+  PsychProofAddress    Psych? @relation("ProofAddress")
+  PsychCurriculumVitae Psych? @relation("CurriculumVitae")
+
+  createdAt DateTime  @default(now())
   deletedAt DateTime?
 }
 
@@ -259,4 +195,41 @@ enum MimeType {
 enum DocumentCategory {
   PROOF_ADDRESS
   CURRICULUM_VITAE
+}
+
+model Psych {
+  id     String @id @default(ulid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  CRP  String  @unique
+  note String?
+
+  proofAddressId String   @unique
+  proofAddress   Document @relation("ProofAddress", fields: [proofAddressId], references: [id], onDelete: Cascade)
+
+  curriculumVitaeId String   @unique
+  curriculumVitae   Document @relation("CurriculumVitae", fields: [curriculumVitaeId], references: [id], onDelete: Cascade)
+
+  street                 String
+  number                 String
+  complement             String?
+  district               String
+  city                   String
+  state                  String
+  zipCode                String
+  hasXpSuicidePrevention Boolean
+  pendingNote            String?
+  interviewed            Boolean     @default(false)
+  status                 PsychStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PsychStatus {
+  APPROVED
+  FAILED
+  PENDING // Avaliação pendente
+  ADJUSTMENT // Precisa de ajuste nos documentos
 }

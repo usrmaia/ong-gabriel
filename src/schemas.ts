@@ -192,32 +192,6 @@ export const DocumentSchema = z.object({
   data: z.instanceof(Uint8Array, { error: "Dados inválidos." }),
   category: z.enum(DocumentCategory, { error: "Categoria inválida." }),
 });
-// model Psycho {
-//   id     String @id @default(ulid())
-//   userId String @unique
-//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-//   CRP  String  @unique
-//   note String?
-
-//   proofAddressId String   @unique
-//   proofAddress   Document @relation("ProofAddress", fields: [proofAddressId], references: [id], onDelete: Cascade)
-
-//   curriculumVitaeId String   @unique
-//   curriculum        Document @relation("Curriculum", fields: [curriculumVitaeId], references: [id], onDelete: Cascade)
-
-//   street                 String
-//   number                 String
-//   complement             String?
-//   district               String
-//   city                   String
-//   state                  String
-//   zipCode                String
-//   hasXpSuicidePrevention Boolean
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
 
 export const CreatePsychSchema = z.object({
   CRP: z.string().length(8, "CRP deve ter exatamente 8 caracteres."),
@@ -255,6 +229,8 @@ export const CreatePsychSchema = z.object({
     .regex(/^\d{5}-?\d{3}$/, "CEP deve estar no formato 00000-000 ou 00000000.")
     .transform((value) => value.replace("-", "")),
   hasXpSuicidePrevention: z.boolean().nonoptional("Campo obrigatório."),
+  proofAddress: DocumentSchema,
+  curriculumVitae: DocumentSchema,
 });
 
 export type CreatePsych = z.input<typeof CreatePsychSchema>;

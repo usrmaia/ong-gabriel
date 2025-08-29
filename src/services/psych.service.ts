@@ -47,7 +47,7 @@ export async function createPsychFromUser(data: CreatePsych) {
     },
     include: {
       proofAddress: true,
-      curriculum: true,
+      curriculumVitae: true,
     },
   });
 
