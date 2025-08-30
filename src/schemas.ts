@@ -193,7 +193,7 @@ export const DocumentSchema = z.object({
   category: z.enum(DocumentCategory, { error: "Categoria inválida." }),
 });
 
-export const CreatePsychSchema = z.object({
+export const BasePsychSchema = z.object({
   CRP: z.string().length(8, "CRP deve ter exatamente 8 caracteres."),
   note: z
     .string()
@@ -229,13 +229,11 @@ export const CreatePsychSchema = z.object({
     .regex(/^\d{5}-?\d{3}$/, "CEP deve estar no formato 00000-000 ou 00000000.")
     .transform((value) => value.replace("-", "")),
   hasXpSuicidePrevention: z.boolean().nonoptional("Campo obrigatório."),
-  proofAddress: DocumentSchema,
-  curriculumVitae: DocumentSchema,
 });
 
-export type CreatePsych = z.input<typeof CreatePsychSchema>;
+export type BasePsych = z.input<typeof BasePsychSchema>;
 
-export const UpdatePsychSchema = CreatePsychSchema.extend({
+export const RevisePsychSchema = BasePsychSchema.extend({
   pendingNote: z
     .string()
     .max(2048, "Campo deve ter no máximo 2048 caracteres.")
@@ -243,4 +241,4 @@ export const UpdatePsychSchema = CreatePsychSchema.extend({
   status: z.enum(PsychStatus, { error: "Status inválido." }).optional(),
 });
 
-export type UpdatePsych = z.input<typeof UpdatePsychSchema>;
+export type RevisePsych = z.input<typeof RevisePsychSchema>;

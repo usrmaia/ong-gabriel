@@ -5,15 +5,20 @@ import logger from "@/config/logger";
 import { createDocument, deleteDocument } from "./document.service";
 import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
-import { CreatePsychSchema } from "@/schemas";
+import { BasePsychSchema } from "@/schemas";
 import { Result } from "@/types";
 import { getUserAuthenticated } from "@/utils/auth";
 
+/**
+ * Cria um novo registro de psicólogo a partir de dados básicos do usuário com documentos associados.
+ */
 export async function createPsychFromUser(
-  psych: Prisma.PsychCreateInput,
+  psych: Prisma.PsychUncheckedCreateInput,
+  proofAddress: Prisma.DocumentUncheckedCreateInput,
+  curriculumVitae: Prisma.DocumentUncheckedCreateInput,
 ): Promise<Result<Psych>> {
   try {
-    const validatedPsych = await CreatePsychSchema.safeParseAsync(psych);
+    const validatedPsych = await BasePsychSchema.safeParseAsync(psych);
     if (!validatedPsych.success)
       return {
         success: false,
@@ -42,45 +47,29 @@ export async function createPsychFromUser(
         code: 409,
       };
 
-    if (!psych.proofAddress || !psych.curriculumVitae)
+    const documentsResult = await createPsychDocuments(
+      proofAddress,
+      curriculumVitae,
+    );
+    if (!documentsResult.success)
       return {
         success: false,
-        error: { errors: ["É necessário enviar todos os documentos."] },
-        code: 400,
+        error: {
+          errors: documentsResult.error?.errors || [],
+          properties: {
+            proofAddressId: documentsResult.error?.properties?.proofAddressId,
+            curriculumVitaeId:
+              documentsResult.error?.properties?.curriculumVitaeId,
+          },
+        },
+        code: documentsResult.code,
       };
-
-    const [proofAddressResult, curriculumVitaeResult] = await Promise.all([
-      createDocument(validatedPsych.data.proofAddress),
-      createDocument(validatedPsych.data.curriculumVitae),
-    ]);
-
-    if (!proofAddressResult.success) {
-      deleteDocument(curriculumVitaeResult.data!.id);
-      return {
-        success: false,
-        error: proofAddressResult.error,
-        code: 400,
-      };
-    }
-
-    if (!curriculumVitaeResult.success) {
-      deleteDocument(proofAddressResult.data!.id);
-      return {
-        success: false,
-        error: curriculumVitaeResult.error,
-        code: 400,
-      };
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { proofAddress, curriculumVitae, ...otherDetails } =
-      validatedPsych.data;
 
     const psycho = await prisma.psych.create({
       data: {
-        ...otherDetails,
-        proofAddressId: proofAddressResult.data!.id,
-        curriculumVitaeId: curriculumVitaeResult.data!.id,
+        ...validatedPsych.data,
+        proofAddressId: documentsResult.data!.proofAddressId,
+        curriculumVitaeId: documentsResult.data!.curriculumVitaeId,
         userId: user.id,
       },
     });
@@ -98,3 +87,49 @@ export async function createPsychFromUser(
     };
   }
 }
+
+export const createPsychDocuments = async (
+  proofAddress: Prisma.DocumentUncheckedCreateInput,
+  curriculumVitae: Prisma.DocumentUncheckedCreateInput,
+): Promise<Result<{ proofAddressId: string; curriculumVitaeId: string }>> => {
+  const [proofAddressResult, curriculumVitaeResult] = await Promise.all([
+    createDocument(proofAddress),
+    createDocument(curriculumVitae),
+  ]);
+
+  if (!proofAddressResult.success) {
+    deleteDocument(curriculumVitaeResult.data!.id);
+    return {
+      success: false,
+      error: {
+        errors: proofAddressResult.error?.errors || [],
+        properties: {
+          proofAddressId: proofAddressResult.error,
+        },
+      },
+    };
+  }
+
+  if (!curriculumVitaeResult.success) {
+    deleteDocument(proofAddressResult.data!.id);
+    return {
+      success: false,
+      error: {
+        errors: curriculumVitaeResult.error?.errors || [],
+        properties: {
+          curriculumVitaeId: curriculumVitaeResult.error,
+        },
+      },
+      code: 400,
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      proofAddressId: proofAddressResult.data!.id,
+      curriculumVitaeId: curriculumVitaeResult.data!.id,
+    },
+    code: 200,
+  };
+};
