@@ -1,7 +1,13 @@
 import { User } from "@prisma/client";
 
+import { Session } from "@auth/core/types";
 import { auth } from "@/auth";
 import { getUserById } from "@/services";
+
+export const getSession = async (): Promise<Session | null> => {
+  const session = await auth();
+  return session;
+};
 
 export const getUserIdAuthenticated = async (): Promise<string> => {
   const userId = (await auth())?.user.id;

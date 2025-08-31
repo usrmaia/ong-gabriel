@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Young_Serif, Raleway, Poppins } from "next/font/google";
-import Image from "next/image";
 
 import { Analytics } from "@/components/analytics";
 import "./globals.css";
-import Link from "next/link";
-import { env } from "@/config/env";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -42,36 +39,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${raleway.variable} ${youngSerif.variable} ${poppins.variable} antialiased flex flex-col min-w-screen min-h-screen`}
+        className={`${raleway.variable} ${youngSerif.variable} ${poppins.variable} antialiased flex flex-col`}
       >
         <Analytics />
-        <header className="w-full p-4">
-          <Image
-            className="mx-auto"
-            src="/ong-gabriel-logo.svg"
-            alt="Logo da ONG Gabriel"
-            width={180}
-            height={38}
-            priority
-          />
-          {env.FEEDBACK_FORM && (
-            <p className="text-center text-sm font-semibold">
-              Esta é uma versão de desenvolvimento. Possui algum feedback para
-              nós?{" "}
-              <Link
-                className="text-blue-600 hover:underline"
-                href={env.FEEDBACK_FORM}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Clique aqui!
-              </Link>
-            </p>
-          )}
-        </header>
-        <main className="flex flex-1 flex-col self-center max-w-sm w-full gap-10 px-6">
-          {children}
-        </main>
+        {children}
         <footer className="flex items-center justify-center p-4">
           <p className="text-sm text-center font-xs text-s-gunmetal-100">
             <span className="font-bold">
