@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
 import { Young_Serif, Raleway, Poppins } from "next/font/google";
 
 import { Analytics } from "@/components/analytics";
 import "./globals.css";
+import Link from "next/link";
+import { env } from "@/config/env";
+import { metadata } from "./metadata";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -26,34 +28,7 @@ const poppins = Poppins({
   style: ["normal", "italic"],
 });
 
-export const metadata: Metadata = {
-  title: "ONG Gabriel - Plataforma de Atendimento",
-  description: "Plataforma de atendimento psicológico para profissionais e pacientes.",
-  openGraph: {
-    title: "ONG Gabriel - Plataforma de Atendimento",
-    description: "Plataforma de atendimento psicológico para profissionais e pacientes.",
-    siteName: "ONG Gabriel",
-    images: [
-      {
-        url: "http://url-base/default-user.jpg",
-        secureUrl: "https://url-base/default-user.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Imagem da ONG Gabriel",
-      },
-    ],
-    locale: "pt-BR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "ONG Gabriel - Plataforma de Atendimento",
-    description:
-      "Plataforma de atendimento psicológico para profissionais e pacientes.",
-    images: ["/default-user.jpg"],
-    creator: "@ong_gabriel",
-  },
-};
+export { metadata };
 
 export default function RootLayout({
   children,
