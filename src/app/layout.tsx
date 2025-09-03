@@ -2,8 +2,6 @@ import { Young_Serif, Raleway, Poppins } from "next/font/google";
 
 import { Analytics } from "@/components/analytics";
 import "./globals.css";
-import Link from "next/link";
-import { env } from "@/config/env";
 import { metadata } from "./metadata";
 
 const raleway = Raleway({
