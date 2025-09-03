@@ -9,6 +9,7 @@ import {
   WhoLivesWith,
 } from "@prisma/client";
 import { fakerPT_BR as faker } from "@faker-js/faker";
+import PDFDocument from "pdfkit";
 
 const prisma = new PrismaClient();
 
@@ -25,11 +26,10 @@ async function main() {
     "georgemaiaf@gmail.com",
     "fernandomafra1991@gmail.com",
     "apenasparatestes12345@gmail.com",
+    "josivania0706@gmail.com",
   ];
 
   await Promise.all([
-    prisma.patientAttendance.deleteMany(),
-    prisma.formAnamnesis.deleteMany(),
     prisma.session.deleteMany(),
     prisma.account.deleteMany(),
     prisma.authenticator.deleteMany(),
@@ -223,7 +223,105 @@ async function main() {
   console.log(
     `✅ Criados ${patientAttendances.length} atendimentos para pacientes`,
   );
+
+  const prePsychUsers = await prisma.user.createManyAndReturn({
+    data: Array.from({ length: faker.number.int({ min: 5, max: 10 }) }, () => ({
+      name: faker.person.firstName(),
+      full_name: faker.person.fullName(),
+      email: faker.internet.email(),
+      emailVerified: new Date(),
+      phone: faker.phone.number({ style: "international" }),
+      phoneVerified: new Date(),
+      role: [Role.PREPSYCHO],
+      date_of_birth: faker.date.past({ years: 10 }),
+      image: faker.image.dataUri({ width: 200, height: 200 }),
+    })),
+  });
+
+  console.log(`✅ Criados ${prePsychUsers.length} pré-psicólogos`);
+
+  const psychCurriculumDocuments = await prisma.document.createManyAndReturn({
+    data: await Promise.all(
+      prePsychUsers.map(
+        async (user) =>
+          ({
+            userId: user.id,
+            name: `Currículo de ${user.full_name}.pdf`,
+            category: "CURRICULUM_VITAE",
+            mimeType: "APPLICATION_PDF",
+            data: await documentPDFBuffer(`Currículo de ${user.full_name}`),
+          }) as Prisma.DocumentUncheckedCreateInput,
+      ),
+    ),
+  });
+
+  console.log(
+    `✅ Criados ${psychCurriculumDocuments.length} currículos de pré-psicólogos`,
+  );
+
+  const psychProofAddressDocuments = await prisma.document.createManyAndReturn({
+    data: await Promise.all(
+      prePsychUsers.map(
+        async (user) =>
+          ({
+            userId: user.id,
+            name: `Comprovante de Endereço de ${user.full_name}.pdf`,
+            category: "PROOF_ADDRESS",
+            mimeType: "APPLICATION_PDF",
+            data: await documentPDFBuffer(
+              `Comprovante de Endereço de ${user.full_name}`,
+            ),
+          }) as Prisma.DocumentUncheckedCreateInput,
+      ),
+    ),
+  });
+
+  console.log(
+    `✅ Criados ${psychProofAddressDocuments.length} comprovantes de endereço de pré-psicólogos`,
+  );
+
+  const psychs = await prisma.psych.createManyAndReturn({
+    data: prePsychUsers.flatMap((user) => {
+      return {
+        userId: user.id,
+        curriculumVitaeId:
+          psychCurriculumDocuments.find((doc) => doc.userId === user.id)?.id ||
+          null,
+        proofAddressId:
+          psychProofAddressDocuments.find((doc) => doc.userId === user.id)
+            ?.id || null,
+        CRP: faker.string.alphanumeric(8).toUpperCase(),
+        hasXpSuicidePrevention: faker.datatype.boolean(),
+        note: faker.lorem.sentence(),
+        city: faker.location.city(),
+        district: faker.location.city(),
+        number: faker.string.alphanumeric(6).toUpperCase(),
+        state: faker.location.state({ abbreviated: true }),
+        street: faker.location.streetAddress(),
+        zipCode: faker.location.zipCode(),
+        complement: faker.location.streetAddress(),
+      } as Prisma.PsychUncheckedCreateInput;
+    }),
+  });
+
+  console.log(`✅ Criados ${psychs.length} psicólogos`);
 }
+
+const documentPDFBuffer = (text: string): Promise<Uint8Array> => {
+  return new Promise((resolve) => {
+    const doc = new PDFDocument();
+    const chunks: Buffer[] = [];
+
+    doc.on("data", (chunk) => chunks.push(chunk));
+    doc.on("end", () => {
+      const buffer = Buffer.concat(chunks);
+      resolve(new Uint8Array(buffer));
+    });
+
+    doc.text(text);
+    doc.end();
+  });
+};
 
 main()
   .catch((e) => {
