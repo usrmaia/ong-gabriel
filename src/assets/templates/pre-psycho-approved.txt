@@ -1,0 +1,17 @@
+Olá {{nome}},
+
+Seu cadastro como psicólogo voluntário na plataforma da ONG Gabriel foi aprovado.
+
+A partir de agora, você já pode acessar o Ambiente do Psicólogo, onde poderá:
+- Editar seu perfil,
+- Visualizar e gerenciar suas consultas,
+- Acompanhar pacientes atendidos,
+- Comentar e registrar informações de atendimentos.
+
+Clique no link abaixo para acessar sua conta:
+{{url}}
+
+Estamos felizes em contar com você nessa missão de transformar vidas por meio da psicologia.
+
+Atenciosamente,
+Equipe ONG Gabriel

@@ -1,0 +1,15 @@
+Olá {{nome}},
+
+Agradecemos seu interesse em atuar como psicólogo voluntário na ONG Gabriel.
+
+Após análise dos dados e documentos enviados, infelizmente seu cadastro foi reprovado  neste momento.
+
+Motivo: {{motivo}}.
+
+Caso queira, você pode revisar suas informações e realizar uma nova solicitação de cadastro acessando o link:
+{{url}}
+
+Seguimos à disposição para esclarecer quaisquer dúvidas.
+
+Atenciosamente,
+Equipe ONG Gabriel

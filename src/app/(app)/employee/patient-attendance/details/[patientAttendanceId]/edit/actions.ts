@@ -5,6 +5,7 @@ import { PatientAttendance } from "@prisma/client";
 import logger from "@/config/logger";
 import { updatePatientAttendance } from "@/services";
 import { Result } from "@/types";
+import { sendEmail } from "@/infra";
 
 export async function onSubmit(
   initialState: Result<PatientAttendance>,

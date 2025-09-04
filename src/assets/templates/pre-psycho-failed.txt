@@ -1,0 +1,18 @@
+Olá {{nome}},
+
+Recebemos sua solicitação de cadastro como psicólogo voluntário na ONG Gabriel 🙌.
+
+Durante a análise dos dados e documentos enviados, identificamos que são necessários ajustes/complementos antes de concluirmos a validação.
+
+Pendências encontradas:
+- {{pendencias}}
+
+Para prosseguir, pedimos que você acesse o link abaixo e realize as correções necessárias:
+{{url}}
+
+Assim que os ajustes forem concluídos, nossa equipe dará continuidade à validação do seu cadastro.
+
+Agradecemos desde já pela colaboração e pelo interesse em se juntar à nossa missão de apoio psicológico voluntário.
+
+Atenciosamente,
+Equipe ONG Gabriel
