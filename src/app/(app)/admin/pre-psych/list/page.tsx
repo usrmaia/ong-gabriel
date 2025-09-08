@@ -15,8 +15,15 @@ import { Psych, User } from "@prisma/client";
 
 export default async function PrepsychoListPage() {
   const psychresult = await getPsychs({
-    include: { user: true },
+    select: {
+      id: true,
+      status: true,
+      interviewed: true,
+      hasXpSuicidePrevention: true,
+      user: { select: { id: true, name: true, email: true, image: true } },
+    },
     where: { status: { in: ["PENDING", "ADJUSTMENT"] } },
+    orderBy: { status: "desc" },
   });
 
   if (!psychresult.success) return <p>Unauthorized</p>;
