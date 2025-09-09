@@ -14,6 +14,13 @@ export const getPsychs = async (
   filter?: Prisma.PsychFindManyArgs,
 ): Promise<Result<Psych[]>> => {
   try {
+    const user = await getUserAuthenticated();
+    if (!can(user, "list", "psychs"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado!"] },
+        code: 403,
+      };
     const psychData = await prisma.psych.findMany(filter);
     return { success: true, data: psychData };
   } catch (error) {
