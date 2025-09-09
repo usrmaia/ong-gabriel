@@ -1,6 +1,6 @@
 import { PatientAttendance, User } from "@prisma/client";
 
-import { BackNavigationHeader, CardPatientProfile } from "@/components/ui";
+import { BackNavigationHeader, CardUserProfile } from "@/components/ui";
 import { PatientAttendanceEditForm } from "./form";
 import { getPatientAttendanceById } from "@/services";
 
@@ -36,7 +36,7 @@ export default async function PatientAttendanceEditPage({
         href={`/employee/patient/details/${patientAttendance.patientId}`}
       />
       <section className="flex flex-col gap-4">
-        <CardPatientProfile patient={patientAttendance.patient} />
+        <CardUserProfile user={patientAttendance.patient} />
         <PatientAttendanceEditForm patientAttendance={patientAttendance} />
       </section>
     </>

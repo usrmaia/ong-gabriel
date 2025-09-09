@@ -167,6 +167,7 @@ const PatientAttendanceDurationMinutesSchema = z
 
 export const CreatePatientAttendanceSchema = z.object({
   patientId: z.string().min(1, "ID do paciente é obrigatório."),
+  professionalId: z.string().min(1, "ID do profissional é obrigatório."),
   durationMinutes: PatientAttendanceDurationMinutesSchema,
   dateAt: PatientAttendanceDateAtSchema,
 });
@@ -196,8 +197,11 @@ export const DocumentSchema = z.object({
 export const BasePsychSchema = z.object({
   CRP: z
     .string()
-    .refine((value) => value.replace(/\D/g, ""))
-    .length(8, "CRP deve ter exatamente 8 caracteres."),
+    .transform((value) => value.replace(/\D/g, ""))
+    .refine(
+      (value) => value.length === 8,
+      "CRP deve ter exatamente 8 caracteres.",
+    ),
   note: z
     .string()
     .max(2048, "Campo deve ter no máximo 2048 caracteres.")
@@ -224,16 +228,47 @@ export const BasePsychSchema = z.object({
     .max(128, "Cidade deve ter no máximo 128 caracteres."),
   state: z
     .string()
-    .refine(
-      (value) => /^[A-Za-z]+$/.test(value),
-      "Estado deve conter apenas letras.",
-    )
     .length(2, "Estado deve ter exatamente 2 caracteres.")
-    .transform((value) => value.toLowerCase()),
+    .transform((value) => value.toUpperCase())
+    .refine((value) => {
+      const validStates = [
+        "AC",
+        "AL",
+        "AP",
+        "AM",
+        "BA",
+        "CE",
+        "DF",
+        "ES",
+        "GO",
+        "MA",
+        "MT",
+        "MS",
+        "MG",
+        "PA",
+        "PB",
+        "PR",
+        "PE",
+        "PI",
+        "RJ",
+        "RN",
+        "RS",
+        "RO",
+        "RR",
+        "SC",
+        "SP",
+        "SE",
+        "TO",
+      ];
+      return validStates.includes(value);
+    }, "Use a sigla do estado (ex: SP, RJ)."),
   zipCode: z
     .string()
-    .refine((value) => value.replace(/\D/g, ""))
-    .length(8, "CEP deve ter exatamente 8 caracteres."),
+    .transform((value) => value.replace(/\D/g, ""))
+    .refine(
+      (value) => value.length === 8,
+      "CEP deve ter exatamente 8 caracteres.",
+    ),
   hasXpSuicidePrevention: z
     .union([z.string(), z.boolean()])
     .nonoptional("Campo obrigatório.")

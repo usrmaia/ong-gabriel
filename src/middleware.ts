@@ -34,6 +34,7 @@ export const config = {
     "/auth/logout",
     "/employee/:path*",
     "/patient/:path*",
+    "/pre-psych/:path",
     "/user/:path*",
   ],
 };

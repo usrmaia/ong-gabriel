@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { TZDateMini } from "@date-fns/tz";
-import { Edit, Mail, Phone } from "lucide-react";
+import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FormAnamnesis, PatientAttendance, User } from "@prisma/client";
@@ -19,26 +19,7 @@ import {
   WhoLivesWithSchema,
 } from "@/schemas";
 
-export const CardPatientProfile = ({ patient }: { patient: User }) => (
-  <Card className="shadow-lg w-full py-4 border-0 rounded-lg">
-    <CardContent className="flex flex-col gap-2 text-s-van-dyke text-sm font-poppins">
-      <div className="flex gap-2">
-        <Mail />
-        <span>{patient.email}</span>
-      </div>
-      <div className="flex gap-2">
-        <Phone />
-        <span>{patient.phone || "N/A"}</span>
-      </div>
-      <p>
-        <span className="font-bold">Data de Nascimento: </span>
-        {patient.date_of_birth
-          ? format(new TZDateMini(patient.date_of_birth, "UTC"), "dd/MM/yyyy")
-          : "N/A"}
-      </p>
-    </CardContent>
-  </Card>
-);
+// ...existing code...
 
 export const CardPatientAttendance = ({
   attendance,
@@ -48,9 +29,6 @@ export const CardPatientAttendance = ({
   return (
     <Link href={`/employee/patient/details/${attendance.patientId}`}>
       <Card className={`shadow-lg w-full px-2 py-4 border-0`}>
-        {/* <CardHeader>
-        <CardTitle>[TIPO]</CardTitle>
-      </CardHeader> */}
         <CardContent className="flex flex-row items-center gap-5 w-full">
           <Image
             src={attendance.patient.image ?? "/default-user.jpg"}
