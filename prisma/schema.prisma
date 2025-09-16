@@ -222,6 +222,7 @@ model Psych {
   zipCode                String
   createdAt              DateTime    @default(now())
   updatedAt              DateTime    @updatedAt
+  evaluatedAt            DateTime?
 }
 
 enum PsychStatus {
