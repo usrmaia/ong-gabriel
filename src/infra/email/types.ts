@@ -32,12 +32,12 @@ export const TemplateSubject: Record<Template, string> = {
   "pre-psycho-failed": "Ajustes necessários no seu cadastro – ONG Gabriel",
 };
 
-//  sendEmail({
-//       to: "josivania0706@gmail.com",
-//       template: "pre-psycho-failed",
-//       context: {
-//         nome: "Josivânia",
-//         pendencias: "Documento ilegível\n- Comprovante de endereço ausente",
-//         url: "https://onggabriel.org",
-//       },
-//     });
+// sendEmail({
+//   to: "josivania0706@gmail.com",
+//   template: "pre-psycho-approved",
+//   context: {
+//     nome: "Josivânia",
+//     // pendencias: "Documento ilegível\n- Comprovante de endereço ausente",
+//     url: "https://onggabriel.org",
+//   },
+// });

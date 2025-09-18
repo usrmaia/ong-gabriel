@@ -1,17 +1,24 @@
-Olá {{nome}},
+ONG Gabriel
+
+Olá {{Nome do Psicólogo}},
 
 Seu cadastro como psicólogo voluntário na plataforma da ONG Gabriel foi aprovado.
 
-A partir de agora, você já pode acessar o Ambiente do Psicólogo, onde poderá:
-- Editar seu perfil,
-- Visualizar e gerenciar suas consultas,
-- Acompanhar pacientes atendidos,
-- Comentar e registrar informações de atendimentos.
+A partir de agora, você já pode acessar o Ambiente do Psicólogo.
 
-Clique no link abaixo para acessar sua conta:
-{{url}}
+Editar o perfil
+Visualizar e gerenciar suas consultas
+Acompanhar pacientes ativos
+Comentar e registrar informações dos atendimentos
+
+Acesse aqui sua conta: {{url}}
 
 Estamos felizes em contar com você nessa missão de transformar vidas por meio da psicologia.
 
 Atenciosamente,
 Equipe ONG Gabriel
+
+ONG Gabriel
+Rua Heitor Penteado, 231
+Cidade Satélite Íris, Campinas - SP9g70f
+contato@onggabriel.com

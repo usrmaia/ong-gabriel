@@ -27,6 +27,15 @@ export async function onSubmit(
       },
     );
 
+    sendEmail({
+      to: "josivania0706@gmail.com",
+      template: "pre-psycho-approved",
+      context: {
+        nome: "Josivânia",
+        // pendencias: "Documento ilegível\n- Comprovante de endereço ausente",
+        url: "http://localhost:3000/",
+      },
+    });
     if (!updatedAttendanceResult.success)
       return {
         success: false,

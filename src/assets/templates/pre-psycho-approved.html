@@ -4,36 +4,246 @@
     <meta charset="UTF-8" />
     <title>Cadastro aprovado – Bem-vindo à Plataforma da ONG Gabriel</title>
   </head>
-  <body style="font-family: Arial, sans-serif; line-height: 1.6">
-    <p>Olá {{nome}},</p>
+  <body
+    style="
+      font-family: Arial, sans-serif;
+      background-color: #fdfbf7;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    "
+  >
+    <div
+      style="
+        max-width: 500px;
+        margin: 0 auto;
+        background: #fffaf4;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #eee;
+      "
+    >
+      <!-- Header -->
+      <div style="text-align: center; padding: 20px">
+        <img
+          src="./../../../public/ong-gabriel-logo.svg"
+          alt="ONG Gabriel Logo"
+          style="max-width: 177px; height: auto"
+        />
+      </div>
 
-    <p>
-      Seu cadastro como psicólogo voluntário na plataforma da ONG Gabriel foi
-      aprovado.
-    </p>
+      <!-- Content -->
+      <div style="padding: 20px">
+        <h1 style="font-size: 18px; margin: 0 0 10px 0">Olá {{nome}},</h1>
+        <h2
+          style="
+            font-size: 28px;
+            color: #11a05d;
+            font-family: Arial, sans-serif;
+            margin: 0 0 20px 0;
+            font-weight: 400;
+            line-height: 130%;
+          "
+        >
+          Seu cadastro como psicólogo voluntário na plataforma da ONG Gabriel
+          foi aprovado.
+        </h2>
 
-    <p>
-      A partir de agora, você já pode acessar o Ambiente do Psicólogo, onde
-      poderá:
-    </p>
+        <div style="text-align: center; margin: 20px 0">
+          <img
+            src="./../../../public/send-email-img.png"
+            alt="Ilustração"
+            style="max-width: 220px"
+          />
+        </div>
 
-    <ul>
-      <li>Editar seu perfil,</li>
-      <li>Visualizar e gerenciar suas consultas,</li>
-      <li>Acompanhar pacientes atendidos,</li>
-      <li>Comentar e registrar informações de atendimentos.</li>
-    </ul>
+        <p
+          style="
+            margin: 20px 0;
+            font-size: 16px;
+            line-height: 150%;
+            font-family: Arial, sans-serif;
+            font-weight: 700;
+            color: #43300e;
+          "
+        >
+          A partir de agora,
+          <strong style="color: #333"
+            >você já pode acessar o Ambiente do Psicólogo</strong
+          >.<br /><br />
+          • Editar o perfil<br />
+          • Visualizar e gerenciar suas consultas<br />
+          • Acompanhar pacientes ativos<br />
+          • Comentar e registrar informações dos atendimentos.
+        </p>
 
-    <p>
-      Clique no link abaixo para acessar sua conta: <br />
-      <a href="{{url}}">{{URL da Plataforma}}</a>
-    </p>
+        <div style="display: flex; justify-content: center">
+          <a
+            href="{{url}}"
+            style="
+              display: block;
+              text-align: center;
+              background: #ffb347;
+              color: #000;
+              padding: 8px;
+              margin: 20px 0;
+              text-decoration: none;
+              border-radius: 40px;
+              font-weight: bold;
+              width: 60%;
+            "
+          >
+            Acesse aqui sua conta
+          </a>
+        </div>
 
-    <p>
-      Estamos felizes em contar com você nessa missão de transformar vidas por
-      meio da psicologia.
-    </p>
+        <p style="font-size: 14px; line-height: 1.6">
+          Estamos felizes em contar com você nessa missão de transformar vidas
+          por meio da psicologia.
+        </p>
 
-    <p>Atenciosamente, <br />Equipe ONG Gabriel</p>
+        <p style="font-size: 14px; margin-top: 20px">
+          Atenciosamente,<br />
+          Equipe ONG Gabriel
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div
+        style="
+          text-align: center;
+          padding: 20px;
+          font-size: 12px;
+          background: #fff;
+          color: #666;
+        "
+      >
+        <img
+          src="./../../../public/ong-gabriel-logo.svg"
+          alt="ONG Gabriel"
+          style="max-width: 120px; margin-bottom: 10px"
+        />
+        <div style="margin: 10px 0">
+          <a
+            href="#"
+            style="
+              margin: 0 5px;
+              text-decoration: none;
+              color: #ffb347;
+              font-size: 16px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-instagram-icon lucide-instagram"
+            >
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+            </svg>
+          </a>
+          <a
+            href="#"
+            style="
+              margin: 0 5px;
+              text-decoration: none;
+              color: #ffb347;
+              font-size: 16px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-facebook-icon lucide-facebook"
+            >
+              <path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              />
+            </svg>
+          </a>
+          <a
+            href="#"
+            style="
+              margin: 0 5px;
+              text-decoration: none;
+              color: #ffb347;
+              font-size: 16px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-linkedin-icon lucide-linkedin"
+            >
+              <path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              />
+              <rect width="4" height="12" x="2" y="9" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+          <a
+            href="#"
+            style="
+              margin: 0 5px;
+              text-decoration: none;
+              color: #ffb347;
+              font-size: 16px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-youtube-icon lucide-youtube"
+            >
+              <path
+                d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"
+              />
+              <path d="m10 15 5-3-5-3z" />
+            </svg>
+          </a>
+        </div>
+        <p>
+          Rua Heitor Penteado, 231<br />
+          Cidade Satélite Íris, Campinas - SP
+        </p>
+        <p>
+          <a
+            href="mailto:contato@onggabriel.com"
+            style="color: #666; text-decoration: none"
+            >contato@onggabriel.com</a
+          >
+        </p>
+      </div>
+    </div>
   </body>
 </html>
