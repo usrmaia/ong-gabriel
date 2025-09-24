@@ -10,6 +10,65 @@ import { BasePsychSchema } from "@/schemas";
 import { Result } from "@/types";
 import { getUserAuthenticated } from "@/utils/auth";
 
+export const getPsychs = async (
+  filter?: Prisma.PsychFindManyArgs,
+): Promise<Result<Psych[]>> => {
+  try {
+    const user = await getUserAuthenticated();
+    if (!can(user, "list", "psychs"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado!"] },
+        code: 403,
+      };
+    const psychData = await prisma.psych.findMany(filter);
+    return { success: true, data: psychData };
+  } catch (error) {
+    logger.error("Erro ao buscar candidatos a psicólogos:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao buscar candidatos a psicólogos!"] },
+      code: 500,
+    };
+  }
+};
+
+export const getPsychById = async (
+  psychId: string,
+  filter?: Prisma.PsychDefaultArgs,
+): Promise<Result<Psych | null>> => {
+  try {
+    const user = await getUserAuthenticated();
+    if (!can(user, "view", "psychs"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado a visualizar psicólogo!"] },
+        code: 403,
+      };
+
+    const psychData = await prisma.psych.findUnique({
+      where: { id: psychId },
+      ...filter,
+    });
+
+    if (!psychData)
+      return {
+        success: false,
+        error: { errors: ["Psicólogo não encontrado!"] },
+        code: 404,
+      };
+
+    return { success: true, data: psychData };
+  } catch (error) {
+    logger.error("Erro ao buscar psicólogo:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao buscar psicólogo!"] },
+      code: 500,
+    };
+  }
+};
+
 export const getPsychByUserId = async (
   userId: string,
   filter?: Prisma.PsychDefaultArgs,
