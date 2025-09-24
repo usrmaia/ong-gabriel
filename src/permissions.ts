@@ -30,6 +30,10 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       action: "list",
       resource: "psychs",
     },
+    {
+      action: "view",
+      resource: "psychs",
+    },
   ],
   EMPLOYEE: [
     {
