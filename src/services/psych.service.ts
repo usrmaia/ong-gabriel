@@ -4,11 +4,16 @@ import logger from "@/config/logger";
 import { createDocument, deleteDocument } from "./document.service";
 import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
-import { Prisma, Psych } from "@prisma/client";
-import { addRoleToUser } from "./role.service";
-import { BasePsychSchema } from "@/schemas";
+import { Prisma, Psych, PsychStatus } from "@prisma/client";
+import { addRoleToUser, deleteRoleToUser } from "./role.service";
+import {
+  BasePsychSchema,
+  evaluatePsychSchema,
+  EvaluatePsychInput,
+} from "@/schemas";
 import { Result } from "@/types";
 import { getUserAuthenticated } from "@/utils/auth";
+import { sendEmail, Template } from "@/infra/email";
 
 export const getPsychs = async (
   filter?: Prisma.PsychFindManyArgs,
@@ -335,6 +340,65 @@ export const updatePsychFromUser = async (
     return {
       success: false,
       error: { errors: ["Erro ao atualizar psicólogo!"] },
+      code: 500,
+    };
+  }
+};
+
+export const evaluateCandidatePsych = async (
+  psychId: string,
+  input: EvaluatePsychInput,
+): Promise<Result<Psych>> => {
+  try {
+    const evaluateResult = await evaluatePsychSchema.safeParseAsync(input);
+    if (!evaluateResult.success)
+      return {
+        success: false,
+        error: z.treeifyError(evaluateResult.error),
+        code: 400,
+      };
+
+    const user = await getUserAuthenticated();
+    if (!can(user, "update", "psychs"))
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado!"] },
+        code: 403,
+      };
+
+    const updatedPsych = await prisma.psych.update({
+      where: { id: psychId },
+      data: { ...evaluateResult.data },
+      include: { user: true },
+    });
+
+    if (updatedPsych.status === "APPROVED") {
+      addRoleToUser(updatedPsych.userId, "EMPLOYEE");
+      deleteRoleToUser(updatedPsych.userId, "PREPSYCHO");
+    }
+
+    const templateMap: Record<Exclude<PsychStatus, "PENDING">, Template> = {
+      APPROVED: "pre-psycho-approved",
+      FAILED: "pre-psycho-failed",
+      ADJUSTMENT: "pre-psycho-adjustment",
+    };
+
+    sendEmail({
+      to: updatedPsych.user.email,
+      template: templateMap[evaluateResult.data.status],
+      context: {
+        userName:
+          updatedPsych.user.full_name || updatedPsych.user.name || "Candidato",
+        pendingNote: updatedPsych.pendingNote || "",
+      },
+    });
+
+    return { success: true, data: updatedPsych };
+  } catch (error) {
+    logger.error("Erro ao avaliar candidato a psicólogo:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao avaliar candidato a psicólogo!"] },
       code: 500,
     };
   }
