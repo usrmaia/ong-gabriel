@@ -9,6 +9,9 @@ import { addRoleToUser } from "./role.service";
 import { BasePsychSchema } from "@/schemas";
 import { Result } from "@/types";
 import { getUserAuthenticated } from "@/utils/auth";
+import { evaluatePsychSchema, EvaluatePsychInput } from "@/schemas";
+import { sendEmail } from "@/infra/email/email";
+
 
 export const getPsychs = async (
   filter?: Prisma.PsychFindManyArgs,
@@ -188,4 +191,66 @@ export const createPsychDocuments = async (
     },
     code: 200,
   };
+};
+
+export const evaluateCandidatePsych = async (
+  psychId: string,
+  input: EvaluatePsychInput
+): Promise<Result<Psych>> => {
+  try {
+    const parsed = await evaluatePsychSchema.safeParseAsync(input);
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: z.treeifyError(parsed.error),
+        code: 400,
+      };
+    }
+
+    const user = await getUserAuthenticated();
+    if (!can(user, "update", "psychs")) {
+      return {
+        success: false,
+        error: { errors: ["Usuário não autorizado!"] },
+        code: 403,
+      };
+    }
+
+    const updated = await prisma.psych.update({
+      where: { id: psychId },
+      data: {
+        pendingNote: parsed.data.pendingNote,
+        interviewed: parsed.data.interviewed,
+        status: parsed.data.status,
+      },
+      include: { user: true },
+    });
+
+    const templateMap = {
+      APPROVED: "pre-psycho-approved",
+      ADJUSTMENT: "pre-psycho-adjustment",
+      FAILED: "pre-psycho-failed",
+    } as const;
+
+    const template = templateMap[parsed.data.status];
+    if (template) {
+      sendEmail({
+        to: updated.user.email,
+        template,
+        context: {
+          name: updated.user.full_name || updated.user.name || "Candidato",
+          pendingNote: parsed.data.pendingNote,
+        },
+      });
+    }
+
+    return { success: true, data: updated };
+  } catch (error) {
+    logger.error("Erro ao avaliar candidato a psicólogo:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao avaliar candidato a psicólogo!"] },
+      code: 500,
+    };
+  }
 };

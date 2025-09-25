@@ -288,3 +288,23 @@ export const RevisePsychSchema = BasePsychSchema.extend({
 });
 
 export type RevisePsych = z.input<typeof RevisePsychSchema>;
+
+export const evaluatePsychSchema = z
+  .object({
+    pendingNote: z.string().optional(),
+    interviewed: z.boolean(),
+    status: z.enum(["APPROVED", "ADJUSTMENT", "FAILED"]),
+  })
+  .refine(
+    (data) => {
+      if (data.status === "ADJUSTMENT") return !!data.pendingNote?.trim();
+      return true;
+    },
+    {
+      message:
+        "O psicólogo precisa de ajuste, é obrigatório ter um comentário!",
+      path: ["pendingNote"],
+    },
+  );
+
+export type EvaluatePsychInput = z.infer<typeof evaluatePsychSchema>;
