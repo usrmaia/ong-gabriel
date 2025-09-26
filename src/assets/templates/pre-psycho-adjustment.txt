@@ -1,0 +1,22 @@
+ONG Gabriel
+
+Olá {{userName}},
+
+Recebemos sua solicitação de cadastro como psicólogo voluntário na ONG Gabriel 🙌.
+Durante a análise dos dados e documentos enviados, identificamos que são necessários ajustes ou complementos antes de concluirmos a validação.
+Pendência(s) encontrada(s):
+{{pendingNote}}
+
+Para prosseguir, acesse o link abaixo e realize os ajustes necessários:
+
+Acesse aqui seu cadastro: {{REDIRECT_URL}}
+
+Assim que os ajustes forem concluídos, nossa equipe dará continuidade à validação do seu cadastro.
+Agradecemos desde já pela colaboração e pelo interesse em se juntar à nossa missão de apoio psicológico voluntário.
+
+Atenciosamente,
+Equipe ONG Gabriel
+
+ONG Gabriel
+Rua Heitor Ribas Bueno, 231
+Cidade Satélite Íris, Campinas - SP

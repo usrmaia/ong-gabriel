@@ -1,0 +1,15 @@
+Olá {{nome}},
+
+Agradecemos seu interesse em atuar como psicólogo voluntário na ONG Gabriel. 
+Após análise dos dados e documentos enviados, infelizmente seu cadastro foi reprovado neste momento.
+
+{{pendingNote}}
+
+Seguimos à disposição para esclarecer quaisquer dúvidas.
+
+Atenciosamente,
+Equipe ONG Gabriel
+
+ONG Gabriel
+Rua Heitor Ribas Bueno, 231
+Cidade Satélite Íris, Campinas - SP
