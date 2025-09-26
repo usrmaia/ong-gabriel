@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { User, PsychStatus, Psych, Document } from "@prisma/client";
 
-import { BackNavigationHeader, Badge, CardUserProfile } from "@/components/ui";
+import { BackNavigationHeader, Badge, CardUserProfile, Label, RadioGroup, RadioGroupItem } from "@/components/ui";
 import { getPsychById } from "@/services";
 import prisma from "@/lib/prisma";
+import { FileText } from "lucide-react";
 
 export default async function PrePsychDetailsPage({
   params,
@@ -67,6 +68,7 @@ export default async function PrePsychDetailsPage({
         </div>
       </section>
 
+      {/* Dados Pessoais */}
       <section className="flex flex-col gap-2">
         <h2 style={{ color: "var(--color-p-xanthous)" }}>Dados Pessoais</h2>
         <div className="border-b-2 pb-2">
@@ -98,6 +100,7 @@ export default async function PrePsychDetailsPage({
         </div>
       </section>
 
+      {/* Informações Residenciais */}
       <section className="flex flex-col gap-2">
         <h2 style={{ color: "var(--color-p-xanthous)" }}>Informações Residenciais</h2>
         <div className="border-b-2 pb-2">
@@ -108,7 +111,7 @@ export default async function PrePsychDetailsPage({
           <p className="font-bold">Endereço</p>
           <p>{psych.street}</p>
         </div>
-        <div className="border-b-2 pb-2 flex gap-8">
+        <div className="border-b-2 pb-2 flex gap-2">
           <div>
             <p className="font-bold">Número</p>
             <p>{psych.number}</p>
@@ -122,7 +125,7 @@ export default async function PrePsychDetailsPage({
           <p className="font-bold">Bairro</p>
           <p>{psych.district}</p>
         </div>
-        <div className="border-b-2 pb-2 flex gap-8">
+        <div className="border-b-2 pb-2 flex gap-5">
           <div>
             <p className="font-bold">Estado</p>
             <p>{psych.state}</p>
@@ -133,6 +136,55 @@ export default async function PrePsychDetailsPage({
           </div>
         </div>
       </section>
+
+      {/* Informações Profissionais */}
+      <section className="flex flex-col gap-3">
+        <h2 style={{ color: "var(--color-p-xanthous)" }}>Informações Profissionais</h2>
+
+        <div>
+          <p className="font-bold mb-2">Experiência na prevenção e suicídio</p>
+          <RadioGroup
+            name="hasXpSuicidePrevention"
+            value={psych.hasXpSuicidePrevention.toString()}
+            className="flex gap-8"
+            disabled
+          >
+            <div className="flex gap-2 items-center">
+              <RadioGroupItem value="true" />
+              <Label>Sim</Label>
+            </div>
+            <div className="flex gap-2 items-center">
+              <RadioGroupItem value="false" />
+              <Label>Não</Label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        <div className="border-b-2 pb-2">
+          <p className="font-bold">CRP</p>
+          <p>{psych.CRP}</p>
+        </div>
+
+        <div className="border-b-2 pb-2">
+          <p className="font-bold">Observações adicionais</p>
+          <p>{psych.note}</p>
+        </div>
+      </section>
+
+      {/* Anexos */}
+      <section>
+        <h2 style={{ color: "var(--color-p-xanthous)" }}>Anexos</h2>
+
+        <div style={{ border: "var(--color-p-xanthous) .0625rem solid" }} className="rounded-lg p-3">
+          <FileText style={{ color: "var(--color-success)" }} />
+          <a href="#" className="font-bold">{psych.curriculumVitae.name}</a>
+          <p>Criado em: <span>{psych.curriculumVitae.createdAt
+            ? new Date(psych.curriculumVitae.createdAt).toLocaleDateString("pt-BR")
+            : "Não informado"}</span></p>
+        </div>
+      </section>
+
+
 
       <section className="flex flex-col gap-2">
         <div className="w-full flex flex-col items-center gap-2">
