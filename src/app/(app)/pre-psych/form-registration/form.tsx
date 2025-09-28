@@ -6,12 +6,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Psych } from "@prisma/client";
-import { CloudUpload } from "lucide-react";
+import { CloudUpload, Download } from "lucide-react";
 
 import { onSubmit } from "./actions";
 import {
   Button,
+  ButtonDownloadDocument,
   Input,
   Label,
   RadioGroup,
@@ -25,27 +25,50 @@ import {
   SelectValue,
   Textarea,
 } from "@/components/ui";
+import { PsychProfile } from "./type";
+import { MAX_PDF_SIZE_IN_BYTES } from "@/config/consts";
 
-interface PrePsychFormRegistrationProps {
-  psych?: Psych;
-}
-
-export function PrePsychFormRegistration({
-  psych,
-}: PrePsychFormRegistrationProps) {
+export function PrePsychFormRegistration({ psych }: { psych?: PsychProfile }) {
   const [state, formAction] = useActionState(onSubmit, {
-    data: psych,
+    data: psych || undefined,
     success: false,
     error: { errors: [] },
   });
 
   const [hasXpSuicidePrevention, setHasXpSuicidePrevention] = useState<
     string | null
-  >(null);
+  >(
+    state.data?.hasXpSuicidePrevention == undefined
+      ? null
+      : state.data?.hasXpSuicidePrevention
+        ? "true"
+        : "false",
+  );
+
+  const [fileName, setFileName] = useState({
+    curriculumVitae: "",
+    proofAddress: "",
+  });
+
+  const handleFileChange = (
+    field: "curriculumVitae" | "proofAddress",
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    console.log("File Size:", file?.size);
+    if (file && file.size > MAX_PDF_SIZE_IN_BYTES) {
+      alert("O arquivo selecionado é muito grande. O tamanho máximo é 500KB.");
+      e.target.value = ""; // Clear the input
+      return;
+    }
+    if (file) setFileName((prev) => ({ ...prev, [field]: file.name }));
+    else setFileName((prev) => ({ ...prev, [field]: "" }));
+  };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+    if (psych?.id) formData.append("id", psych.id);
     startTransition(() => formAction(formData));
   };
 
@@ -88,6 +111,7 @@ export function PrePsychFormRegistration({
           placeholder="00000-000"
           pattern="\d{5}-?\d{3}"
           maxLength={9}
+          defaultValue={state.data?.zipCode || undefined}
           required
         />
         <span
@@ -113,6 +137,7 @@ export function PrePsychFormRegistration({
           id="street"
           name="street"
           placeholder="Rua, Avenida, etc."
+          defaultValue={state.data?.street || undefined}
           required
         />
         <span id="street-error" role="alert" className="text-xs text-error h-2">
@@ -134,6 +159,7 @@ export function PrePsychFormRegistration({
           id="number"
           name="number"
           placeholder="123"
+          defaultValue={state.data?.number || undefined}
           required
         />
         <span id="number-error" role="alert" className="text-xs text-error h-2">
@@ -152,6 +178,7 @@ export function PrePsychFormRegistration({
           id="complement"
           name="complement"
           placeholder="Apt, Bloco, etc."
+          defaultValue={state.data?.complement || undefined}
         />
         <span
           id="complement-error"
@@ -176,6 +203,7 @@ export function PrePsychFormRegistration({
           id="city"
           name="city"
           placeholder="Nome da cidade"
+          defaultValue={state.data?.city || undefined}
           required
         />
         <span id="city-error" role="alert" className="text-xs text-error h-2">
@@ -197,6 +225,7 @@ export function PrePsychFormRegistration({
           id="district"
           name="district"
           placeholder="Nome do bairro"
+          defaultValue={state.data?.district || undefined}
           required
         />
         <span
@@ -217,7 +246,7 @@ export function PrePsychFormRegistration({
           </Label>
           <span className="text-xs">*Obrigatório</span>
         </div>
-        <Select name="state">
+        <Select name="state" defaultValue={state.data?.state || undefined}>
           <SelectTrigger aria-required className="w-full">
             <SelectValue placeholder="UF" />
           </SelectTrigger>
@@ -260,6 +289,7 @@ export function PrePsychFormRegistration({
           maxLength={8}
           minLength={8}
           pattern="\d{8}"
+          defaultValue={state.data?.CRP || undefined}
           required
         />
         <span id="CRP-error" role="alert" className="text-xs text-error h-2">
@@ -312,6 +342,7 @@ export function PrePsychFormRegistration({
           placeholder="Conte-nos um pouco mais sobre você, suas experiências, motivações..."
           rows={4}
           maxLength={2048}
+          defaultValue={state.data?.note || undefined}
         />
         <span id="note-error" role="alert" className="text-xs text-error h-2">
           {state.error?.properties?.note?.errors}
@@ -329,6 +360,13 @@ export function PrePsychFormRegistration({
       </p>
 
       <section className="flex flex-col gap-3 mt-4">
+        {psych?.curriculumVitaeId && (
+          <ButtonDownloadDocument documentId={psych?.curriculumVitaeId}>
+            <span className="text-sm underline inline-flex items-center gap-1">
+              Baixar currículo enviado <Download size={16} />
+            </span>
+          </ButtonDownloadDocument>
+        )}
         <div className="flex justify-between items-center">
           <Label
             id="curriculumVitaeId-label"
@@ -340,14 +378,22 @@ export function PrePsychFormRegistration({
           <span className="text-xs">*Obrigatório</span>
         </div>
         <div className="flex gap-4">
-          <Input
-            type="file"
-            id="curriculumVitae"
-            name="curriculumVitae"
-            accept=".pdf"
-            required
-            className="flex-1 file:p-1 file:rounded-full file:border-0 file:text-sm file:font-semibold"
-          />
+          <div className="flex-1 relative">
+            <Input
+              type="file"
+              id="curriculumVitae"
+              name="curriculumVitae"
+              accept=".pdf"
+              required={!state.data?.id}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={(e) => handleFileChange("curriculumVitae", e)}
+            />
+            <span className="items-center justify-between p-2 file:text-foreground placeholder:text-s-taupe-gray-100 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-s-silver-100 flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm">
+              {fileName.curriculumVitae ||
+                state.data?.curriculumVitae?.name ||
+                "Escolha seu currículo"}
+            </span>
+          </div>
           <Label
             id="curriculumVitaeId-label"
             htmlFor="curriculumVitae"
@@ -364,6 +410,13 @@ export function PrePsychFormRegistration({
           {state.error?.properties?.curriculumVitaeId?.errors}
         </span>
 
+        {psych?.curriculumVitaeId && (
+          <ButtonDownloadDocument documentId={psych?.proofAddressId}>
+            <span className="text-sm underline inline-flex items-center gap-1">
+              Baixar comprovante enviado <Download size={16} />
+            </span>
+          </ButtonDownloadDocument>
+        )}
         <div className="flex justify-between items-center">
           <Label
             id="proofAddressId-label"
@@ -375,14 +428,22 @@ export function PrePsychFormRegistration({
           <span className="text-xs">*Obrigatório</span>
         </div>
         <div className="flex gap-4">
-          <Input
-            type="file"
-            id="proofAddress"
-            name="proofAddress"
-            accept=".pdf"
-            required
-            className="flex-1 file:p-1 file:rounded-full file:border-0 file:text-sm file:font-semibold"
-          />
+          <div className="flex-1 relative">
+            <Input
+              type="file"
+              id="proofAddress"
+              name="proofAddress"
+              accept=".pdf"
+              required={!state.data?.id}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={(e) => handleFileChange("proofAddress", e)}
+            />
+            <span className="items-center justify-between p-2 file:text-foreground placeholder:text-s-taupe-gray-100 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-s-silver-100 flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm">
+              {fileName.proofAddress ||
+                state.data?.proofAddress?.name ||
+                "Escolha seu comprovante de endereço"}
+            </span>
+          </div>
           <Label
             id="proofAddressId-label"
             htmlFor="proofAddress"

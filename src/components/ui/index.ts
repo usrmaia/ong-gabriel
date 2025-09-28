@@ -1,5 +1,6 @@
 export * from "./badge";
 export * from "./button";
+export * from "./button-download-document";
 export * from "./button-utils";
 export * from "./button-sign";
 export * from "./card";
