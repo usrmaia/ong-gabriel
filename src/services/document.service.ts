@@ -1,6 +1,7 @@
 import { Document, MimeType, Prisma } from "@prisma/client";
 import z from "zod/v4";
 
+import { MAX_PDF_SIZE_IN_BYTES } from "@/config/consts";
 import logger from "@/config/logger";
 import { getValidate } from "@/infra/documents";
 import prisma from "@/lib/prisma";
@@ -149,8 +150,6 @@ export const deleteDocument = async (
     };
   }
 };
-
-const MAX_PDF_SIZE_IN_BYTES = 500 * 1024; // 500 KB
 
 const getMaxSizeInBytes = (mimeType: MimeType): number => {
   switch (mimeType) {
