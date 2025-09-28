@@ -15,6 +15,17 @@ export const getPsychByUserId = async (
   filter?: Prisma.PsychDefaultArgs,
 ): Promise<Result<Psych | null>> => {
   try {
+    const user = await getUserAuthenticated();
+
+    // Permitir apenas o próprio usuário ou um admin
+    if (userId !== user.id && !user.role.includes("ADMIN")) {
+      return {
+        success: false,
+        error: { errors: ["Não autorizado!"] },
+        code: 403,
+      };
+    }
+
     const psychData = await prisma.psych.findUnique({
       where: { userId },
       ...filter,
@@ -165,4 +176,50 @@ export const createPsychDocuments = async (
     },
     code: 200,
   };
+};
+
+export const updatePsych = async (
+  userId: string,
+  data: Partial<Prisma.PsychUncheckedUpdateInput>,
+  currentUser: { id: string; role: string[] },
+): Promise<Result<Psych>> => {
+  try {
+    // Permitir apenas o próprio usuário ou admin
+    if (userId !== currentUser.id && !currentUser.role.includes("ADMIN")) {
+      return {
+        success: false,
+        error: { errors: ["Não autorizado!"] },
+        code: 403,
+      };
+    }
+
+    const psych = await prisma.psych.findUnique({ where: { userId } });
+    if (!psych)
+      return {
+        success: false,
+        error: { errors: ["Psicólogo não encontrado!"] },
+        code: 404,
+      };
+
+    if (psych.status !== "ADJUSTMENT")
+      return {
+        success: false,
+        error: { errors: ["Edição não permitida para este status!"] },
+        code: 403,
+      };
+
+    const updated = await prisma.psych.update({
+      where: { userId },
+      data,
+    });
+
+    return { success: true, data: updated };
+  } catch (error) {
+    logger.error("Erro ao atualizar psicólogo:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao atualizar psicólogo!"] },
+      code: 500,
+    };
+  }
 };
