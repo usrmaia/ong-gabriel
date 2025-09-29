@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Psych } from "@prisma/client";
+import { Document, Psych } from "@prisma/client";
 import { CloudUpload } from "lucide-react";
 
 import { onSubmit } from "./actions";
@@ -27,7 +27,11 @@ import {
 } from "@/components/ui";
 
 interface PrePsychFormRegistrationProps {
-  psych?: Psych;
+  psych?: Psych & {
+    user: { role: string[] };
+    curriculumVitae: Document;
+    proofAddress: Document;
+  };
 }
 
 export function PrePsychFormRegistration({
@@ -41,7 +45,13 @@ export function PrePsychFormRegistration({
 
   const [hasXpSuicidePrevention, setHasXpSuicidePrevention] = useState<
     string | null
-  >(null);
+  >(
+    state.data?.hasXpSuicidePrevention == undefined
+      ? null
+      : state.data?.hasXpSuicidePrevention
+        ? "true"
+        : "false",
+  );
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +98,7 @@ export function PrePsychFormRegistration({
           placeholder="00000-000"
           pattern="\d{5}-?\d{3}"
           maxLength={9}
+          defaultValue={state.data?.zipCode || undefined}
           required
         />
         <span
@@ -113,6 +124,7 @@ export function PrePsychFormRegistration({
           id="street"
           name="street"
           placeholder="Rua, Avenida, etc."
+          defaultValue={state.data?.street || undefined}
           required
         />
         <span id="street-error" role="alert" className="text-xs text-error h-2">
@@ -134,6 +146,7 @@ export function PrePsychFormRegistration({
           id="number"
           name="number"
           placeholder="123"
+          defaultValue={state.data?.number || undefined}
           required
         />
         <span id="number-error" role="alert" className="text-xs text-error h-2">
@@ -152,6 +165,7 @@ export function PrePsychFormRegistration({
           id="complement"
           name="complement"
           placeholder="Apt, Bloco, etc."
+          defaultValue={state.data?.complement || undefined}
         />
         <span
           id="complement-error"
@@ -176,6 +190,7 @@ export function PrePsychFormRegistration({
           id="city"
           name="city"
           placeholder="Nome da cidade"
+          defaultValue={state.data?.city || undefined}
           required
         />
         <span id="city-error" role="alert" className="text-xs text-error h-2">
@@ -197,6 +212,7 @@ export function PrePsychFormRegistration({
           id="district"
           name="district"
           placeholder="Nome do bairro"
+          defaultValue={state.data?.district || undefined}
           required
         />
         <span
@@ -217,7 +233,7 @@ export function PrePsychFormRegistration({
           </Label>
           <span className="text-xs">*Obrigatório</span>
         </div>
-        <Select name="state">
+        <Select name="state" defaultValue={state.data?.state || undefined}>
           <SelectTrigger aria-required className="w-full">
             <SelectValue placeholder="UF" />
           </SelectTrigger>
@@ -260,6 +276,7 @@ export function PrePsychFormRegistration({
           maxLength={8}
           minLength={8}
           pattern="\d{8}"
+          defaultValue={state.data?.CRP || undefined}
           required
         />
         <span id="CRP-error" role="alert" className="text-xs text-error h-2">
@@ -312,6 +329,7 @@ export function PrePsychFormRegistration({
           placeholder="Conte-nos um pouco mais sobre você, suas experiências, motivações..."
           rows={4}
           maxLength={2048}
+          defaultValue={state.data?.note || undefined}
         />
         <span id="note-error" role="alert" className="text-xs text-error h-2">
           {state.error?.properties?.note?.errors}

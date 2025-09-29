@@ -41,10 +41,12 @@ export const getPsychByUserId = async (
     const user = await getUserAuthenticated();
 
     // Permitir apenas o próprio usuário ou um admin
-    if (userId !== user.id && !user.role.includes("ADMIN")) {
+    if (userId !== user.id || !user.role.includes("ADMIN")) {
       return {
         success: false,
-        error: { errors: ["Não autorizado!"] },
+        error: {
+          errors: ["Usuário não autorizado a visualizar este psicólogo!"],
+        },
         code: 403,
       };
     }
@@ -93,7 +95,7 @@ export const createPsychFromUser = async (
     if (!can(user, "simpleCreate", "psychs"))
       return {
         success: false,
-        error: { errors: ["O usuário já é um psicologo!"] },
+        error: { errors: ["Usuário não autorizado!"] },
         code: 409,
       };
 
