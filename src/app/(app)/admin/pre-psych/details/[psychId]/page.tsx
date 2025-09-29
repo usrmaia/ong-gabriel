@@ -1,10 +1,18 @@
 import Image from "next/image";
 import { User, PsychStatus, Psych, Document } from "@prisma/client";
 
-import { BackNavigationHeader, Badge, CardUserProfile, Label, RadioGroup, RadioGroupItem } from "@/components/ui";
+import {
+  BackNavigationHeader,
+  Badge,
+  CardUserProfile,
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui";
 import { getPsychById } from "@/services";
 import prisma from "@/lib/prisma";
 import { FileText } from "lucide-react";
+import { DownloadButton } from "@/components/ui/button.download";
 
 export default async function PrePsychDetailsPage({
   params,
@@ -54,17 +62,22 @@ export default async function PrePsychDetailsPage({
         />
         <div>
           <p className="font-bold">{psych.user.full_name}</p>
-          <p className="my-1"><span className="font-bold">CRP: </span>{psych.CRP.replace(/^(\d{2})(\d{6})$/, "$1/$2")}</p>
-          <p>{psych.status == "ADJUSTMENT" && (
-            <Badge className="text-s-charcoal-100 bg-amber-500">
-              Atualizado
-            </Badge>
-          )}
+          <p className="my-1">
+            <span className="font-bold">CRP: </span>
+            {psych.CRP.replace(/^(\d{2})(\d{6})$/, "$1/$2")}
+          </p>
+          <p>
+            {psych.status == "ADJUSTMENT" && (
+              <Badge className="text-s-charcoal-100 bg-amber-500">
+                Atualizado
+              </Badge>
+            )}
             {psych.status == "PENDING" && (
               <Badge className="text-s-charcoal-100 bg-available">
                 Aguardando
               </Badge>
-            )}</p>
+            )}
+          </p>
         </div>
       </section>
 
@@ -92,9 +105,9 @@ export default async function PrePsychDetailsPage({
           <p>
             {psych.user.phone
               ? psych.user.phone.replace(
-                /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
-                "+55 ($2) $3-$4"
-              )
+                  /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
+                  "+55 ($2) $3-$4",
+                )
               : "Não informado"}
           </p>
         </div>
@@ -102,7 +115,9 @@ export default async function PrePsychDetailsPage({
 
       {/* Informações Residenciais */}
       <section className="flex flex-col gap-2">
-        <h2 style={{ color: "var(--color-p-xanthous)" }}>Informações Residenciais</h2>
+        <h2 style={{ color: "var(--color-p-xanthous)" }}>
+          Informações Residenciais
+        </h2>
         <div className="border-b-2 pb-2">
           <p className="font-bold">CEP</p>
           <p>{psych.zipCode}</p>
@@ -139,7 +154,9 @@ export default async function PrePsychDetailsPage({
 
       {/* Informações Profissionais */}
       <section className="flex flex-col gap-3">
-        <h2 style={{ color: "var(--color-p-xanthous)" }}>Informações Profissionais</h2>
+        <h2 style={{ color: "var(--color-p-xanthous)" }}>
+          Informações Profissionais
+        </h2>
 
         <div>
           <p className="font-bold mb-2">Experiência na prevenção e suicídio</p>
@@ -175,26 +192,41 @@ export default async function PrePsychDetailsPage({
       <section>
         <h2 style={{ color: "var(--color-p-xanthous)" }}>Anexos</h2>
 
-        <div style={{ border: "var(--color-p-xanthous) .0625rem solid" }} className="rounded-lg p-3">
+        <div
+          style={{ border: "var(--color-p-xanthous) .0625rem solid" }}
+          className="rounded-lg p-3"
+        >
           <FileText style={{ color: "var(--color-success)" }} />
-          <a href="#" className="font-bold">{psych.curriculumVitae.name}</a>
-          <p>Criado em: <span>{psych.curriculumVitae.createdAt
-            ? new Date(psych.curriculumVitae.createdAt).toLocaleDateString("pt-BR")
-            : "Não informado"}</span></p>
+          <a href="#" className="font-bold">
+            {psych.curriculumVitae.name}
+          </a>
+          <p>
+            Criado em:{" "}
+            <span>
+              {psych.curriculumVitae.createdAt
+                ? new Date(psych.curriculumVitae.createdAt).toLocaleDateString(
+                    "pt-BR",
+                  )
+                : "Não informado"}
+            </span>
+          </p>
         </div>
       </section>
 
-
-
       <section className="flex flex-col gap-2">
         <div className="w-full flex flex-col items-center gap-2">
-
           <p className="font-poppins text-lg text-s-van-dyke">
             {psych.user.name}
           </p>
         </div>
         <CardUserProfile user={psych.user} />
         <h2 className="text-center">Documentos</h2>
+        <DownloadButton
+          data={curriculumVitae.data}
+          filename={curriculumVitae.name}
+          label={curriculumVitae?.name ?? "Sem currículo cadastrado."}
+          mimeType="application/pdf"
+        />
         <a
           href={curriculumVitae.id}
           rel="noreferrer"
@@ -202,11 +234,7 @@ export default async function PrePsychDetailsPage({
         >
           {curriculumVitae?.name ?? "Sem currículo cadastrado."}
         </a>
-        <a
-          href={proofAddress.id}
-          rel="noreferrer"
-          download={proofAddress.data}
-        >
+        <a href={proofAddress.id} rel="noreferrer" download={proofAddress.data}>
           {proofAddress.name ?? "Sem endereço cadastrado."}
         </a>
       </section>
