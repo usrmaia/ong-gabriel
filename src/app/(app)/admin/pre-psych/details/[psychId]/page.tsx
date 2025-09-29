@@ -4,14 +4,14 @@ import { User, PsychStatus, Psych, Document } from "@prisma/client";
 import {
   BackNavigationHeader,
   Badge,
-  CardUserProfile,
+  Button,
   Label,
   RadioGroup,
   RadioGroupItem,
 } from "@/components/ui";
 import { getPsychById } from "@/services";
 import prisma from "@/lib/prisma";
-import { FileText } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { DownloadButton } from "@/components/ui/button.download";
 
 export default async function PrePsychDetailsPage({
@@ -41,7 +41,7 @@ export default async function PrePsychDetailsPage({
     proofAddress: Document;
   };
   const curriculumVitae = psych.curriculumVitae;
-  const proofAddress = psych.proofAddress;
+  // const proofAddress = psych.proofAddress;
 
   return (
     <>
@@ -105,9 +105,9 @@ export default async function PrePsychDetailsPage({
           <p>
             {psych.user.phone
               ? psych.user.phone.replace(
-                  /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
-                  "+55 ($2) $3-$4",
-                )
+                /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
+                "+55 ($2) $3-$4",
+              )
               : "Não informado"}
           </p>
         </div>
@@ -189,55 +189,87 @@ export default async function PrePsychDetailsPage({
       </section>
 
       {/* Anexos */}
-      <section>
+      <section className="flex flex-col gap-3">
         <h2 style={{ color: "var(--color-p-xanthous)" }}>Anexos</h2>
 
         <div
           style={{ border: "var(--color-p-xanthous) .0625rem solid" }}
           className="rounded-lg p-3"
         >
-          <FileText style={{ color: "var(--color-success)" }} />
-          <a href="#" className="font-bold">
-            {psych.curriculumVitae.name}
-          </a>
-          <p>
-            Criado em:{" "}
-            <span>
-              {psych.curriculumVitae.createdAt
-                ? new Date(psych.curriculumVitae.createdAt).toLocaleDateString(
+          <div className="flex gap-2 align-items-center">
+            <FileText style={{ color: "var(--color-success)" }} />
+            <div className="font-bold">
+              <DownloadButton
+                data={curriculumVitae.data}
+                filename={curriculumVitae.name}
+                label={curriculumVitae?.name ?? "Sem currículo cadastrado."}
+                mimeType="application/pdf"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center mt-2">
+            <p>
+              Criado em:{" "}
+              <span>
+                {psych.curriculumVitae.createdAt
+                  ? new Date(psych.curriculumVitae.createdAt).toLocaleDateString(
                     "pt-BR",
                   )
-                : "Não informado"}
-            </span>
-          </p>
+                  : "Não informado"}
+              </span>
+            </p>
+            <Download style={{ color: "var(--color-p-indigo)" }} />
+          </div>
+        </div>
+
+        <div>
+          <p className="font-bold mb-2">Profissional foi entrevistado?</p>
+          <RadioGroup
+            name="hasXpSuicidePrevention"
+            value={psych.interviewed.toString()}
+            className="flex gap-8"
+            disabled
+          >
+            <div className="flex gap-2 items-center">
+              <RadioGroupItem value="true" />
+              <Label>Sim</Label>
+            </div>
+            <div className="flex gap-2 items-center">
+              <RadioGroupItem value="false" />
+              <Label>Não</Label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        <div>
+          <p className="font-bold mb-2">Aprovar candidatura?</p>
+          <RadioGroup defaultValue="comfortable" className="flex gap-8">
+            <div className="flex items-center gap-3">
+              <RadioGroupItem value="default" id="r1" />
+              <Label htmlFor="r1">Sim</Label>
+            </div>
+            <div className="flex items-center gap-3">
+              <RadioGroupItem value="comfortable" id="r2" />
+              <Label htmlFor="r2">Não</Label>
+            </div>
+          </RadioGroup>
         </div>
       </section>
 
-      <section className="flex flex-col gap-2">
-        <div className="w-full flex flex-col items-center gap-2">
-          <p className="font-poppins text-lg text-s-van-dyke">
-            {psych.user.name}
-          </p>
-        </div>
-        <CardUserProfile user={psych.user} />
-        <h2 className="text-center">Documentos</h2>
-        <DownloadButton
-          data={curriculumVitae.data}
-          filename={curriculumVitae.name}
-          label={curriculumVitae?.name ?? "Sem currículo cadastrado."}
-          mimeType="application/pdf"
-        />
-        <a
-          href={curriculumVitae.id}
-          rel="noreferrer"
-          download={curriculumVitae.data}
-        >
-          {curriculumVitae?.name ?? "Sem currículo cadastrado."}
-        </a>
-        <a href={proofAddress.id} rel="noreferrer" download={proofAddress.data}>
-          {proofAddress.name ?? "Sem endereço cadastrado."}
-        </a>
+
+      {/* Botões */}
+      <section className="flex flex-col w-full gap-4">
+        <Button className="bg-transparent hover:bg-[#fdeddd]" style={{ border: "var(--color-p-terracotta) .0625rem solid" }} >
+          <a href="#">Salvar</a>
+        </Button>
+
+        <Button>
+          <a href="#">Avançar</a>
+        </Button>
       </section>
+
+
       <div className="mt-6 flex gap-4 justify-center">
         <form
           action={async () => {
@@ -287,22 +319,6 @@ export default async function PrePsychDetailsPage({
             Ajustar
           </button>
         </form>
-      </div>
-      <div className="mt-4 text-center">
-        <span className="font-semibold">Status atual: </span>
-        <span>
-          {psych?.status
-            ? psych.status === PsychStatus.APPROVED
-              ? "Aprovado"
-              : psych.status === PsychStatus.FAILED
-                ? "Reprovado"
-                : psych.status === PsychStatus.ADJUSTMENT
-                  ? "Ajuste necessário"
-                  : psych.status === PsychStatus.PENDING
-                    ? "Pendente"
-                    : "Desconhecido"
-            : "Indefinido"}
-        </span>
       </div>
     </>
   );
