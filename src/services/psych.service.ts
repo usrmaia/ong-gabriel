@@ -40,8 +40,7 @@ export const getPsychByUserId = async (
   try {
     const user = await getUserAuthenticated();
 
-    // Permitir apenas o próprio usuário ou um admin
-    if (userId !== user.id || !user.role.includes("ADMIN")) {
+    if (!can(user, "view", "psychs", { userId })) {
       return {
         success: false,
         error: {

@@ -30,6 +30,10 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       action: "list",
       resource: "psychs",
     },
+    {
+      action: "view",
+      resource: "psychs",
+    },
   ],
   EMPLOYEE: [
     {
@@ -58,6 +62,11 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       action: "simpleCreate",
       resource: "psychs",
       condition: (user) => !user.role.includes("EMPLOYEE"),
+    },
+    {
+      action: "view",
+      resource: "psychs",
+      condition: (user, targetResource) => user.id === targetResource.userId,
     },
   ],
   PATIENT: [

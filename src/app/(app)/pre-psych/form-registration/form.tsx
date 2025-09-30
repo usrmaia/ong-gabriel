@@ -6,12 +6,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Document, Psych } from "@prisma/client";
 import { CloudUpload } from "lucide-react";
 
 import { onSubmit } from "./actions";
 import {
   Button,
+  ButtonDownloadDocument,
   Input,
   Label,
   RadioGroup,
@@ -25,20 +25,11 @@ import {
   SelectValue,
   Textarea,
 } from "@/components/ui";
+import { Psych } from "@prisma/client";
 
-interface PrePsychFormRegistrationProps {
-  psych?: Psych & {
-    user: { role: string[] };
-    curriculumVitae: Document;
-    proofAddress: Document;
-  };
-}
-
-export function PrePsychFormRegistration({
-  psych,
-}: PrePsychFormRegistrationProps) {
+export function PrePsychFormRegistration({ psych }: { psych?: Psych }) {
   const [state, formAction] = useActionState(onSubmit, {
-    data: psych,
+    data: psych || undefined,
     success: false,
     error: { errors: [] },
   });
@@ -347,6 +338,11 @@ export function PrePsychFormRegistration({
       </p>
 
       <section className="flex flex-col gap-3 mt-4">
+        {psych?.curriculumVitaeId && (
+          <ButtonDownloadDocument documentId={psych?.curriculumVitaeId}>
+            <span className="text-sm underline">Ver currículo enviado</span>
+          </ButtonDownloadDocument>
+        )}
         <div className="flex justify-between items-center">
           <Label
             id="curriculumVitaeId-label"
@@ -382,6 +378,11 @@ export function PrePsychFormRegistration({
           {state.error?.properties?.curriculumVitaeId?.errors}
         </span>
 
+        {psych?.curriculumVitaeId && (
+          <ButtonDownloadDocument documentId={psych?.proofAddressId}>
+            <span className="text-sm underline">Ver comprovante enviado</span>
+          </ButtonDownloadDocument>
+        )}
         <div className="flex justify-between items-center">
           <Label
             id="proofAddressId-label"
