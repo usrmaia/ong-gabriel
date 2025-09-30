@@ -5,6 +5,7 @@ import {
   BackNavigationHeader,
   Badge,
   Button,
+  ButtonDownloadDocument,
   Label,
   RadioGroup,
   RadioGroupItem,
@@ -12,7 +13,6 @@ import {
 import { getPsychById } from "@/services";
 import prisma from "@/lib/prisma";
 import { Download, FileText } from "lucide-react";
-import { ButtonDownloadData } from "@/components/ui/button-download-data";
 
 export default async function PrePsychDetailsPage({
   params,
@@ -192,11 +192,7 @@ export default async function PrePsychDetailsPage({
       <section className="flex flex-col gap-3">
         <h2 style={{ color: "var(--color-p-xanthous)" }}>Anexos</h2>
 
-        <ButtonDownloadData
-          data={curriculumVitae.data}
-          filename={curriculumVitae.name}
-          mimeType="application/pdf"
-        >
+        <ButtonDownloadDocument documentId={curriculumVitae.id}>
           <div
             style={{ border: "var(--color-p-xanthous) .0625rem solid" }}
             className="rounded-lg p-3"
@@ -221,7 +217,7 @@ export default async function PrePsychDetailsPage({
               <Download style={{ color: "var(--color-p-indigo)" }} />
             </div>
           </div>
-        </ButtonDownloadData>
+        </ButtonDownloadDocument>
 
         <div>
           <p className="font-bold mb-2">Profissional foi entrevistado?</p>
