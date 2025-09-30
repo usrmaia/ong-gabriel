@@ -12,7 +12,7 @@ import {
 import { getPsychById } from "@/services";
 import prisma from "@/lib/prisma";
 import { Download, FileText } from "lucide-react";
-import { DownloadButton } from "@/components/ui/button.download";
+import { ButtonDownloadData } from "@/components/ui/button-download-data";
 
 export default async function PrePsychDetailsPage({
   params,
@@ -105,9 +105,9 @@ export default async function PrePsychDetailsPage({
           <p>
             {psych.user.phone
               ? psych.user.phone.replace(
-                /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
-                "+55 ($2) $3-$4",
-              )
+                  /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
+                  "+55 ($2) $3-$4",
+                )
               : "Não informado"}
           </p>
         </div>
@@ -192,36 +192,36 @@ export default async function PrePsychDetailsPage({
       <section className="flex flex-col gap-3">
         <h2 style={{ color: "var(--color-p-xanthous)" }}>Anexos</h2>
 
-        <div
-          style={{ border: "var(--color-p-xanthous) .0625rem solid" }}
-          className="rounded-lg p-3"
+        <ButtonDownloadData
+          data={curriculumVitae.data}
+          filename={curriculumVitae.name}
+          mimeType="application/pdf"
         >
-          <div className="flex gap-2 align-items-center">
-            <FileText style={{ color: "var(--color-success)" }} />
-            <div className="font-bold">
-              <DownloadButton
-                data={curriculumVitae.data}
-                filename={curriculumVitae.name}
-                label={curriculumVitae?.name ?? "Sem currículo cadastrado."}
-                mimeType="application/pdf"
-              />
+          <div
+            style={{ border: "var(--color-p-xanthous) .0625rem solid" }}
+            className="rounded-lg p-3"
+          >
+            <div className="flex gap-2 align-items-center">
+              <div className="font-bold">
+                <FileText style={{ color: "var(--color-success)" }} />
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center mt-2">
+              <p>
+                Criado em:{" "}
+                <span>
+                  {psych.curriculumVitae.createdAt
+                    ? new Date(
+                        psych.curriculumVitae.createdAt,
+                      ).toLocaleDateString("pt-BR")
+                    : "Não informado"}
+                </span>
+              </p>
+              <Download style={{ color: "var(--color-p-indigo)" }} />
             </div>
           </div>
-
-          <div className="flex justify-between items-center mt-2">
-            <p>
-              Criado em:{" "}
-              <span>
-                {psych.curriculumVitae.createdAt
-                  ? new Date(psych.curriculumVitae.createdAt).toLocaleDateString(
-                    "pt-BR",
-                  )
-                  : "Não informado"}
-              </span>
-            </p>
-            <Download style={{ color: "var(--color-p-indigo)" }} />
-          </div>
-        </div>
+        </ButtonDownloadData>
 
         <div>
           <p className="font-bold mb-2">Profissional foi entrevistado?</p>
@@ -257,10 +257,12 @@ export default async function PrePsychDetailsPage({
         </div>
       </section>
 
-
       {/* Botões */}
       <section className="flex flex-col w-full gap-4">
-        <Button className="bg-transparent hover:bg-[#fdeddd]" style={{ border: "var(--color-p-terracotta) .0625rem solid" }} >
+        <Button
+          className="bg-transparent hover:bg-[#fdeddd]"
+          style={{ border: "var(--color-p-terracotta) .0625rem solid" }}
+        >
           <a href="#">Salvar</a>
         </Button>
 
@@ -268,7 +270,6 @@ export default async function PrePsychDetailsPage({
           <a href="#">Avançar</a>
         </Button>
       </section>
-
 
       <div className="mt-6 flex gap-4 justify-center">
         <form

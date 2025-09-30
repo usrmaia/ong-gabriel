@@ -3,15 +3,15 @@
 type DownloadButtonProps = {
   data?: Uint8Array;
   filename?: string;
-  label: string;
   mimeType?: string;
+  children?: React.ReactNode;
 };
 
-export const DownloadButton = ({
+export const ButtonDownloadData = ({
   data,
   filename,
-  label,
   mimeType,
+  children,
 }: DownloadButtonProps) => {
   const handleDownload = () => {
     if (!data) return;
@@ -28,12 +28,8 @@ export const DownloadButton = ({
   };
 
   return (
-    <button
-      onClick={handleDownload}
-      className="text-blue-600 hover:text-blue-800 underline text-left disabled:text-gray-400 disabled:cursor-not-allowed"
-      disabled={!data}
-    >
-      {label}
+    <button onClick={handleDownload} className="cursor-pointer">
+      {children}
     </button>
   );
 };
