@@ -89,7 +89,13 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       condition: (user, targetResource) => user.id === targetResource.userId,
     },
   ],
-  PREPSYCHO: [],
+  PREPSYCHO: [
+    {
+      action: "update",
+      resource: "psychs",
+      condition: (user, targetResource) => user.id === targetResource.userId,
+    },
+  ],
 };
 
 /**
