@@ -3,7 +3,10 @@
 import { redirect } from "next/navigation";
 import { Prisma, Psych } from "@prisma/client";
 
-import { createPsychFromUser } from "@/services/psych.service";
+import {
+  createPsychFromUser,
+  updatePsychFromUser,
+} from "@/services/psych.service";
 import { Result } from "@/types";
 
 export async function onSubmit(
@@ -56,11 +59,17 @@ export async function onSubmit(
     category: "CURRICULUM_VITAE",
   };
 
-  const result = await createPsychFromUser(
-    formDataObject,
-    proofAddressDoc,
-    curriculumVitaeDoc,
-  );
+  const result = formDataObject.id
+    ? await updatePsychFromUser(
+        formDataObject,
+        proofAddressDoc,
+        curriculumVitaeDoc,
+      )
+    : await createPsychFromUser(
+        formDataObject,
+        proofAddressDoc,
+        curriculumVitaeDoc,
+      );
 
   if (!result.success) return result;
 

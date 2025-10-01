@@ -4,7 +4,7 @@ import logger from "@/config/logger";
 import { createDocument, deleteDocument } from "./document.service";
 import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
-import { Document, Prisma, Psych } from "@prisma/client";
+import { Prisma, Psych } from "@prisma/client";
 import { addRoleToUser } from "./role.service";
 import { BasePsychSchema } from "@/schemas";
 import { Result } from "@/types";
@@ -254,8 +254,8 @@ export const updatePsych = async (
  */
 export const updatePsychFromUser = async (
   psych: Partial<Prisma.PsychUncheckedUpdateInput>,
-  proofAddress: Document,
-  curriculumVitae: Document,
+  proofAddress: Prisma.DocumentUncheckedCreateInput,
+  curriculumVitae: Prisma.DocumentUncheckedCreateInput,
 ): Promise<Result<Psych>> => {
   try {
     const user = await getUserAuthenticated();
