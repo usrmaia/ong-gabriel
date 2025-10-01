@@ -12,7 +12,6 @@ import { getUserAuthenticated } from "@/utils/auth";
 import { evaluatePsychSchema, EvaluatePsychInput } from "@/schemas";
 import { sendEmail } from "@/infra/email/email";
 
-
 export const getPsychs = async (
   filter?: Prisma.PsychFindManyArgs,
 ): Promise<Result<Psych[]>> => {
@@ -195,56 +194,50 @@ export const createPsychDocuments = async (
 
 export const evaluateCandidatePsych = async (
   psychId: string,
-  input: EvaluatePsychInput
+  input: EvaluatePsychInput,
 ): Promise<Result<Psych>> => {
   try {
-    const parsed = await evaluatePsychSchema.safeParseAsync(input);
-    if (!parsed.success) {
+    const evaluateResult = await evaluatePsychSchema.safeParseAsync(input);
+    if (!evaluateResult.success)
       return {
         success: false,
-        error: z.treeifyError(parsed.error),
+        error: z.treeifyError(evaluateResult.error),
         code: 400,
       };
-    }
 
     const user = await getUserAuthenticated();
-    if (!can(user, "update", "psychs")) {
+    if (!can(user, "update", "psychs"))
       return {
         success: false,
         error: { errors: ["Usuário não autorizado!"] },
         code: 403,
       };
-    }
 
-    const updated = await prisma.psych.update({
+    const updatedPsych = await prisma.psych.update({
       where: { id: psychId },
-      data: {
-        pendingNote: parsed.data.pendingNote,
-        interviewed: parsed.data.interviewed,
-        status: parsed.data.status,
-      },
+      data: { ...evaluateResult.data },
       include: { user: true },
     });
 
+    // TODO: Resolver após OG-49
     const templateMap = {
       APPROVED: "pre-psycho-approved",
       ADJUSTMENT: "pre-psycho-adjustment",
       FAILED: "pre-psycho-failed",
     } as const;
 
-    const template = templateMap[parsed.data.status];
-    if (template) {
-      sendEmail({
-        to: updated.user.email,
-        template,
-        context: {
-          name: updated.user.full_name || updated.user.name || "Candidato",
-          pendingNote: parsed.data.pendingNote,
-        },
-      });
-    }
+    const template = templateMap[evaluateResult.data.status];
+    sendEmail({
+      to: updatedPsych.user.email,
+      template,
+      context: {
+        name:
+          updatedPsych.user.full_name || updatedPsych.user.name || "Candidato",
+        pendingNote: evaluateResult.data.pendingNote,
+      },
+    });
 
-    return { success: true, data: updated };
+    return { success: true, data: updatedPsych };
   } catch (error) {
     logger.error("Erro ao avaliar candidato a psicólogo:", error);
     return {

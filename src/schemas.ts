@@ -279,25 +279,24 @@ export const BasePsychSchema = z.object({
 
 export type BasePsych = z.input<typeof BasePsychSchema>;
 
-export const RevisePsychSchema = BasePsychSchema.extend({
-  pendingNote: z
-    .string()
-    .max(2048, "Campo deve ter no máximo 2048 caracteres.")
-    .optional(),
-  status: z.enum(PsychStatus, { error: "Status inválido." }).optional(),
-});
-
-export type RevisePsych = z.input<typeof RevisePsychSchema>;
-
 export const evaluatePsychSchema = z
   .object({
-    pendingNote: z.string().optional(),
+    pendingNote: z
+      .string()
+      .max(2048, "Campo deve ter no máximo 2048 caracteres.")
+      .optional(),
     interviewed: z.boolean(),
-    status: z.enum(["APPROVED", "ADJUSTMENT", "FAILED"]),
+    status: z.enum(
+      [PsychStatus.APPROVED, PsychStatus.ADJUSTMENT, PsychStatus.FAILED],
+      {
+        error:
+          "Status inválido, candidato deve ser aprovado, ajuste ou reprovado.",
+      },
+    ),
   })
   .refine(
-    (data) => {
-      if (data.status === "ADJUSTMENT") return !!data.pendingNote?.trim();
+    (check) => {
+      if (check.status === "ADJUSTMENT") return !!check.pendingNote?.trim();
       return true;
     },
     {
