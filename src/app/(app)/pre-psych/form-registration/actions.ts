@@ -12,7 +12,15 @@ import { Result } from "@/types";
 export async function onSubmit(
   prev: Result<Psych>,
   formData: globalThis.FormData,
-): Promise<Result<Psych>> {
+): Promise<
+  Result<
+    Psych & {
+      user: { role: string[] };
+      curriculumVitae: { name: string } | null;
+      proofAddress: { name: string } | null;
+    }
+  >
+> {
   const formDataObject = Object.fromEntries(
     formData.entries(),
   ) as unknown as Psych;

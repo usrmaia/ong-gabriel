@@ -202,52 +202,6 @@ export const createPsychDocuments = async (
   };
 };
 
-export const updatePsych = async (
-  userId: string,
-  data: Partial<Prisma.PsychUncheckedUpdateInput>,
-  currentUser: { id: string; role: string[] },
-): Promise<Result<Psych>> => {
-  try {
-    // Permitir apenas o próprio usuário ou admin
-    if (userId !== currentUser.id && !currentUser.role.includes("ADMIN")) {
-      return {
-        success: false,
-        error: { errors: ["Não autorizado!"] },
-        code: 403,
-      };
-    }
-
-    const psych = await prisma.psych.findUnique({ where: { userId } });
-    if (!psych)
-      return {
-        success: false,
-        error: { errors: ["Psicólogo não encontrado!"] },
-        code: 404,
-      };
-
-    if (psych.status !== "ADJUSTMENT")
-      return {
-        success: false,
-        error: { errors: ["Edição não permitida para este status!"] },
-        code: 403,
-      };
-
-    const updated = await prisma.psych.update({
-      where: { userId },
-      data,
-    });
-
-    return { success: true, data: updated };
-  } catch (error) {
-    logger.error("Erro ao atualizar psicólogo:", error);
-    return {
-      success: false,
-      error: { errors: ["Erro ao atualizar psicólogo!"] },
-      code: 500,
-    };
-  }
-};
-
 /**
  * Atualiza um registro de psicólogo com dados básicos e documentos associados.
  * Permite edição apenas para candidatos com status ADJUSTMENT.
@@ -309,21 +263,28 @@ export const updatePsychFromUser = async (
         };
     }
 
-    await prisma.psych.update({
+    let updatedPsych = await prisma.psych.update({
+      include: { proofAddress: true, curriculumVitae: true },
       where: { userId: user.id },
       data: validatedPsych.data,
     });
 
-    if (existingPsych.proofAddress.data !== proofAddress.data) {
+    const isProofAddressChanged =
+      existingPsych.proofAddress.data.byteLength !==
+        proofAddress.data.byteLength ||
+      existingPsych.proofAddress.data !== proofAddress.data;
+    if (isProofAddressChanged) {
       const createProofResult = await createDocument(proofAddress);
       if (!createProofResult.success)
         return {
           success: false,
+          data: updatedPsych,
           error: createProofResult.error,
           code: 500,
         };
 
-      await prisma.psych.update({
+      updatedPsych = await prisma.psych.update({
+        include: { proofAddress: true, curriculumVitae: true },
         where: { userId: user.id },
         data: { proofAddressId: createProofResult.data!.id },
       });
@@ -338,16 +299,22 @@ export const updatePsychFromUser = async (
         );
     }
 
-    if (existingPsych.curriculumVitae.data !== curriculumVitae.data) {
+    const isCurriculumVitaeUpdated =
+      existingPsych.curriculumVitae.data.byteLength !==
+        curriculumVitae.data.byteLength ||
+      existingPsych.curriculumVitae.data !== curriculumVitae.data;
+    if (isCurriculumVitaeUpdated) {
       const createCVResult = await createDocument(curriculumVitae);
       if (!createCVResult.success)
         return {
           success: false,
+          data: updatedPsych,
           error: createCVResult.error,
           code: 500,
         };
 
-      await prisma.psych.update({
+      updatedPsych = await prisma.psych.update({
+        include: { proofAddress: true, curriculumVitae: true },
         where: { userId: user.id },
         data: { curriculumVitaeId: createCVResult.data!.id },
       });
@@ -362,11 +329,13 @@ export const updatePsychFromUser = async (
         );
     }
 
-    const updatedPsych = await prisma.psych.findUnique({
+    updatedPsych = await prisma.psych.update({
+      include: { proofAddress: true, curriculumVitae: true },
       where: { userId: user.id },
+      data: { status: "PENDING" },
     });
 
-    return { success: true, data: updatedPsych! };
+    return { success: true, data: updatedPsych };
   } catch (error) {
     logger.error("Erro ao atualizar psicólogo:", error);
     return {

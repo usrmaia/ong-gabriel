@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { CloudUpload } from "lucide-react";
+import { CloudUpload, Download } from "lucide-react";
 
 import { onSubmit } from "./actions";
 import {
@@ -27,7 +27,15 @@ import {
 } from "@/components/ui";
 import { Psych } from "@prisma/client";
 
-export function PrePsychFormRegistration({ psych }: { psych?: Psych }) {
+export function PrePsychFormRegistration({
+  psych,
+}: {
+  psych?: Psych & {
+    user: { role: string[] };
+    curriculumVitae: { name: string } | null;
+    proofAddress: { name: string } | null;
+  };
+}) {
   const [state, formAction] = useActionState(onSubmit, {
     data: psych || undefined,
     success: false,
@@ -340,7 +348,9 @@ export function PrePsychFormRegistration({ psych }: { psych?: Psych }) {
       <section className="flex flex-col gap-3 mt-4">
         {psych?.curriculumVitaeId && (
           <ButtonDownloadDocument documentId={psych?.curriculumVitaeId}>
-            <span className="text-sm underline">Ver currículo enviado</span>
+            <span className="text-sm underline inline-flex items-center gap-1">
+              Baixar currículo enviado <Download size={16} />
+            </span>
           </ButtonDownloadDocument>
         )}
         <div className="flex justify-between items-center">
@@ -380,7 +390,9 @@ export function PrePsychFormRegistration({ psych }: { psych?: Psych }) {
 
         {psych?.curriculumVitaeId && (
           <ButtonDownloadDocument documentId={psych?.proofAddressId}>
-            <span className="text-sm underline">Ver comprovante enviado</span>
+            <span className="text-sm underline inline-flex items-center gap-1">
+              Baixar comprovante enviado <Download size={16} />
+            </span>
           </ButtonDownloadDocument>
         )}
         <div className="flex justify-between items-center">
@@ -394,14 +406,21 @@ export function PrePsychFormRegistration({ psych }: { psych?: Psych }) {
           <span className="text-xs">*Obrigatório</span>
         </div>
         <div className="flex gap-4">
-          <Input
-            type="file"
-            id="proofAddress"
-            name="proofAddress"
-            accept=".pdf"
-            required
-            className="flex-1 file:p-1 file:rounded-full file:border-0 file:text-sm file:font-semibold"
-          />
+          <div className="flex-1 relative">
+            <Input
+              type="file"
+              id="proofAddress"
+              name="proofAddress"
+              accept=".pdf"
+              required
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <span className="items-center justify-between p-2 file:text-foreground placeholder:text-s-taupe-gray-100 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-s-silver-100 flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm">
+              {state.data?.proofAddress?.name
+                ? state.data.proofAddress.name
+                : "Escolha seu comprovante de endereço"}
+            </span>
+          </div>
           <Label
             id="proofAddressId-label"
             htmlFor="proofAddress"

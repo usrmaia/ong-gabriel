@@ -9,10 +9,18 @@ import { getUserIdAuthenticated } from "@/utils/auth";
 export default async function PrePsychFormRegistrationPage() {
   const userId = await getUserIdAuthenticated();
   const psychResult = await getPsychByUserId(userId, {
-    include: { user: { select: { role: true } } },
+    include: {
+      user: { select: { role: true } },
+      curriculumVitae: { select: { name: true } },
+      proofAddress: { select: { name: true } },
+    },
   });
   const psych = psychResult.data as
-    | (Psych & { user: { role: string[] } })
+    | (Psych & {
+        user: { role: string[] };
+        curriculumVitae: { name: string } | null;
+        proofAddress: { name: string } | null;
+      })
     | null;
 
   // Caso ainda não tenha sido verificado
