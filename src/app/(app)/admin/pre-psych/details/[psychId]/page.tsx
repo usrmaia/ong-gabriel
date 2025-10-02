@@ -13,6 +13,7 @@ import {
 import { getPsychById } from "@/services";
 import prisma from "@/lib/prisma";
 import { Download, FileText } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function PrePsychDetailsPage({
   params,
@@ -41,14 +42,11 @@ export default async function PrePsychDetailsPage({
     proofAddress: Document;
   };
   const curriculumVitae = psych.curriculumVitae;
-  // const proofAddress = psych.proofAddress;
 
   return (
     <>
-      <h2 className="text-center">Cadastro Psicólogo</h2>
-
       <BackNavigationHeader
-        title="Pré-Psicólogo"
+        title="Cadastro Psicólogo"
         href="/admin/pre-psych/list"
       />
 
@@ -105,9 +103,9 @@ export default async function PrePsychDetailsPage({
           <p>
             {psych.user.phone
               ? psych.user.phone.replace(
-                  /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
-                  "+55 ($2) $3-$4",
-                )
+                /^(\+?55)?(\d{2})(\d{4,5})(\d{4})$/,
+                "+55 ($2) $3-$4",
+              )
               : "Não informado"}
           </p>
         </div>
@@ -209,8 +207,8 @@ export default async function PrePsychDetailsPage({
                 <span>
                   {psych.curriculumVitae.createdAt
                     ? new Date(
-                        psych.curriculumVitae.createdAt,
-                      ).toLocaleDateString("pt-BR")
+                      psych.curriculumVitae.createdAt,
+                    ).toLocaleDateString("pt-BR")
                     : "Não informado"}
                 </span>
               </p>
@@ -225,7 +223,6 @@ export default async function PrePsychDetailsPage({
             name="hasXpSuicidePrevention"
             value={psych.interviewed.toString()}
             className="flex gap-8"
-            disabled
           >
             <div className="flex gap-2 items-center">
               <RadioGroupItem value="true" />
@@ -238,33 +235,45 @@ export default async function PrePsychDetailsPage({
           </RadioGroup>
         </div>
 
-        <div>
-          <p className="font-bold mb-2">Aprovar candidatura?</p>
-          <RadioGroup defaultValue="comfortable" className="flex gap-8">
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="default" id="r1" />
-              <Label htmlFor="r1">Sim</Label>
+        <div className="flex flex-col gap-3">
+          <form
+            action={async (formData: FormData) => {
+              "use server";
+              const status = formData.get("approval") as PsychStatus;
+              await prisma.psych.update({
+                where: { userId: psych.user.id },
+                data: { status },
+              });
+              redirect(`/admin/pre-psych/list/`);
+            }}
+          >
+            <div>
+              <p className="font-bold mb-2">Aprovar candidatura?</p>
+              <RadioGroup
+                name="approval"
+                defaultValue={psych.status.toString()}
+                className="flex gap-8"
+              >
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value={PsychStatus.APPROVED} id="r1" />
+                  <Label htmlFor="r1">Sim</Label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value={PsychStatus.FAILED} id="r2" />
+                  <Label htmlFor="r2">Não</Label>
+                </div>
+              </RadioGroup>
             </div>
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="comfortable" id="r2" />
-              <Label htmlFor="r2">Não</Label>
-            </div>
-          </RadioGroup>
+            <Button
+              type="submit"
+              className="mt-4 bg-transparent hover:bg-[#fdeddd]"
+              style={{ border: "var(--color-p-terracotta) .0625rem solid" }}
+            >
+              Salvar
+            </Button>
+          </form>
         </div>
-      </section>
 
-      {/* Botões */}
-      <section className="flex flex-col w-full gap-4">
-        <Button
-          className="bg-transparent hover:bg-[#fdeddd]"
-          style={{ border: "var(--color-p-terracotta) .0625rem solid" }}
-        >
-          <a href="#">Salvar</a>
-        </Button>
-
-        <Button>
-          <a href="#">Avançar</a>
-        </Button>
       </section>
 
       <div className="mt-6 flex gap-4 justify-center">
