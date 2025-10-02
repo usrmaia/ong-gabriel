@@ -2,6 +2,7 @@
 
 import { PatientAttendance } from "@prisma/client";
 
+import { env } from "@/config/env";
 import logger from "@/config/logger";
 import { updatePatientAttendance } from "@/services";
 import { Result } from "@/types";
@@ -34,6 +35,7 @@ export async function onSubmit(
         nome: "Josivânia",
         // pendencias: "Documento ilegível\n- Comprovante de endereço ausente",
         url: "http://localhost:3000/",
+        EMAIL_IMG_PUBLIC_URL: env.EMAIL_IMG_PUBLIC_URL,
       },
     });
     if (!updatedAttendanceResult.success)

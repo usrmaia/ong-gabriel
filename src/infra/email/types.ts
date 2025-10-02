@@ -11,16 +11,19 @@ export type TemplateContext = {
   "pre-psycho-approved": {
     nome: string;
     url: string;
+    EMAIL_IMG_PUBLIC_URL: string;
   };
   "pre-psycho-adjustment": {
     nome: string;
     motivo: string;
     url: string;
+    EMAIL_IMG_PUBLIC_URL: string;
   };
   "pre-psycho-failed": {
     nome: string;
     pendencias: string;
     url: string;
+    EMAIL_IMG_PUBLIC_URL: string;
   };
 };
 
@@ -31,13 +34,3 @@ export const TemplateSubject: Record<Template, string> = {
   "pre-psycho-adjustment": "Retorno sobre seu cadastro – ONG Gabriel",
   "pre-psycho-failed": "Ajustes necessários no seu cadastro – ONG Gabriel",
 };
-
-// sendEmail({
-//   to: "josivania0706@gmail.com",
-//   template: "pre-psycho-approved",
-//   context: {
-//     nome: "Josivânia",
-//     // pendencias: "Documento ilegível\n- Comprovante de endereço ausente",
-//     url: "https://onggabriel.org",
-//   },
-// });

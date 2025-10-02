@@ -18,6 +18,7 @@ const envSchema = z.object({
   EMAIL_GOOGLE_SECRET: z.string().optional(),
   EMAIL_GOOGLE_REFRESH_TOKEN: z.string().optional(),
   EMAIL_GOOGLE_ACCESS_TOKEN: z.string().optional(),
+  EMAIL_IMG_PUBLIC_URL: z.string().url(),
 
   SECURE_COOKIES_ENABLED: z
     .string()
