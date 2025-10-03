@@ -217,115 +217,67 @@ export default async function PrePsychDetailsPage({
           </div>
         </ButtonDownloadDocument>
 
-        <div>
-          <p className="font-bold mb-2">Profissional foi entrevistado?</p>
+        <form
+          className="flex flex-col gap-3"
+          action={async (formData: FormData) => {
+            "use server";
+            const status = formData.get("approval") as PsychStatus;
+            const interviewed = formData.get("interviewed") === "true";
+
+            await prisma.psych.update({
+              where: { userId: psych.user.id },
+              data: { status, interviewed },
+            });
+            redirect(`/admin/pre-psych/list/`);
+          }}
+        >
+
+          <p className="font-bold">Profissional foi entrevistado?</p>
           <RadioGroup
-            name="hasXpSuicidePrevention"
-            value={psych.interviewed.toString()}
+            name="interviewed"
+            defaultValue={psych.interviewed.toString()}
             className="flex gap-8"
           >
             <div className="flex gap-2 items-center">
-              <RadioGroupItem value="true" />
-              <Label>Sim</Label>
+              <RadioGroupItem value="true" id="yesInterviewed" />
+              <Label htmlFor="yesInterviewed">Sim</Label>
             </div>
             <div className="flex gap-2 items-center">
-              <RadioGroupItem value="false" />
-              <Label>Não</Label>
+              <RadioGroupItem value="false" id="noInterviewed" />
+              <Label htmlFor="noInterviewed">Não</Label>
             </div>
           </RadioGroup>
-        </div>
 
-        <div className="flex flex-col gap-3">
-          <form
-            action={async (formData: FormData) => {
-              "use server";
-              const status = formData.get("approval") as PsychStatus;
-              await prisma.psych.update({
-                where: { userId: psych.user.id },
-                data: { status },
-              });
-              redirect(`/admin/pre-psych/list/`);
-            }}
-          >
-            <div>
-              <p className="font-bold mb-2">Aprovar candidatura?</p>
-              <RadioGroup
-                name="approval"
-                defaultValue={psych.status.toString()}
-                className="flex gap-8"
-              >
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value={PsychStatus.APPROVED} id="r1" />
-                  <Label htmlFor="r1">Sim</Label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value={PsychStatus.FAILED} id="r2" />
-                  <Label htmlFor="r2">Não</Label>
-                </div>
-              </RadioGroup>
-            </div>
-            <Button
-              type="submit"
-              className="mt-4 bg-transparent hover:bg-[#fdeddd]"
-              style={{ border: "var(--color-p-terracotta) .0625rem solid" }}
+          <div>
+            <p className="font-bold mb-2">Aprovar candidatura?</p>
+            <RadioGroup
+              name="approval"
+              defaultValue={psych.status.toString()}
+              className="flex gap-8"
             >
-              Salvar
-            </Button>
-          </form>
-        </div>
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value={PsychStatus.APPROVED} id="yesApproval" />
+                <Label htmlFor="yesApproval">Sim</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value={PsychStatus.FAILED} id="noApproval" />
+                <Label htmlFor="noApproval">Não</Label>
+              </div>
+            </RadioGroup>
+          </div>
+          <Button
+            type="submit"
+            className="mt-4 bg-transparent hover:bg-[#fdeddd]"
+            style={{ border: "var(--color-p-terracotta) .0625rem solid" }}
+          >
+            Salvar
+          </Button>
+          <Button>
+            Avançar
+          </Button>
+        </form>
 
       </section>
-
-      <div className="mt-6 flex gap-4 justify-center">
-        <form
-          action={async () => {
-            "use server";
-            await prisma.psych.update({
-              where: { userId: psych.user.id },
-              data: { status: PsychStatus.APPROVED },
-            });
-          }}
-        >
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            Aprovar
-          </button>
-        </form>
-        <form
-          action={async () => {
-            "use server";
-            await prisma.psych.update({
-              where: { userId: psych.user.id },
-              data: { status: PsychStatus.FAILED },
-            });
-          }}
-        >
-          <button
-            type="submit"
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Reprovar
-          </button>
-        </form>
-        <form
-          action={async () => {
-            "use server";
-            await prisma.psych.update({
-              where: { userId: psych.user.id },
-              data: { status: PsychStatus.ADJUSTMENT },
-            });
-          }}
-        >
-          <button
-            type="submit"
-            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-          >
-            Ajustar
-          </button>
-        </form>
-      </div>
     </>
   );
 }
