@@ -1,26 +1,19 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { Prisma, Psych } from "@prisma/client";
 
+import { Prisma, Psych } from "@prisma/client";
 import {
   createPsychFromUser,
   updatePsychFromUser,
 } from "@/services/psych.service";
+import { PsychProfile } from "./type";
 import { Result } from "@/types";
 
 export async function onSubmit(
   prev: Result<Psych>,
   formData: globalThis.FormData,
-): Promise<
-  Result<
-    Psych & {
-      user: { role: string[] };
-      curriculumVitae: { name: string } | null;
-      proofAddress: { name: string } | null;
-    }
-  >
-> {
+): Promise<Result<PsychProfile>> {
   const formDataObject = Object.fromEntries(
     formData.entries(),
   ) as unknown as Psych;
@@ -67,17 +60,19 @@ export async function onSubmit(
     category: "CURRICULUM_VITAE",
   };
 
-  const result = formDataObject.id
-    ? await updatePsychFromUser(
-        formDataObject,
-        proofAddressDoc,
-        curriculumVitaeDoc,
-      )
-    : await createPsychFromUser(
-        formDataObject,
-        proofAddressDoc,
-        curriculumVitaeDoc,
-      );
+  const result = (
+    formDataObject.id
+      ? await updatePsychFromUser(
+          formDataObject,
+          proofAddressDoc,
+          curriculumVitaeDoc,
+        )
+      : await createPsychFromUser(
+          formDataObject,
+          proofAddressDoc,
+          curriculumVitaeDoc,
+        )
+  ) as Result<PsychProfile>;
 
   if (!result.success) return result;
 

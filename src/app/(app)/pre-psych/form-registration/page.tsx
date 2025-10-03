@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { PrePsychFormRegistration } from "./form";
-import { Psych } from "@prisma/client";
 import { getPsychByUserId } from "@/services";
+import { PsychProfile } from "./type";
 import { getUserIdAuthenticated } from "@/utils/auth";
 
 export default async function PrePsychFormRegistrationPage() {
@@ -11,17 +11,11 @@ export default async function PrePsychFormRegistrationPage() {
   const psychResult = await getPsychByUserId(userId, {
     include: {
       user: { select: { role: true } },
-      curriculumVitae: { select: { name: true } },
-      proofAddress: { select: { name: true } },
+      curriculumVitae: true,
+      proofAddress: true,
     },
   });
-  const psych = psychResult.data as
-    | (Psych & {
-        user: { role: string[] };
-        curriculumVitae: { name: string } | null;
-        proofAddress: { name: string } | null;
-      })
-    | null;
+  const psych = psychResult.data as PsychProfile;
 
   // Caso ainda não tenha sido verificado
   if (psych?.status === "PENDING")
