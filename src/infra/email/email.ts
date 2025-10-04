@@ -3,7 +3,12 @@ import nodemailer from "nodemailer";
 import { env } from "@/config/env";
 import logger from "@/config/logger";
 import { applyTemplate, getTemplates } from "./template";
-import { Template, TemplateContext, TemplateSubject } from "./types";
+import {
+  Template,
+  TemplateContext,
+  TemplateContextData,
+  TemplateSubject,
+} from "./types";
 import { Result } from "@/types";
 
 const transporter = nodemailer.createTransport({
@@ -54,12 +59,15 @@ export const sendEmail = async <T extends Template>({
   context,
 }: SendEmailProps<T>): Promise<Result> => {
   const { templateHTML, templateTXT } = getTemplates(template);
+  const templateData = TemplateContextData[template];
+  context = { ...templateData, ...context };
 
   const htmlContent = applyTemplate(templateHTML, context);
   const textContent = applyTemplate(templateTXT, context);
   const subject = TemplateSubject[template];
 
   const sentMessageInfo = await transporter.sendMail({
+    from: `"ONG Gabriel" <${env.EMAIL_GOOGLE_USER}>`,
     to,
     subject,
     html: htmlContent,

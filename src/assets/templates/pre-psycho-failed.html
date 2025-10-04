@@ -2,40 +2,557 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>E-mail – Cadastro Pendente de Ajustes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Cadastro Não Aprovado – ONG Gabriel</title>
+    <meta name="color-scheme" content="light" />
+    <meta name="supported-color-schemes" content="light" />
+    <!--[if mso]>
+      <noscript>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+      </noscript>
+    <![endif]-->
+    <style type="text/css">
+      /* Estilos para clientes que suportam CSS no head */
+      @media screen and (max-width: 600px) {
+        .container {
+          width: 100% !important;
+        }
+        .content {
+          padding: 15px !important;
+        }
+        .button {
+          width: 90% !important;
+        }
+      }
+
+      /* Reset para clientes que removem margin/padding */
+      table,
+      td {
+        border-collapse: collapse;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        border: 0;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+      }
+    </style>
   </head>
-  <body style="font-family: Arial, sans-serif; line-height: 1.6">
-    <p>Olá {{nome}},</p>
+  <body
+    style="
+      font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+      background-color: #fdfbf7;
+      margin: 0;
+      padding: 0;
+      color: #333333;
+      width: 100% !important;
+      min-width: 100%;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    "
+  >
+    <!-- Wrapper principal -->
+    <table
+      role="presentation"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      width="100%"
+      style="
+        background-color: #fdfbf7;
+        padding: 20px 0;
+        border-collapse: collapse;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      "
+    >
+      <tr>
+        <td align="center" style="padding: 0">
+          <!--[if mso | IE]>
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="500" style="width:500px;">
+          <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+          <![endif]-->
+          <table
+            class="container"
+            role="presentation"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            width="500"
+            style="
+              background: #fffaf4;
+              border-radius: 8px;
+              border: 1px solid #eeeeee;
+              max-width: 500px;
+              width: 100%;
+              border-collapse: collapse;
+              mso-table-lspace: 0pt;
+              mso-table-rspace: 0pt;
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td
+                align="center"
+                style="padding: 20px; font-size: 0; line-height: 0"
+              >
+                <img
+                  src="{{EMAIL_IMG_PUBLIC_URL}}/email/logo-ong-gabriel.png"
+                  alt="ONG Gabriel - Psicologia Voluntária"
+                  width="177"
+                  height="auto"
+                  style="
+                    max-width: 177px;
+                    height: auto;
+                    display: block;
+                    border: 0;
+                    outline: none;
+                    text-decoration: none;
+                    -ms-interpolation-mode: bicubic;
+                  "
+                />
+              </td>
+            </tr>
 
-    <p>
-      Recebemos sua solicitação de cadastro como psicólogo voluntário na ONG
-      Gabriel 🙌.
-    </p>
+            <!-- Content -->
+            <tr>
+              <td class="content" style="padding: 20px">
+                <h1
+                  style="
+                    font-size: 24px;
+                    font-weight: 700;
+                    margin: 0 0 10px 0;
+                    color: #333333;
+                    font-family:
+                      Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                    line-height: 1.3;
+                  "
+                >
+                  Olá {{userName}},
+                </h1>
+                <p
+                  style="
+                    margin: 16px 0;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    font-family:
+                      Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                    font-weight: normal;
+                    color: #43300e;
+                  "
+                >
+                  <strong style="color: #43300e"
+                    >Agradecemos seu interesse</strong
+                  >
+                  em atuar como psicólogo voluntário na ONG Gabriel.
+                  <br />
+                  Após análise dos dados e documentos enviados,
+                  <strong style="color: #43300e"
+                    >infelizmente seu cadastro foi reprovado</strong
+                  >
+                  neste momento.
+                </p>
 
-    <p>
-      Durante a análise dos dados e documentos enviados, identificamos que são
-      necessários ajustes/complementos antes de concluirmos a validação.
-    </p>
-    <p>Pendências encontradas:</p>
-    <ul>
-      <li>{{pendencias}}</li>
-    </ul>
+                <table
+                  role="presentation"
+                  align="center"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="
+                    margin: 16px auto;
+                    border-collapse: collapse;
+                    mso-table-lspace: 0pt;
+                    mso-table-rspace: 0pt;
+                  "
+                >
+                  <tr>
+                    <td align="center" style="font-size: 0; line-height: 0">
+                      <img
+                        src="{{EMAIL_IMG_PUBLIC_URL}}/email/failed.png"
+                        alt="Ajustes necessários - Ilustração de pendência"
+                        width="220"
+                        height="auto"
+                        style="
+                          max-width: 220px;
+                          height: auto;
+                          display: block;
+                          border: 0;
+                          outline: none;
+                          text-decoration: none;
+                          -ms-interpolation-mode: bicubic;
+                        "
+                      />
+                    </td>
+                  </tr>
+                </table>
 
-    <p>
-      Para prosseguir, pedimos que você acesse o link abaixo e realize as
-      correções necessárias: <br />
-      <a href="{{url}}">{{URL da Plataforma}}</a>
-    </p>
+                <!-- Seção de motivos -->
+                <p
+                  style="
+                    margin-top: 20px;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    font-family:
+                      Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                    font-weight: normal;
+                    color: #43300e;
+                  "
+                >
+                  {{pendingNote}}
+                </p>
 
-    <p>
-      Assim que os ajustes forem concluídos, nossa equipe dará continuidade à
-      validação do seu cadastro.
-    </p>
+                <p
+                  style="
+                    margin: 20px 0;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    font-family:
+                      Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                    font-weight: normal;
+                    color: #43300e;
+                  "
+                >
+                  <strong style="color: #333333">Seguimos a disposição</strong>
+                  para esclarecer quaisquer dúvidas.
+                </p>
 
-    <p>
-      Agradecemos desde já pela colaboração e pelo interesse em se juntar à
-      nossa missão de apoio psicológico voluntário.
-    </p>
-    <p>Atenciosamente, <br />Equipe ONG Gabriel</p>
+                <p
+                  style="
+                    font-size: 14px;
+                    margin: 32px 0 0 0;
+                    color: #43300e;
+                    font-family:
+                      Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                    line-height: 1.5;
+                  "
+                >
+                  Atenciosamente,<br />
+                  <strong style="color: #333333">Equipe ONG Gabriel</strong>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                align="center"
+                style="
+                  padding: 32px 40px;
+                  font-size: 12px;
+                  background-color: #ffffff;
+                  border-top: 1px solid #eeeeee;
+                "
+              >
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  width="100%"
+                  style="
+                    border-collapse: collapse;
+                    mso-table-lspace: 0pt;
+                    mso-table-rspace: 0pt;
+                  "
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      style="padding-bottom: 10px; font-size: 0; line-height: 0"
+                    >
+                      <img
+                        src="{{EMAIL_IMG_PUBLIC_URL}}/email/logo-ong-gabriel.png"
+                        alt="ONG Gabriel - Psicologia Voluntária"
+                        width="180"
+                        height="auto"
+                        style="
+                          max-width: 180px;
+                          height: auto;
+                          display: block;
+                          border: 0;
+                          outline: none;
+                          text-decoration: none;
+                          -ms-interpolation-mode: bicubic;
+                        "
+                      />
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Links das redes sociais -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="
+                    margin: 24px auto 0 auto;
+                    border-collapse: collapse;
+                    mso-table-lspace: 0pt;
+                    mso-table-rspace: 0pt;
+                  "
+                >
+                  <tr>
+                    <td align="center">
+                      <a
+                        href="{{INSTAGRAM_URL}}"
+                        style="
+                          margin: 0 8px;
+                          text-decoration: none;
+                          color: #ffb347;
+                          font-size: 14px;
+                          font-family:
+                            Arial, &quot;Helvetica Neue&quot;, Helvetica,
+                            sans-serif;
+                          font-weight: normal;
+                        "
+                      >
+                        <table
+                          role="presentation"
+                          align="center"
+                          cellpadding="0"
+                          cellspacing="0"
+                          border="0"
+                          style="
+                            margin: 0 12px;
+                            border-collapse: collapse;
+                            mso-table-lspace: 0pt;
+                            mso-table-rspace: 0pt;
+                          "
+                        >
+                          <tr>
+                            <td
+                              align="center"
+                              style="font-size: 0; line-height: 0"
+                            >
+                              <img
+                                src="{{EMAIL_IMG_PUBLIC_URL}}/email/instagram.png"
+                                alt="Instagram - Ícone da rede social"
+                                width="24"
+                                height="24"
+                                style="
+                                  max-width: 24px;
+                                  height: auto;
+                                  display: block;
+                                  border: 0;
+                                  outline: none;
+                                  text-decoration: none;
+                                  -ms-interpolation-mode: bicubic;
+                                "
+                              />
+                            </td>
+                          </tr>
+                        </table>
+                      </a>
+                    </td>
+                    <td align="center">
+                      <a
+                        href="{{FACEBOOK_URL}}"
+                        style="
+                          margin: 0 8px;
+                          text-decoration: none;
+                          color: #ffb347;
+                          font-size: 14px;
+                          font-family:
+                            Arial, &quot;Helvetica Neue&quot;, Helvetica,
+                            sans-serif;
+                          font-weight: normal;
+                        "
+                      >
+                        <table
+                          role="presentation"
+                          align="center"
+                          cellpadding="0"
+                          cellspacing="0"
+                          border="0"
+                          style="
+                            margin: 0 12px;
+                            border-collapse: collapse;
+                            mso-table-lspace: 0pt;
+                            mso-table-rspace: 0pt;
+                          "
+                        >
+                          <tr>
+                            <td
+                              align="center"
+                              style="font-size: 0; line-height: 0"
+                            >
+                              <img
+                                src="{{EMAIL_IMG_PUBLIC_URL}}/email/facebook.png"
+                                alt="Facebook - Ícone da rede social"
+                                width="24"
+                                height="24"
+                                style="
+                                  max-width: 24px;
+                                  height: auto;
+                                  display: block;
+                                  border: 0;
+                                  outline: none;
+                                  text-decoration: none;
+                                  -ms-interpolation-mode: bicubic;
+                                "
+                              />
+                            </td>
+                          </tr>
+                        </table>
+                      </a>
+                    </td>
+                    <td align="center">
+                      <a
+                        href="{{LINKEDIN_URL}}"
+                        style="
+                          margin: 0 8px;
+                          text-decoration: none;
+                          color: #ffb347;
+                          font-size: 14px;
+                          font-family:
+                            Arial, &quot;Helvetica Neue&quot;, Helvetica,
+                            sans-serif;
+                          font-weight: normal;
+                        "
+                      >
+                        <table
+                          role="presentation"
+                          align="center"
+                          cellpadding="0"
+                          cellspacing="0"
+                          border="0"
+                          style="
+                            margin: 0 12px;
+                            border-collapse: collapse;
+                            mso-table-lspace: 0pt;
+                            mso-table-rspace: 0pt;
+                          "
+                        >
+                          <tr>
+                            <td
+                              align="center"
+                              style="font-size: 0; line-height: 0"
+                            >
+                              <img
+                                src="{{EMAIL_IMG_PUBLIC_URL}}/email/linkedin.png"
+                                alt="LinkedIn - Ícone da rede social"
+                                width="24"
+                                height="24"
+                                style="
+                                  max-width: 24px;
+                                  height: auto;
+                                  display: block;
+                                  border: 0;
+                                  outline: none;
+                                  text-decoration: none;
+                                  -ms-interpolation-mode: bicubic;
+                                "
+                              />
+                            </td>
+                          </tr>
+                        </table>
+                      </a>
+                    </td>
+                    <td align="center">
+                      <a
+                        href="{{YOUTUBE_URL}}"
+                        style="
+                          margin: 0 8px;
+                          text-decoration: none;
+                          color: #ffb347;
+                          font-size: 14px;
+                          font-family:
+                            Arial, &quot;Helvetica Neue&quot;, Helvetica,
+                            sans-serif;
+                          font-weight: normal;
+                        "
+                      >
+                        <table
+                          role="presentation"
+                          align="center"
+                          cellpadding="0"
+                          cellspacing="0"
+                          border="0"
+                          style="
+                            margin: 0 12px;
+                            border-collapse: collapse;
+                            mso-table-lspace: 0pt;
+                            mso-table-rspace: 0pt;
+                          "
+                        >
+                          <tr>
+                            <td
+                              align="center"
+                              style="font-size: 0; line-height: 0"
+                            >
+                              <img
+                                src="{{EMAIL_IMG_PUBLIC_URL}}/email/youtube.png"
+                                alt="YouTube - Ícone da rede social"
+                                width="24"
+                                height="24"
+                                style="
+                                  max-width: 24px;
+                                  height: auto;
+                                  display: block;
+                                  border: 0;
+                                  outline: none;
+                                  text-decoration: none;
+                                  -ms-interpolation-mode: bicubic;
+                                "
+                              />
+                            </td>
+                          </tr>
+                        </table>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Website link -->
+                <p style="margin: 16px 0 0 0">
+                  <a
+                    href="{{PUBLIC_URL}}"
+                    style="
+                      color: #53514e;
+                      text-decoration: none;
+                      font-size: 12px;
+                      font-family:
+                        Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                    "
+                  >
+                    {{PUBLIC_URL}}
+                  </a>
+                </p>
+
+                <!-- Endereço -->
+                <p
+                  style="
+                    margin: 24px 0 0 0;
+                    color: #53514e;
+                    font-size: 12px;
+                    font-family:
+                      Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                    line-height: 1.4;
+                  "
+                >
+                  Rua Heitor Ribas Bueno, 231<br />
+                  Cidade Satélite Íris, Campinas - SP
+                </p>
+              </td>
+            </tr>
+          </table>
+          <!--[if mso | IE]>
+          </td>
+          </tr>
+          </table>
+          <![endif]-->
+        </td>
+      </tr>
+    </table>
   </body>
 </html>

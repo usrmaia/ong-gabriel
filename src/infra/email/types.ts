@@ -1,3 +1,5 @@
+import { env } from "@/config/env";
+
 export type Template =
   | "hello-world"
   | "pre-psycho-approved"
@@ -9,28 +11,52 @@ export type TemplateContext = {
     title: string;
   };
   "pre-psycho-approved": {
-    nome: string;
-    url: string;
-    EMAIL_IMG_PUBLIC_URL: string;
+    userName: string;
   };
   "pre-psycho-adjustment": {
-    nome: string;
-    motivo: string;
-    url: string;
-    EMAIL_IMG_PUBLIC_URL: string;
+    userName: string;
+    pendingNote: string;
   };
   "pre-psycho-failed": {
-    nome: string;
-    pendencias: string;
-    url: string;
-    EMAIL_IMG_PUBLIC_URL: string;
+    userName: string;
+    pendingNote: string;
   };
+};
+
+export const TemplateContextData: Record<Template, Record<string, string>> = {
+  "hello-world": {},
+  "pre-psycho-approved": {
+    EMAIL_IMG_PUBLIC_URL: env.EMAIL_IMG_PUBLIC_URL,
+    PUBLIC_URL: env.NEXT_PUBLIC_URL,
+    REDIRECT_URL: `${env.NEXT_PUBLIC_URL}/employee/home`,
+    FACEBOOK_URL: "https://www.facebook.com/p/ONG-Gabriel-100083766169010",
+    INSTAGRAM_URL: "https://www.instagram.com/ong.gabriel_",
+    LINKEDIN_URL: "https://www.linkedin.com/company/ong-gabriel",
+    YOUTUBE_URL: "https://www.youtube.com/@ONGGabriel",
+  },
+  "pre-psycho-adjustment": {
+    EMAIL_IMG_PUBLIC_URL: env.EMAIL_IMG_PUBLIC_URL,
+    PUBLIC_URL: env.NEXT_PUBLIC_URL,
+    REDIRECT_URL: `${env.NEXT_PUBLIC_URL}/pre-psych/form-registration`,
+    FACEBOOK_URL: "https://www.facebook.com/p/ONG-Gabriel-100083766169010",
+    INSTAGRAM_URL: "https://www.instagram.com/ong.gabriel_",
+    LINKEDIN_URL: "https://www.linkedin.com/company/ong-gabriel",
+    YOUTUBE_URL: "https://www.youtube.com/@ONGGabriel",
+  },
+  "pre-psycho-failed": {
+    EMAIL_IMG_PUBLIC_URL: env.EMAIL_IMG_PUBLIC_URL,
+    PUBLIC_URL: env.NEXT_PUBLIC_URL,
+    FACEBOOK_URL: "https://www.facebook.com/p/ONG-Gabriel-100083766169010",
+    INSTAGRAM_URL: "https://www.instagram.com/ong.gabriel_",
+    LINKEDIN_URL: "https://www.linkedin.com/company/ong-gabriel",
+    YOUTUBE_URL: "https://www.youtube.com/@ONGGabriel",
+  },
 };
 
 export const TemplateSubject: Record<Template, string> = {
   "hello-world": "Email de Teste - ONG Gabriel",
   "pre-psycho-approved":
-    "Cadastro aprovado – Bem-vindo à Plataforma da ONG Gabriel",
-  "pre-psycho-adjustment": "Retorno sobre seu cadastro – ONG Gabriel",
-  "pre-psycho-failed": "Ajustes necessários no seu cadastro – ONG Gabriel",
+    "Cadastro Aprovado – Bem-vindo à Plataforma da ONG Gabriel",
+  "pre-psycho-adjustment": "Ajustes Necessários no Cadastro – ONG Gabriel",
+  "pre-psycho-failed": "Cadastro Não Aprovado – ONG Gabriel",
 };

@@ -29,13 +29,11 @@ export async function onSubmit(
     );
 
     sendEmail({
-      to: "josivania0706@gmail.com",
-      template: "pre-psycho-approved",
+      to: "georgemaiaf@gmail.com",
+      template: "pre-psycho-failed",
       context: {
-        nome: "Josivânia",
-        // pendencias: "Documento ilegível\n- Comprovante de endereço ausente",
-        url: "http://localhost:3000/",
-        EMAIL_IMG_PUBLIC_URL: env.EMAIL_IMG_PUBLIC_URL,
+        userName: "Josivânia",
+        pendingNote: "Por favor, complete as informações pendentes.",
       },
     });
     if (!updatedAttendanceResult.success)
