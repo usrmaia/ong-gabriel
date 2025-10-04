@@ -208,8 +208,8 @@ export const createPsychDocuments = async (
  */
 export const updatePsychFromUser = async (
   psych: Partial<Prisma.PsychUncheckedUpdateInput>,
-  proofAddress: Prisma.DocumentUncheckedCreateInput,
-  curriculumVitae: Prisma.DocumentUncheckedCreateInput,
+  proofAddress?: Prisma.DocumentUncheckedCreateInput,
+  curriculumVitae?: Prisma.DocumentUncheckedCreateInput,
 ): Promise<Result<Psych>> => {
   try {
     const user = await getUserAuthenticated();
@@ -269,11 +269,8 @@ export const updatePsychFromUser = async (
       data: validatedPsych.data,
     });
 
-    const isProofAddressChanged =
-      existingPsych.proofAddress.data.byteLength !==
-        proofAddress.data.byteLength ||
-      existingPsych.proofAddress.data !== proofAddress.data;
-    if (isProofAddressChanged) {
+    if (proofAddress) {
+      // Atualiza apenas se um novo documento for fornecido
       const createProofResult = await createDocument(proofAddress);
       if (!createProofResult.success)
         return {
@@ -299,11 +296,8 @@ export const updatePsychFromUser = async (
         );
     }
 
-    const isCurriculumVitaeUpdated =
-      existingPsych.curriculumVitae.data.byteLength !==
-        curriculumVitae.data.byteLength ||
-      existingPsych.curriculumVitae.data !== curriculumVitae.data;
-    if (isCurriculumVitaeUpdated) {
+    if (curriculumVitae) {
+      // Atualiza apenas se um novo documento for fornecido
       const createCVResult = await createDocument(curriculumVitae);
       if (!createCVResult.success)
         return {

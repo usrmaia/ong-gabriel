@@ -11,8 +11,8 @@ export default async function PrePsychFormRegistrationPage() {
   const psychResult = await getPsychByUserId(userId, {
     include: {
       user: { select: { role: true } },
-      curriculumVitae: true,
-      proofAddress: true,
+      curriculumVitae: { select: { id: true, name: true } },
+      proofAddress: { select: { id: true, name: true } },
     },
   });
   const psych = psychResult.data as PsychProfile;

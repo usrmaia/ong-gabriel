@@ -44,7 +44,7 @@ export const ButtonDownloadDocument = ({
   };
 
   return (
-    <button onClick={handleDownload} className="cursor-pointer">
+    <button type="button" onClick={handleDownload} className="cursor-pointer">
       {children}
     </button>
   );

@@ -26,6 +26,7 @@ import {
   Textarea,
 } from "@/components/ui";
 import { PsychProfile } from "./type";
+import { MAX_PDF_SIZE_IN_BYTES } from "@/config/consts";
 
 export function PrePsychFormRegistration({ psych }: { psych?: PsychProfile }) {
   const [state, formAction] = useActionState(onSubmit, {
@@ -44,30 +45,30 @@ export function PrePsychFormRegistration({ psych }: { psych?: PsychProfile }) {
         : "false",
   );
 
+  const [fileName, setFileName] = useState({
+    curriculumVitae: "",
+    proofAddress: "",
+  });
+
+  const handleFileChange = (
+    field: "curriculumVitae" | "proofAddress",
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    console.log("File Size:", file?.size);
+    if (file && file.size > MAX_PDF_SIZE_IN_BYTES) {
+      alert("O arquivo selecionado é muito grande. O tamanho máximo é 500KB.");
+      e.target.value = ""; // Clear the input
+      return;
+    }
+    if (file) setFileName((prev) => ({ ...prev, [field]: file.name }));
+    else setFileName((prev) => ({ ...prev, [field]: "" }));
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
-
-    const hasCurriculumVitae = state.data?.curriculumVitae?.data.length;
-    if (hasCurriculumVitae && !formData.get("curriculumVitae")) {
-      const file: File = new File(
-        [state.data?.curriculumVitae?.data as BlobPart],
-        state.data?.curriculumVitae?.name || "curriculo.pdf",
-        { type: "application/pdf" },
-      );
-      formData.set("curriculumVitae", file);
-    }
-
-    const hasProofAddress = state.data?.proofAddress?.data.length;
-    if (hasProofAddress && !formData.get("proofAddress")) {
-      const file: File = new File(
-        [state.data?.proofAddress?.data as BlobPart],
-        state.data?.proofAddress?.name || "comprovante.pdf",
-        { type: "application/pdf" },
-      );
-      formData.set("proofAddress", file);
-    }
-
+    if (psych?.id) formData.append("id", psych.id);
     startTransition(() => formAction(formData));
   };
 
@@ -383,11 +384,14 @@ export function PrePsychFormRegistration({ psych }: { psych?: PsychProfile }) {
               id="curriculumVitae"
               name="curriculumVitae"
               accept=".pdf"
-              required
+              required={!state.data?.id}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={(e) => handleFileChange("curriculumVitae", e)}
             />
             <span className="items-center justify-between p-2 file:text-foreground placeholder:text-s-taupe-gray-100 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-s-silver-100 flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm">
-              {state.data?.curriculumVitae?.name ?? "Escolha seu currículo"}
+              {fileName.curriculumVitae ||
+                state.data?.curriculumVitae?.name ||
+                "Escolha seu currículo"}
             </span>
           </div>
           <Label
@@ -430,11 +434,13 @@ export function PrePsychFormRegistration({ psych }: { psych?: PsychProfile }) {
               id="proofAddress"
               name="proofAddress"
               accept=".pdf"
-              required
+              required={!state.data?.id}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={(e) => handleFileChange("proofAddress", e)}
             />
             <span className="items-center justify-between p-2 file:text-foreground placeholder:text-s-taupe-gray-100 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-s-silver-100 flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm">
-              {state.data?.proofAddress?.name ??
+              {fileName.proofAddress ||
+                state.data?.proofAddress?.name ||
                 "Escolha seu comprovante de endereço"}
             </span>
           </div>

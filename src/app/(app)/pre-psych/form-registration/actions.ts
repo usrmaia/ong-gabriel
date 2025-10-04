@@ -21,7 +21,10 @@ export async function onSubmit(
   const curriculumVitaeFile = formData.get("curriculumVitae");
   const proofAddressFile = formData.get("proofAddress");
 
-  if (!curriculumVitaeFile || !(curriculumVitaeFile instanceof File))
+  const isCurriculumVitaeRequired =
+    !formDataObject.id && // required
+    (!curriculumVitaeFile || !(curriculumVitaeFile instanceof File));
+  if (isCurriculumVitaeRequired)
     return {
       success: false,
       error: {
@@ -31,7 +34,10 @@ export async function onSubmit(
       },
     };
 
-  if (!proofAddressFile || !(proofAddressFile instanceof File))
+  const isProofAddressRequired =
+    !formDataObject.id && // required
+    (!proofAddressFile || !(proofAddressFile instanceof File));
+  if (isProofAddressRequired)
     return {
       success: false,
       error: {
@@ -41,24 +47,31 @@ export async function onSubmit(
       },
     };
 
-  const curriculumVitaeBuffer = await curriculumVitaeFile.arrayBuffer();
-  const proofAddressBuffer = await proofAddressFile.arrayBuffer();
+  let proofAddressDoc: Prisma.DocumentUncheckedCreateInput | undefined;
+  if (proofAddressFile instanceof File && proofAddressFile.size) {
+    const proofAddressBuffer = await proofAddressFile.arrayBuffer();
 
-  const proofAddressDoc: Prisma.DocumentUncheckedCreateInput = {
-    userId: formDataObject.userId,
-    name: `Comprovante de Endereço - ${formDataObject.CRP}.pdf`,
-    mimeType: "APPLICATION_PDF",
-    data: new Uint8Array(proofAddressBuffer),
-    category: "PROOF_ADDRESS",
-  };
+    proofAddressDoc = {
+      userId: formDataObject.userId,
+      name: `Comprovante de Endereço - ${formDataObject.CRP}.pdf`,
+      mimeType: "APPLICATION_PDF",
+      data: new Uint8Array(proofAddressBuffer),
+      category: "PROOF_ADDRESS",
+    };
+  }
 
-  const curriculumVitaeDoc: Prisma.DocumentUncheckedCreateInput = {
-    userId: formDataObject.userId,
-    name: `Currículo - ${formDataObject.CRP}.pdf`,
-    mimeType: "APPLICATION_PDF",
-    data: new Uint8Array(curriculumVitaeBuffer),
-    category: "CURRICULUM_VITAE",
-  };
+  let curriculumVitaeDoc: Prisma.DocumentUncheckedCreateInput | undefined;
+  if (curriculumVitaeFile instanceof File && curriculumVitaeFile.size) {
+    const curriculumVitaeBuffer = await curriculumVitaeFile.arrayBuffer();
+
+    curriculumVitaeDoc = {
+      userId: formDataObject.userId,
+      name: `Currículo - ${formDataObject.CRP}.pdf`,
+      mimeType: "APPLICATION_PDF",
+      data: new Uint8Array(curriculumVitaeBuffer),
+      category: "CURRICULUM_VITAE",
+    };
+  }
 
   const result = (
     formDataObject.id
@@ -69,8 +82,9 @@ export async function onSubmit(
         )
       : await createPsychFromUser(
           formDataObject,
-          proofAddressDoc,
-          curriculumVitaeDoc,
+          proofAddressDoc!,
+          curriculumVitaeDoc!,
+          // ! pois existe no caso de criação
         )
   ) as Result<PsychProfile>;
 
