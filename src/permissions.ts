@@ -131,7 +131,7 @@ export function can(
 
     for (const policy of userPolicies) {
       if (policy.action === action && policy.resource === resource) {
-        if (policy.condition) {
+        if (policy.condition && targetResource) {
           if (policy.condition(user, targetResource)) return true;
         } else return true;
       }
