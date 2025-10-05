@@ -13,21 +13,18 @@ const mockPolicies: Record<Role, PolicyStatement[]> = {
       action: "view",
       resource: "users",
       condition: (user: any, targetResource: any) =>
-        user?.id !== undefined &&
-        targetResource?.id !== undefined &&
         user.id === targetResource.id,
     },
     {
       action: "update",
       resource: "users",
       condition: (user: any, targetResource: any) =>
-        user?.id !== undefined &&
-        targetResource?.id !== undefined &&
         user.id === targetResource.id,
     },
   ],
   EMPLOYEE: [],
   PATIENT: [],
+  PREPSYCHO: [],
 };
 
 describe("can", () => {
