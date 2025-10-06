@@ -195,10 +195,9 @@ export default async function PrePsychDetailsPage({
             style={{ border: "var(--color-p-xanthous) .0625rem solid" }}
             className="rounded-lg p-3"
           >
-            <div className="flex gap-2 align-items-center">
-              <div className="font-bold">
-                <FileText style={{ color: "var(--color-success)" }} />
-              </div>
+            <div className="flex gap-2 align-items-center font-bold">
+              <FileText style={{ color: "var(--color-success)" }} />
+              <span>{psych.curriculumVitae.name}</span>
             </div>
 
             <div className="flex justify-between items-center mt-2">
