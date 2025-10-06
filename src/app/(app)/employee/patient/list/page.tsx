@@ -12,6 +12,7 @@ export default async function PatientListPage() {
         some: isAdmin ? undefined : { professionalId: user.id },
       },
     },
+    orderBy: { name: "asc" },
   });
   const patients = patientsResult.data || [];
 
