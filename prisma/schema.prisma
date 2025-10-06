@@ -207,7 +207,7 @@ model Psych {
   curriculumVitaeId String   @unique
   curriculumVitae   Document @relation("CurriculumVitae", fields: [curriculumVitaeId], references: [id], onDelete: Cascade)
 
-  CRP                    String      @unique
+  CRP                    String
   note                   String?
   hasXpSuicidePrevention Boolean
   pendingNote            String?

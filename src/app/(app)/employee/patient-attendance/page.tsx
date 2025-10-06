@@ -11,6 +11,7 @@ export default async function PatientAttendancesPage() {
   const patientAttendancesResult = await getPatientAttendances({
     include: { patient: true },
     where: { professionalId: isAdmin ? undefined : user.id },
+    orderBy: { dateAt: "asc" },
   });
   const patientAttendances =
     patientAttendancesResult.data as (PatientAttendance & {
