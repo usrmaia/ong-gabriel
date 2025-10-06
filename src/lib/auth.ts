@@ -12,6 +12,6 @@ export const login = async (provider: Provider, redirectTo?: any) => {
 
 export const logout = async () => {
   await signOut({
-    redirectTo: "/auth/login",
+    redirectTo: "/",
   });
 };

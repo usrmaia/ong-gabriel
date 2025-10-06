@@ -72,6 +72,10 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       resource: "psychs",
       condition: (user, targetResource) => user.id === targetResource.userId,
     },
+    {
+      action: "create",
+      resource: "documents",
+    },
   ],
   PATIENT: [
     {
