@@ -286,9 +286,9 @@ export function PrePsychFormRegistration({ psych }: { psych?: PsychProfile }) {
           id="CRP"
           name="CRP"
           placeholder="12345678"
-          maxLength={8}
-          minLength={8}
-          pattern="\d{8}"
+          maxLength={9}
+          minLength={6}
+          pattern="\d{2}[/-]?\d{4,6}"
           defaultValue={state.data?.CRP || undefined}
           required
         />

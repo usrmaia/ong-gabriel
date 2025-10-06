@@ -43,7 +43,7 @@ export const CardUserAvatar = ({ user, href }: CardUserAvatarProps) => (
           height={64}
           className="rounded-full border-1 border-p-tealwave p-0.25"
         />
-        <p className="text-xl font-medium text-s-van-dyke font-poppins">
+        <p className="text-xl font-medium text-s-van-dyke font-poppins overflow-hidden text-ellipsis">
           {user.name?.split(" ")?.slice(0, 2)?.join(" ")}
         </p>
       </CardContent>
