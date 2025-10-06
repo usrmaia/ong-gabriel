@@ -10,12 +10,15 @@ export default async function PatientAttendancesPage() {
   const isAdmin = user.role.includes("ADMIN");
   const patientAttendancesResult = await getPatientAttendances({
     include: { patient: true },
-    where: { professionalId: isAdmin ? undefined : user.id },
+    where: {
+      OR: isAdmin
+        ? undefined
+        : [{ professionalId: user.id }, { professionalId: null }],
+    },
+    orderBy: { dateAt: "asc" },
   });
   const patientAttendances =
-    patientAttendancesResult.data as (PatientAttendance & {
-      patient: User;
-    })[];
+    patientAttendancesResult.data as (PatientAttendance & { patient: User })[];
 
   return (
     <>

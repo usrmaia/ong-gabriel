@@ -11,6 +11,7 @@ import {
   RadioGroupItem,
   Textarea,
 } from "@/components/ui";
+import { useScrollToTop } from "@/hooks";
 
 export function PrePsychDetailsForm({ psych }: { psych: Psych }) {
   const [state, formAction] = useActionState(onSubmit, {
@@ -33,6 +34,8 @@ export function PrePsychDetailsForm({ psych }: { psych: Psych }) {
         state.data.status === PsychStatus.FAILED
       ),
   );
+
+  useScrollToTop(state.success);
 
   return (
     <form

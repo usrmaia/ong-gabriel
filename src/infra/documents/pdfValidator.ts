@@ -32,8 +32,14 @@ export const validatePdf = (props: ValidateProps): Result => {
     );
 
   // Check for essential PDF elements
-  const hasXref = dataStr.includes("xref") || dataStr.includes("/Type/XRef");
-  const hasTrailer = dataStr.includes("trailer");
+  const hasXref =
+    dataStr.includes("xref") ||
+    dataStr.includes("/Type/XRef") ||
+    dataStr.includes("/Type /XRef");
+
+  const hasTrailer =
+    dataStr.includes("trailer") ||
+    (dataStr.includes("startxref") && dataStr.includes("%%EOF"));
 
   if (!hasXref || !hasTrailer)
     result.error?.errors.push(

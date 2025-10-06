@@ -26,7 +26,7 @@ export const UserBaseInfoSchema = z.object({
     .transform((value) => new Date(value)),
   phone: z
     .string()
-    .min(7, "Telefone é obrigatório.")
+    .min(10, "Telefone é obrigatório.")
     .max(24, "Telefone inválido.")
     .transform((value) => {
       return value.replace(/\D/g, "");
@@ -199,8 +199,8 @@ export const BasePsychSchema = z.object({
     .string()
     .transform((value) => value.replace(/\D/g, ""))
     .refine(
-      (value) => value.length === 8,
-      "CRP deve ter exatamente 8 caracteres.",
+      (value) => value.length >= 6 && value.length <= 8,
+      "CRP deve ter entre 6 e 8 caracteres.",
     ),
   note: z
     .string()
