@@ -24,6 +24,34 @@ export default async function LandPage() {
           </Button>
         </Link>
       </div>
+
+      <div className="relative w-80 h-80 rounded-2xl overflow-hidden">
+        <Image
+          src="/landing-page-pessoa-sorrindo.jpg"
+          alt="Nossa missão"
+          width={1024}
+          height={1024}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
+        <h3 className="absolute bottom-6 left-8 right-8 leading-10" style={{ color: "white" }}>
+          Nossa missão é transformar a vida de pessoas
+        </h3>
+      </div>
+
+      <div>
+        <h2 className="text-center">Suporte emocional para a sua vida!</h2>
+        <p>
+          Estamos dispostos a ajudar você, em todas as etapas do atendimento psicológico, por meio de uma plataforma segura e intuitiva de forma simples!
+        </p>
+
+        <h3>Confira as etapas de cadastro</h3>
+        <div>
+          Ícones
+        </div>
+        <Button>Quero ajuda</Button>
+      </div>
+
       <div className="flex flex-col py-12 px-4 gap-6 bg-s-powder-100">
         <h2 className="font-raleway text-center">
           Transforme a vida de quem precisa de apoio
@@ -56,6 +84,13 @@ export default async function LandPage() {
             Quero ajudar
           </Button>
         </Link>
+      </div>
+
+      <div>
+        <h3>Depoimentos</h3>
+        <p>
+          É incrível fazer parte do App Gabriel Guard! Ajudar pessoas e ver o impacto do meu trabalho foi transformador. Gratidão por essa oportunidade!
+        </p>
       </div>
     </>
   );
