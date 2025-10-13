@@ -71,6 +71,7 @@ export const ListPatientAttendances = ({
             <CardPatientAttendance
               key={patientAttendance.id}
               attendance={patientAttendance}
+              backTo="/employee/patient-attendance"
             />
           ))}
         </TabsContent>
@@ -79,6 +80,7 @@ export const ListPatientAttendances = ({
             <CardPatientAttendance
               key={patientAttendance.id}
               attendance={patientAttendance}
+              backTo="/employee/patient-attendance"
             />
           ))}
         </TabsContent>
@@ -87,6 +89,7 @@ export const ListPatientAttendances = ({
             <CardPatientAttendance
               key={patientAttendance.id}
               attendance={patientAttendance}
+              backTo="/employee/patient-attendance"
             />
           ))}
         </TabsContent>

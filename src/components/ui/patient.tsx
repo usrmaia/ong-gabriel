@@ -19,15 +19,17 @@ import {
   WhoLivesWithSchema,
 } from "@/schemas";
 
-// ...existing code...
-
 export const CardPatientAttendance = ({
   attendance,
+  backTo,
 }: {
   attendance: PatientAttendance & { patient: User };
+  backTo?: string;
 }) => {
   return (
-    <Link href={`/employee/patient/details/${attendance.patientId}`}>
+    <Link
+      href={`/employee/patient/details/${attendance.patientId}${backTo ? `?backTo=${encodeURIComponent(backTo)}` : ""}`}
+    >
       <Card className={`shadow-lg w-full px-2 py-4 border-0`}>
         <CardContent className="flex flex-row items-center gap-5 w-full">
           <Image

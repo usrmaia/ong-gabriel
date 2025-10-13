@@ -82,8 +82,9 @@ export default async function HomePage() {
         <div className="flex flex-col gap-2">
           {upcomingPatientAttendances.map((attendance) => (
             <CardPatientAttendance
-              attendance={attendance}
               key={attendance.id}
+              attendance={attendance}
+              backTo="/employee/home"
             />
           ))}
         </div>
