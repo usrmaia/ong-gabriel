@@ -11,10 +11,21 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#fff8f2",
     theme_color: "#3b476d",
     orientation: "portrait-primary",
+    scope: "/",
     categories: ["health", "medical", "lifestyle"],
     lang: "pt-BR",
     dir: "ltr",
     icons: [
+      {
+        src: "/icon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        src: "/icon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
       {
         src: "/icon-192x192.png",
         sizes: "192x192",
@@ -39,6 +50,7 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "425x812",
         type: "image/png",
         form_factor: "narrow",
+        label: "Interface mobile da ONG Gabriel",
       },
     ],
     shortcuts: [

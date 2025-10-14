@@ -17,9 +17,7 @@ export function InstallPWA({ onClose }: InstallPWAProps) {
     setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
   }, []);
 
-  if (isStandalone) {
-    return null; // Já está instalado
-  }
+  if (isStandalone) return null; // Já está instalado
 
   const handleShowInstructions = () => {
     setShowInstructions(true);
@@ -30,7 +28,7 @@ export function InstallPWA({ onClose }: InstallPWAProps) {
     onClose?.();
   };
 
-  if (showInstructions && isIOS) {
+  if (showInstructions && isIOS)
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-lg p-6 max-w-sm w-full">
@@ -87,7 +85,6 @@ export function InstallPWA({ onClose }: InstallPWAProps) {
         </div>
       </div>
     );
-  }
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-400 p-4 m-4 rounded-r-lg">

@@ -18,6 +18,7 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
     useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  // PWA = true; Web = false
   const [isStandalone, setIsStandalone] = useState(false);
 
   useServiceWorker();
@@ -35,25 +36,16 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
 
-      // Mostrar prompt após 30 segundos na página (apenas se não for iOS e não estiver instalado)
-      if (!isIOS && !isStandalone) {
+      // Mostrar prompt após 0,5 segundos na página (apenas se não estiver instalado)
+      if (!isStandalone)
         setTimeout(() => {
           setShowInstallPrompt(true);
-        }, 30000);
-      }
+        }, 500);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
-
-    // Para iOS, mostrar prompt após 1 minuto
-    if (isIOS && !isStandalone) {
-      setTimeout(() => {
-        setShowInstallPrompt(true);
-      }, 60000);
-    }
-
     return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, [isIOS, isStandalone]);
+  }, [isStandalone]);
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
@@ -61,17 +53,18 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
 
-    if (outcome === "accepted") {
-      console.log("PWA instalada com sucesso");
-    }
+    if (outcome === "accepted") console.log("PWA instalada com sucesso");
 
     setDeferredPrompt(null);
     setShowInstallPrompt(false);
   };
 
+  /**
+   * Define a visibilidade do prompt como falsa e armazena o estado de rejeição
+   * no armazenamento de sessão para evitar mostrar o prompt novamente durante a sessão atual.
+   */
   const handleDismiss = () => {
     setShowInstallPrompt(false);
-    // Não mostrar novamente nesta sessão
     sessionStorage.setItem("pwa-prompt-dismissed", "true");
   };
 

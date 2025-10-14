@@ -58,9 +58,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: env.NEXT_PUBLIC_URL,
   },
-  authors: [{ name: "ONG Gabriel", url: env.NEXT_PUBLIC_URL }],
-  creator: "ONG Gabriel",
-  publisher: "ONG Gabriel",
+  authors: [{ name: "PopCorners", url: `${env.NEXT_PUBLIC_URL}/about-dev` }],
+  creator: "PopCorners",
+  publisher: "PopCorners",
   openGraph: {
     title:
       "ONG Gabriel - Atendimento Psicológico Gratuito e Prevenção ao Suicídio",
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
         alt: "ONG Gabriel - Atendimento Psicológico Gratuito e Prevenção ao Suicídio",
       },
     ],
-    creator: "@ong_gabriel",
+    creator: `${env.NEXT_PUBLIC_URL}/about-dev`,
   },
   robots: {
     index: true,
