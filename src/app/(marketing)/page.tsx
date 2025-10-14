@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button } from "@/components/ui";
+import { Button, RadioGroup, RadioGroupItem } from "@/components/ui";
 
 export default async function LandPage() {
   return (
@@ -46,10 +46,10 @@ export default async function LandPage() {
         </p>
 
         <h3>Confira as etapas de cadastro</h3>
-        <div>
+        <div className="border-2 p-4">
           Ícones
         </div>
-        <Button>Quero ajuda</Button>
+        <Button className="w-64">Quero ajuda</Button>
       </div>
 
       <div className="flex flex-col py-12 px-4 gap-6 bg-s-powder-100">
@@ -91,6 +91,29 @@ export default async function LandPage() {
         <p>
           É incrível fazer parte do App Gabriel Guard! Ajudar pessoas e ver o impacto do meu trabalho foi transformador. Gratidão por essa oportunidade!
         </p>
+        <div className="flex gap-2 justify-center items-center">
+          <Image
+            src="/default-user.jpg"
+            alt="Depoimento"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+
+          <div>
+            <p className="font-bold">Adriana Souza</p>
+            <p>Psicólogo</p>
+          </div>
+        </div>
+        <RadioGroup className="flex">
+          <RadioGroupItem value="1" />
+          <RadioGroupItem value="2" />
+          <RadioGroupItem value="3" />
+        </RadioGroup>
+      </div>
+
+      <div className="bg-amber-300 p-3 rounded-lg">
+        <span className="font-bold">Importante:</span> Não oferecemos atendimento imediato para crises suicidas. Em situação de crise, <span className="font-bold">ligue 188 (CVV)</span> ou acesse <a href="https://www.cvv.org.br" rel="noreferrer" target="_blank" className="underline">www.cvv.org.br</a>. Procure o hospital mais próximo em caso de emergência.
       </div>
     </>
   );
