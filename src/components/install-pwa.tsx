@@ -19,9 +19,7 @@ export function InstallPWA({ onClose }: InstallPWAProps) {
 
   if (isStandalone) return null; // Já está instalado
 
-  const handleShowInstructions = () => {
-    setShowInstructions(true);
-  };
+  const handleShowInstructions = () => setShowInstructions(true);
 
   const handleClose = () => {
     setShowInstructions(false);

@@ -66,12 +66,17 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
   const handleDismiss = () => {
     setShowInstallPrompt(false);
     sessionStorage.setItem("pwa-prompt-dismissed", "true");
+    sessionStorage.setItem("pwa-prompt-timestamp", Date.now().toString());
   };
 
   // Não mostrar se já foi dispensado nesta sessão
   const wasDismissed =
     typeof window !== "undefined" &&
-    sessionStorage.getItem("pwa-prompt-dismissed") === "true";
+    // Verifica se o prompt foi dispensado e se está dentro do limite de 24 horas
+    sessionStorage.getItem("pwa-prompt-dismissed") === "true" &&
+    Date.now() -
+      parseInt(sessionStorage.getItem("pwa-prompt-timestamp") || "0") <
+      24 * 60 * 60 * 1000; // 24 horas
 
   return (
     <>
