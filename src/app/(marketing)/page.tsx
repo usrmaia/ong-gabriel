@@ -6,8 +6,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 export default async function LandPage() {
   return (
-    <div className="max-x-lg mx-auto">
-      <header className="flex justify-between items-center p-4">
+    <div className="max-w-[64rem] mx-auto">
+      <header className="flex justify-between items-center p-6">
         <Image
           src="/ong-gabriel-logo.svg"
           alt="Logo ONG Gabriel"
@@ -17,7 +17,7 @@ export default async function LandPage() {
         <Link href={"/entry"}>
           <Button
             variant="outline"
-            className="text-md text-s-navy-100 border-s-navy-100"
+            className="text-md text-s-navy-100 border-s-navy-100 cursor-pointer"
           >
             Entrar
           </Button>
@@ -25,7 +25,7 @@ export default async function LandPage() {
       </header>
 
       <main className="flex flex-col items-center">
-        <section className="relative size-96 rounded-2xl overflow-hidden my-4">
+        <section className="relative size-96 rounded-2xl overflow-hidden">
           <Image
             src="/landing-page-pessoa-sorrindo.jpg"
             alt="Nossa missão"
@@ -52,7 +52,7 @@ export default async function LandPage() {
             <Card src="/gifs/service-patient.gif" title="Fale com o Psicólogo" />
           </div>
           <Link href="/user/base-info?redirectTo=/pre-psych/form-registration" className="w-full">
-            <Button className="w-96">
+            <Button className="w-96 cursor-pointer">
               Quero ajuda
             </Button>
           </Link>
@@ -73,13 +73,13 @@ export default async function LandPage() {
             <Card src="/gifs/heart-hand.gif" title="Transforme a vida de uma pessoa" />
           </div>
           <Link href="/user/base-info?redirectTo=/pre-psych/form-registration" className="w-full">
-            <Button className="w-96 bg-s-navy-100 text-s-butter-100">
+            <Button className="w-96 bg-s-navy-100 text-s-butter-100 cursor-pointer">
               Quero ajudar
             </Button>
           </Link>
         </section>
 
-        <section className="flex flex-col items-center text-center gap-4">
+        <section className="flex flex-col items-center text-center gap-4 my-12">
           <h2>Depoimentos</h2>
           <figure className="relative">
             <blockquote className="italic px-10">
@@ -112,29 +112,29 @@ export default async function LandPage() {
           <span className="font-bold">Importante:</span> Não oferecemos atendimento imediato para crises suicidas. Em situação de crise, <span className="font-bold">ligue 188 (CVV)</span> ou acesse <a href="https://www.cvv.org.br" rel="noreferrer" target="_blank" className="underline">www.cvv.org.br</a>. Procure o hospital mais próximo em caso de emergência.
         </aside>
 
-        <section className="flex flex-col items-center gap-4 p-6 rounded-2xl">
+        <section className="flex flex-col items-center rounded-2xl mt-8 w-full gap-4">
           <h3>Dúvidas frequentes</h3>
-          <Accordion type="single" collapsible className="w-full space-y-1 rounded-lg">
-            <AccordionItem value="item-1" className="bg-secondary px-8">
-              <AccordionTrigger>Como é o atendimento?</AccordionTrigger>
+          <Accordion type="single" collapsible className="w-full space-y-1 px-6">
+            <AccordionItem value="item-1" className="bg-secondary px-8 rounded-lg">
+              <AccordionTrigger className="text-lg font-raleway">Como é o atendimento?</AccordionTrigger>
               <AccordionContent>
                 <p>Nós, da ONG Gabriel, já impactamos centenas de vidas com o apoio de pessoas voluntárias prestando atendimento psicológico!</p>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="item-2" className="bg-secondary px-8">
-              <AccordionTrigger>O atendimento é gratuito?</AccordionTrigger>
+            <AccordionItem value="item-2" className="bg-secondary px-8 rounded-lg">
+              <AccordionTrigger className="text-lg font-raleway">O atendimento é gratuito?</AccordionTrigger>
               <AccordionContent>
                 <p>Sim, pode ser gratuito! Fazemos uma avaliação socioeconômica simples no cadastro para oferecer gratuidade. Se não for o seu caso, cobramos um valor social acessível. Queremos que o cuidado com a saúde mental chegue a todos!</p>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="item-3" className="bg-secondary px-8">
-              <AccordionTrigger>Pra quem é o atendimento?</AccordionTrigger>
+            <AccordionItem value="item-3" className="bg-secondary px-8 rounded-lg">
+              <AccordionTrigger className="text-lg font-raleway">Pra quem é o atendimento?</AccordionTrigger>
               <AccordionContent>
                 <p>Se você busca autoconhecimento ou precisa de ajuda para lidar com ansiedade, estresse, tristeza e desafios do dia a dia, aqui é o lugar certo! Oferecemos apoio psicológico contínuo. Lembre-se: não somos um serviço de emergência. Em crises, procure um pronto-atendimento ou ligue 188 (CVV).</p>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="item-4" className="bg-secondary px-8">
-              <AccordionTrigger>Meus dados estão seguros?</AccordionTrigger>
+            <AccordionItem value="item-4" className="bg-secondary px-8 rounded-lg">
+              <AccordionTrigger className="text-lg font-raleway">Meus dados estão seguros?</AccordionTrigger>
               <AccordionContent>
                 <p>Totalmente seguros! Sua privacidade é nossa prioridade. Tudo o que você conversa com o psicólogo é confidencial, seguindo o Código de Ética. Nossa plataforma usa tecnologias para proteger seus dados e garantir um ambiente seguro para você.</p>
               </AccordionContent>
