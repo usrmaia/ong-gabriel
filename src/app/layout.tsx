@@ -1,8 +1,13 @@
 import { Young_Serif, Raleway, Poppins } from "next/font/google";
+import "./globals.css";
 
 import { Analytics } from "@/components/analytics";
-import "./globals.css";
-import { metadata } from "./metadata";
+import {
+  metadata,
+  generateMedicalOrganizationSchema,
+  generateOrganizationSchema,
+  generateWebsiteSchema,
+} from "./metadata";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -33,8 +38,33 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = generateOrganizationSchema();
+  const websiteSchema = generateWebsiteSchema();
+  const medicalSchema = generateMedicalOrganizationSchema();
+
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <meta name="msapplication-tap-highlight" content="no" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(medicalSchema),
+          }}
+        />
+      </head>
       <body
         className={`${raleway.variable} ${youngSerif.variable} ${poppins.variable} antialiased flex flex-col min-h-screen`}
       >
