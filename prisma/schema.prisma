@@ -11,24 +11,25 @@ datasource db {
 }
 
 model User {
-  id                            String              @id @default(ulid())
-  name                          String?
-  full_name                     String?
-  email                         String              @unique
-  emailVerified                 DateTime?
-  date_of_birth                 DateTime?
-  phone                         String?
-  phoneVerified                 DateTime?
-  image                         String?
-  role                          Role[]              @default([USER])
-  accounts                      Account[]
-  sessions                      Session[]
-  Authenticator                 Authenticator[]
-  FormAnamneses                 FormAnamnesis[]
-  PatientAttendancePatient      PatientAttendance[] @relation("PatientAttendancePatient")
-  PatientAttendanceProfessional PatientAttendance[] @relation("PatientAttendanceProfessional")
-  Documents                     Document[]
-  Psych                         Psych?
+  id                                 String                   @id @default(ulid())
+  name                               String?
+  full_name                          String?
+  email                              String                   @unique
+  emailVerified                      DateTime?
+  date_of_birth                      DateTime?
+  phone                              String?
+  phoneVerified                      DateTime?
+  image                              String?
+  role                               Role[]                   @default([USER])
+  accounts                           Account[]
+  sessions                           Session[]
+  Authenticator                      Authenticator[]
+  FormAnamneses                      FormAnamnesis[]
+  PatientAttendancePatient           PatientAttendance[]      @relation("PatientAttendancePatient")
+  PatientAttendanceProfessional      PatientAttendance[]      @relation("PatientAttendanceProfessional")
+  AvailabilityAttendanceProfessional AvailabilityAttendance[] @relation("AvailabilityAttendanceProfessional")
+  Documents                          Document[]
+  Psych                              Psych?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -157,19 +158,39 @@ enum DifficultiesEating {
   nao
 }
 
-model PatientAttendance {
-  id        String @id @default(ulid())
-  patientId String
-  patient   User   @relation("PatientAttendancePatient", fields: [patientId], references: [id], onDelete: Cascade)
+model AvailabilityAttendance {
+  id             String             @id @default(ulid())
+  professional   User               @relation("AvailabilityAttendanceProfessional", fields: [professionalId], references: [id])
+  professionalId String
+  attendance     PatientAttendance?
 
-  dateAt          DateTime?
-  note            String?
-  durationMinutes Int?
-  professionalId  String?
-  professional    User?     @relation("PatientAttendanceProfessional", fields: [professionalId], references: [id], onDelete: Cascade)
+  startAt  DateTime
+  endAt    DateTime
+  isBooked Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([professionalId, startAt, endAt])
+}
+
+model PatientAttendance {
+  id             String                  @id @default(ulid())
+  patientId      String
+  patient        User                    @relation("PatientAttendancePatient", fields: [patientId], references: [id], onDelete: Cascade)
+  professionalId String?
+  professional   User?                   @relation("PatientAttendanceProfessional", fields: [professionalId], references: [id], onDelete: Cascade)
+  availabilityId String?                 @unique
+  availability   AvailabilityAttendance? @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
+
+  dateAt          DateTime? // TODO: remover este campo futuramente
+  note            String?
+  durationMinutes Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([professionalId, availabilityId])
 }
 
 model Document {
