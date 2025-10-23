@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 export default async function LandPage() {
   return (
-    <div className="max-w-[64rem] mx-auto">
+    <>
       <header className="flex justify-between items-center p-6">
         <Image
           src="/ong-gabriel-logo.svg"
@@ -25,55 +25,62 @@ export default async function LandPage() {
       </header>
 
       <main className="flex flex-col items-center">
-        <section className="relative size-96 rounded-2xl overflow-hidden">
-          <Image
-            src="/landing-page-pessoa-sorrindo.jpg"
-            alt="Nossa missão"
-            width={1024}
-            height={1024}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <h3 className="absolute bottom-6 left-8 right-8 leading-10" style={{ color: "white" }}>
-            Nossa missão é transformar a vida de pessoas
-          </h3>
-        </section>
+        <div className="w-full px-4">
+          <section className="relative w-full h-89 rounded-2xl overflow-hidden">
+            <Image
+              src="/landing-page-pessoa-sorrindo.jpg"
+              alt="Nossa missão"
+              width={600}
+              height={600}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <p className="absolute bottom-10 left-8 right-8 leading-10 font-young-serif text-center text-3xl text-s-butter-100">
+              Nossa missão é transformar a vida de pessoas
+            </p>
+          </section>
+        </div>
 
-        <section className="flex flex-col items-center text-center gap-2 p-6">
-          <h2>Suporte emocional para a sua vida!</h2>
-          <p>
-            Estamos dispostos a ajudar você, em todas as etapas do atendimento psicológico, por meio de uma plataforma segura e intuitiva de forma simples!
-          </p>
+        <section className="flex flex-col items-center w-full text-center px-4 py-12 gap-6">
+          <div className="w-full text-center">
+            <h3>Suporte emocional para a sua vida!</h3>
+            <p className="text-sm pt-4">
+              Estamos dispostos a ajudar você, em todas as etapas do atendimento psicológico, por meio de uma plataforma segura e intuitiva de forma simples!
+            </p>
+          </div>
 
           <h3>Confira as etapas de cadastro</h3>
-          <div className="grid grid-cols-4 gap-2 w-full">
+          <div className="flex overflow-x-auto gap-2 w-full">
             <Card src="/gifs/form-patient.gif" title="Preencha o formulário" />
             <Card src="/gifs/contact-patient.gif" title="Aguarde o contato da ONG Gabriel" />
             <Card src="/gifs/calendar-check.gif" title="Disponibilize sua agenda online" />
             <Card src="/gifs/service-patient.gif" title="Fale com o Psicólogo" />
           </div>
-          <Link href="/user/base-info?redirectTo=/pre-psych/form-registration" className="w-full">
-            <Button className="w-96 cursor-pointer">
+
+          <Link href="/patient/form-anamnesis?redirectTo=/user/base-info" className="w-full">
+            <Button className="cursor-pointer w-full">
               Quero ajuda
             </Button>
           </Link>
         </section>
 
-        <section className="flex flex-col items-center text-center gap-2 p-6 bg-s-powder-100">
-          <h2>Transforme a vida de quem precisa de apoio</h2>
-          <p>
-            Nós, da ONG Gabriel, já impactamos centenas de vidas com o apoio de
-            pessoas voluntárias prestando atendimento psicológico!
-          </p>
+        <section className="flex flex-col items-center w-full text-center px-4 py-12 gap-6 bg-s-powder-100">
+          <div className="w-full text-center">
+            <h3 className="text-sm">Transforme a vida de quem precisa de apoio</h3>
+            <p className="text-sm pt-4">
+              Nós, da ONG Gabriel, já impactamos centenas de vidas com o apoio de
+              pessoas voluntárias prestando atendimento psicológico!
+            </p>
+          </div>
 
           <h3>Veja como você pode ser parte dessa transformação:</h3>
-          <div className="grid grid-cols-4 gap-2 w-full">
+          <div className="flex overflow-x-auto gap-2 w-full">
             <Card src="/gifs/list-records.gif" title="Preencha o formulário" />
             <Card src="/gifs/user-chat.gif" title="Aguarde o contato da ONG Gabriel" />
             <Card src="/gifs/calendar-check.gif" title="Disponibilize sua agenda online" />
             <Card src="/gifs/heart-hand.gif" title="Transforme a vida de uma pessoa" />
           </div>
           <Link href="/user/base-info?redirectTo=/pre-psych/form-registration" className="w-full">
-            <Button className="w-96 bg-s-navy-100 text-s-butter-100 cursor-pointer">
+            <Button className="cursor-pointer w-full bg-s-navy-100 text-s-butter-100">
               Quero ajudar
             </Button>
           </Link>
@@ -82,18 +89,20 @@ export default async function LandPage() {
         <section className="flex flex-col items-center text-center gap-4 my-12">
           <h2>Depoimentos</h2>
           <figure className="relative">
-            <blockquote className="italic px-10">
-              <span className="absolute left-[-5] top-[-40] text-[100px] text-primary">“</span>
-              É incrível fazer parte do App Gabriel Guard! Ajudar pessoas e ver o impacto do meu trabalho foi transformador. Gratidão por essa oportunidade!
-              <span className="absolute right-auto bottom-2 text-[6.25rem] text-primary">”</span>
+            <blockquote className="italic px-10 relative">
+              <span className="absolute left-0 top-[-20px] text-[70px] text-primary font-young-serif">“</span>
+              <span className="inline-block">
+                É incrível fazer parte do App Gabriel Guard! Ajudar pessoas e ver o impacto do meu trabalho foi transformador. Gratidão por essa oportunidade!
+              </span>
+              <span className="absolute right-[20px] top-[-20px] text-[70px] text-primary font-young-serif">”</span>
             </blockquote>
-            <figcaption className="flex flex-col items-center gap-2 mt-4">
+            <figcaption className="flex justify-center items-center gap-2 mt-4">
               <Image
                 src="/default-user.jpg"
                 alt="Foto de um usuário"
                 width="40"
                 height="40"
-                className="rounded-full"
+                className="rounded-full border-1 border-p-xanthous p-0.25 w-12 h-12"
               />
               <div>
                 <p className="font-bold">Adriana Souza</p>
@@ -112,45 +121,45 @@ export default async function LandPage() {
           <span className="font-bold">Importante:</span> Não oferecemos atendimento imediato para crises suicidas. Em situação de crise, <span className="font-bold">ligue 188 (CVV)</span> ou acesse <a href="https://www.cvv.org.br" rel="noreferrer" target="_blank" className="underline">www.cvv.org.br</a>. Procure o hospital mais próximo em caso de emergência.
         </aside>
 
-        <section className="flex flex-col items-center rounded-2xl mt-8 w-full gap-4">
+        <section className="flex flex-col items-center rounded-2xl p-4 w-full gap-6">
           <h3>Dúvidas frequentes</h3>
-          <Accordion type="single" collapsible className="w-full space-y-1 px-6">
+          <Accordion type="single" collapsible className="w-full space-y-1">
             <AccordionItem value="item-1" className="bg-secondary px-8 rounded-lg">
-              <AccordionTrigger className="text-lg font-raleway">Como é o atendimento?</AccordionTrigger>
+              <AccordionTrigger className="text-sm font-semibold font-raleway text-s-onyx-100">Como é o atendimento?</AccordionTrigger>
               <AccordionContent>
-                <p>Nós, da ONG Gabriel, já impactamos centenas de vidas com o apoio de pessoas voluntárias prestando atendimento psicológico!</p>
+                <p className="text-s-onyx-100">Nós, da ONG Gabriel, já impactamos centenas de vidas com o apoio de pessoas voluntárias prestando atendimento psicológico!</p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2" className="bg-secondary px-8 rounded-lg">
-              <AccordionTrigger className="text-lg font-raleway">O atendimento é gratuito?</AccordionTrigger>
+              <AccordionTrigger className="text-sm font-semibold font-raleway text-s-onyx-100">O atendimento é gratuito?</AccordionTrigger>
               <AccordionContent>
-                <p>Sim, pode ser gratuito! Fazemos uma avaliação socioeconômica simples no cadastro para oferecer gratuidade. Se não for o seu caso, cobramos um valor social acessível. Queremos que o cuidado com a saúde mental chegue a todos!</p>
+                <p className="text-s-onyx-100">Sim, pode ser gratuito! Fazemos uma avaliação socioeconômica simples no cadastro para oferecer gratuidade. Se não for o seu caso, cobramos um valor social acessível. Queremos que o cuidado com a saúde mental chegue a todos!</p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3" className="bg-secondary px-8 rounded-lg">
-              <AccordionTrigger className="text-lg font-raleway">Pra quem é o atendimento?</AccordionTrigger>
+              <AccordionTrigger className="text-sm font-semibold font-raleway text-s-onyx-100">Pra quem é o atendimento?</AccordionTrigger>
               <AccordionContent>
-                <p>Se você busca autoconhecimento ou precisa de ajuda para lidar com ansiedade, estresse, tristeza e desafios do dia a dia, aqui é o lugar certo! Oferecemos apoio psicológico contínuo. Lembre-se: não somos um serviço de emergência. Em crises, procure um pronto-atendimento ou ligue 188 (CVV).</p>
+                <p className="text-s-onyx-100">Se você busca autoconhecimento ou precisa de ajuda para lidar com ansiedade, estresse, tristeza e desafios do dia a dia, aqui é o lugar certo! Oferecemos apoio psicológico contínuo. Lembre-se: não somos um serviço de emergência. Em crises, procure um pronto-atendimento ou ligue 188 (CVV).</p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4" className="bg-secondary px-8 rounded-lg">
-              <AccordionTrigger className="text-lg font-raleway">Meus dados estão seguros?</AccordionTrigger>
+              <AccordionTrigger className="text-sm font-semibold font-raleway text-s-onyx-100">Meus dados estão seguros?</AccordionTrigger>
               <AccordionContent>
-                <p>Totalmente seguros! Sua privacidade é nossa prioridade. Tudo o que você conversa com o psicólogo é confidencial, seguindo o Código de Ética. Nossa plataforma usa tecnologias para proteger seus dados e garantir um ambiente seguro para você.</p>
+                <p className="text-s-onyx-100">Totalmente seguros! Sua privacidade é nossa prioridade. Tudo o que você conversa com o psicólogo é confidencial, seguindo o Código de Ética. Nossa plataforma usa tecnologias para proteger seus dados e garantir um ambiente seguro para você.</p>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
         </section>
       </main>
-    </div>
+    </>
   )
 }
 
 const Card = ({ src, title }: { src: string; title: string }) => {
   return (
     <div className="flex flex-col items-center justify-center py-4 px-2 gap-2 min-w-28">
-      <Image src={src} alt="Form Icon" width={512} height={512} />
-      <p className="font-raleway text-center text-s-charcoal-100">{title}</p>
+      <Image src={src} alt="Form Icon" width={512} height={512} className="w-16 h-16" />
+      <p className="font-raleway text-center text-sm text-s-charcoal-100">{title}</p>
     </div>
   );
 };
