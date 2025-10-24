@@ -26,9 +26,10 @@ const nextConfig: NextConfig = {
 export default withPWA({
   ...nextConfig,
   // PWA config options here
+  cacheOnFrontEndNav: true,
   // dest: "public",
   disable: process.env.NODE_ENV === "development",
-  // fallbacks: { document: "/~offline" },
+  fallbacks: { document: "/~offline" },
   // register: true,
   // reloadOnOnline: true,
 });
