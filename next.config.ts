@@ -28,8 +28,8 @@ export default withPWA({
   // PWA config options here
   cacheOnFrontEndNav: true,
   // dest: "public",
-  disable: process.env.NODE_ENV === "development",
+  disable: false, // Habilitado para testar funcionalidade offline
   fallbacks: { document: "/~offline" },
-  // register: true,
-  // reloadOnOnline: true,
+  register: true, // Registra automaticamente o service worker
+  reloadOnOnline: true, // Recarrega quando voltar online
 });
