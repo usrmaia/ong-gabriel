@@ -8,6 +8,7 @@ import {
   generateOrganizationSchema,
   generateWebsiteSchema,
 } from "./metadata";
+import { PWAInstallBanner } from "@/components/pwa-install-banner";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -78,6 +79,7 @@ export default function RootLayout({
             Todos os direitos reservados. Desenvolvido por PopCorns.
           </p>
         </footer>
+        <PWAInstallBanner variant="banner" className="w-full" />
       </body>
     </html>
   );
