@@ -26,25 +26,12 @@ const nextConfig: NextConfig = {
 export default withPWA({
   ...nextConfig,
   // PWA config options here
+  aggressiveFrontEndNavCaching: true,
   cacheOnFrontEndNav: true,
   cacheStartUrl: true,
   dest: "public",
   disable: false, // Habilitado para testar funcionalidade offline
-  fallbacks: { document: "/offline.html" },
+  fallbacks: { document: "/~offline" },
   register: true, // Registra automaticamente o service worker
   reloadOnOnline: true, // Recarrega quando voltar online
-  workboxOptions: {
-    runtimeCaching: [
-      {
-        urlPattern: /^https?.*/,
-        handler: "NetworkFirst",
-        options: {
-          cacheName: "offlineCache",
-          expiration: {
-            maxEntries: 200,
-          },
-        },
-      },
-    ],
-  },
 });
