@@ -2,12 +2,14 @@ import { Young_Serif, Raleway, Poppins } from "next/font/google";
 import "./globals.css";
 
 import { Analytics } from "@/components/analytics";
+import { OfflineMonitor } from "@/components/offline-monitor";
 import {
   metadata,
   generateMedicalOrganizationSchema,
   generateOrganizationSchema,
   generateWebsiteSchema,
 } from "./metadata";
+import { PWAInstallBanner } from "@/components/pwa-install-banner";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -69,6 +71,7 @@ export default function RootLayout({
         className={`${raleway.variable} ${youngSerif.variable} ${poppins.variable} antialiased flex flex-col min-h-screen`}
       >
         <Analytics />
+        <OfflineMonitor />
         {children}
         <footer className="flex items-center justify-center p-4">
           <p className="text-sm text-center font-xs text-s-gunmetal-100">
@@ -78,6 +81,7 @@ export default function RootLayout({
             Todos os direitos reservados. Desenvolvido por PopCorns.
           </p>
         </footer>
+        <PWAInstallBanner variant="banner" className="w-full" />
       </body>
     </html>
   );

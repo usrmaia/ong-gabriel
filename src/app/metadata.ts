@@ -133,8 +133,8 @@ export const metadata: Metadata = {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
   other: {
-    "msapplication-TileColor": "#1e40af",
-    "theme-color": "#1e40af",
+    "msapplication-TileColor": "#fff8f2",
+    "theme-color": "#fff8f2",
   },
 };
 
