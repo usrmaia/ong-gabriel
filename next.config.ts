@@ -30,7 +30,7 @@ export default withPWA({
   cacheStartUrl: true,
   dest: "public",
   disable: false, // Habilitado para testar funcionalidade offline
-  // fallbacks: { document: "/~offline" },
+  fallbacks: { document: "/~offline" },
   register: true, // Registra automaticamente o service worker
   reloadOnOnline: true, // Recarrega quando voltar online
 });
