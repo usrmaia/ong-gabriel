@@ -28,7 +28,7 @@ export default withPWA({
   // PWA config options here
   // dest: "public",
   disable: process.env.NODE_ENV === "development",
-  fallbacks: { document: "/offline.html" },
+  // fallbacks: { document: "/~offline" },
   // register: true,
   // reloadOnOnline: true,
 });
