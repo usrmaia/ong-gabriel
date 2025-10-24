@@ -47,3 +47,9 @@ next-env.d.ts
 /prisma/migrations/migration_lock.toml
 *.db
 *.db-journal
+
+# pwa
+public/fallback-*.js
+public/sw.js
+public/swe-worker-*.js
+public/workbox-*.js
