@@ -2,8 +2,9 @@
 
 import { X, Download, Smartphone } from "lucide-react";
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
-import { usePWAInstall } from "@/hooks/use-pwa-install";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 interface PWAInstallBannerProps {
   variant?: "banner" | "button" | "card";

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PWAInstallBanner } from "@/components/pwa-install-banner";
-import { usePWAInstall } from "@/hooks/use-pwa-install";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 import Link from "next/link";
 import Image from "next/image";
 
