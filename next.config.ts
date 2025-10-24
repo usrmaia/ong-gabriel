@@ -30,7 +30,21 @@ export default withPWA({
   cacheStartUrl: true,
   dest: "public",
   disable: false, // Habilitado para testar funcionalidade offline
-  fallbacks: { document: "/~offline" },
+  fallbacks: { document: "/offline.html" },
   register: true, // Registra automaticamente o service worker
   reloadOnOnline: true, // Recarrega quando voltar online
+  workboxOptions: {
+    runtimeCaching: [
+      {
+        urlPattern: /^https?.*/,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "offlineCache",
+          expiration: {
+            maxEntries: 200,
+          },
+        },
+      },
+    ],
+  },
 });
