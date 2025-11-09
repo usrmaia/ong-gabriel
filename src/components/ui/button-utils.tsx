@@ -8,7 +8,7 @@ import { Button } from "./button";
 
 export const BackNavigationHeader = (props: {
   title: string;
-  href: string;
+  href?: string;
 }) => {
   const router = useRouter();
 
@@ -21,8 +21,9 @@ export const BackNavigationHeader = (props: {
     <div className="flex items-center w-full">
       <Link
         className="flex items-center"
-        href={props.href}
-        onClick={handleClick}
+        href={props.href ?? "#"}
+        // Caso não tenha href, volta para a página anterior
+        onClick={props.href ? undefined : handleClick}
       >
         <Button size="icon" variant="ghost">
           <ChevronLeft />
