@@ -5,7 +5,14 @@ type User = {
   role: Role[] | string[];
 };
 
-type Action = "view" | "list" | "create" | "update" | "delete" | "simpleCreate";
+type Action =
+  | "view"
+  | "list"
+  | "create"
+  | "update"
+  | "simpleUpdate"
+  | "delete"
+  | "simpleCreate";
 
 type Resource =
   | "users"
@@ -104,6 +111,11 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
     {
       action: "simpleCreate",
       resource: "patientAttendance",
+    },
+    {
+      action: "simpleUpdate",
+      resource: "patientAttendance",
+      condition: (user, targetResource) => user.id === targetResource.patientId,
     },
     {
       action: "view",
