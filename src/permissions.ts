@@ -12,7 +12,8 @@ type Resource =
   | "formAnamnesis"
   | "patientAttendance"
   | "psychs"
-  | "documents";
+  | "documents"
+  | "availabilityAttendance";
 
 export type PolicyStatement = {
   action: Action;
@@ -38,6 +39,14 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       action: "update",
       resource: "psychs",
     },
+    {
+      action: "list",
+      resource: "availabilityAttendance",
+    },
+    {
+      action: "create",
+      resource: "availabilityAttendance",
+    },
   ],
   EMPLOYEE: [
     {
@@ -59,6 +68,20 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
     {
       action: "update",
       resource: "patientAttendance",
+    },
+    {
+      action: "list",
+      resource: "availabilityAttendance",
+    },
+    {
+      action: "create",
+      resource: "availabilityAttendance",
+    },
+    {
+      action: "delete",
+      resource: "availabilityAttendance",
+      condition: (user, targetResource) =>
+        user.id === targetResource.professionalId,
     },
   ],
   USER: [
@@ -95,6 +118,10 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
       action: "delete",
       resource: "documents",
       condition: (user, targetResource) => user.id === targetResource.userId,
+    },
+    {
+      action: "list",
+      resource: "availabilityAttendance",
     },
   ],
   PREPSYCHO: [

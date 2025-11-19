@@ -308,3 +308,35 @@ export const evaluatePsychSchema = z
   );
 
 export type EvaluatePsychInput = z.infer<typeof evaluatePsychSchema>;
+
+const AvailabilityAttendanceDateTimeSchema = z
+  .union([z.string(), z.date()])
+  .refine((value) => {
+    const date = new Date(value);
+    const isValidDate = !isNaN(date.getTime());
+    const now = new Date();
+    return isValidDate && date > now;
+  }, "Data deve ser futura e válida.")
+  .transform((value) => new Date(value));
+
+export const CreateAvailabilityAttendanceSchema = z
+  .object({
+    professionalId: z.string().min(1, "ID do profissional é obrigatório."),
+    startAt: AvailabilityAttendanceDateTimeSchema,
+    endAt: AvailabilityAttendanceDateTimeSchema,
+  })
+  .refine((data) => data.startAt < data.endAt, {
+    message: "Horário de início deve ser anterior ao horário de fim.",
+    path: ["endAt"],
+  });
+
+export const CreateAvailabilityAttendanceListSchema = z
+  .array(CreateAvailabilityAttendanceSchema)
+  .min(1, "Pelo menos uma disponibilidade deve ser fornecida.");
+
+export type CreateAvailabilityAttendance = z.input<
+  typeof CreateAvailabilityAttendanceSchema
+>;
+export type CreateAvailabilityAttendanceList = z.input<
+  typeof CreateAvailabilityAttendanceListSchema
+>;
