@@ -1,6 +1,7 @@
 import { PatientAttendance, Prisma } from "@prisma/client";
 import z from "zod/v4";
 
+import { getAvailabilityAttendances, getUserById } from ".";
 import logger from "@/config/logger";
 import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
@@ -9,7 +10,6 @@ import {
   UpdatePatientAttendanceSchema,
 } from "@/schemas";
 import { Result } from "@/types";
-import { getUserById } from "./user.service";
 import { getUserAuthenticated } from "@/utils/auth";
 
 export const getPatientAttendances = async (
@@ -127,6 +127,25 @@ export const createPatientAttendanceFromEmployee = async (
         code: 404,
       };
 
+    if (validatedPatientAttendance.data.availabilityId) {
+      const availability = await getAvailabilityAttendances({
+        where: {
+          id: validatedPatientAttendance.data.availabilityId,
+          professionalId: validatedPatientAttendance.data.professionalId,
+          isBooked: false,
+        },
+        select: { id: true },
+      });
+      if (!availability.success || availability.data?.length === 0)
+        return {
+          success: false,
+          error: {
+            errors: ["Horário de atendimento não encontrado ou já reservado."],
+          },
+          code: 404,
+        };
+    }
+
     const createdPatientAttendance = await prisma.patientAttendance.create({
       data: { ...patientAttendance, ...validatedPatientAttendance.data },
     });
@@ -190,7 +209,9 @@ export const updatePatientAttendance = async (
       };
 
     // Se professionalId não for fornecido, use o ID do usuário autenticado
-    patientAttendance.professionalId ||= user.id;
+    const professionalId =
+      patientAttendance.professionalId?.toString() || user.id;
+    patientAttendance.professionalId = professionalId;
 
     const validatedPatientAttendance =
       await UpdatePatientAttendanceSchema.safeParseAsync(patientAttendance);
@@ -200,6 +221,40 @@ export const updatePatientAttendance = async (
         error: z.treeifyError(validatedPatientAttendance.error),
         code: 400,
       };
+
+    const existingAttendance = await prisma.patientAttendance.findUnique({
+      where: { id: patientAttendanceId },
+      select: { availabilityId: true, professionalId: true },
+    });
+    if (!existingAttendance)
+      return {
+        success: false,
+        error: { errors: ["Atendimento do paciente não encontrado!"] },
+        code: 404,
+      };
+
+    if (
+      validatedPatientAttendance.data.availabilityId &&
+      validatedPatientAttendance.data.availabilityId !==
+        existingAttendance.availabilityId
+    ) {
+      const availability = await getAvailabilityAttendances({
+        where: {
+          id: validatedPatientAttendance.data.availabilityId,
+          professionalId: professionalId,
+          isBooked: false,
+        },
+      });
+
+      if (!availability.success || availability.data?.length === 0)
+        return {
+          success: false,
+          error: {
+            errors: ["Horário de atendimento não encontrado ou já reservado."],
+          },
+          code: 404,
+        };
+    }
 
     const updatedPatientAttendance = await prisma.patientAttendance.update({
       data: { ...patientAttendance, ...validatedPatientAttendance.data },
