@@ -16,16 +16,6 @@ export const getAvailabilityAttendances = async (
 ): Promise<Result<AvailabilityAttendance[]>> => {
   try {
     const availabilities = await prisma.availabilityAttendance.findMany(filter);
-
-    if (availabilities.length === 0)
-      return {
-        success: false,
-        error: {
-          errors: ["Nenhum horário de atendimento encontrado!"],
-        },
-        code: 404,
-      };
-
     return { success: true, data: availabilities };
   } catch (error) {
     logger.error("Erro ao buscar horários de atendimento:", error);
@@ -68,6 +58,40 @@ export const createAvailabilityAttendance = async (
         code: 400,
       };
 
+    const otherAvailabilities = await prisma.availabilityAttendance.findMany({
+      where: { professionalId: user.id },
+    });
+
+    if (otherAvailabilities.length > 0) {
+      const overlapping = validatedAvailabilities.data.filter(
+        (newAvailability) =>
+          otherAvailabilities.some(
+            (existingAvailability) =>
+              (newAvailability.startAt < existingAvailability.endAt &&
+                newAvailability.endAt > existingAvailability.startAt) ||
+              (newAvailability.startAt > existingAvailability.startAt &&
+                newAvailability.startAt < existingAvailability.endAt) ||
+              (newAvailability.endAt > existingAvailability.startAt &&
+                newAvailability.endAt < existingAvailability.endAt),
+          ),
+      );
+
+      if (overlapping.length > 0) {
+        logger.warn(
+          "Alguns horários de atendimento se sobrepõem a horários já existentes.",
+        );
+        return {
+          success: false,
+          error: {
+            errors: [
+              "Alguns horários de atendimento se sobrepõem a horários já existentes.",
+            ],
+          },
+          code: 409,
+        };
+      }
+    }
+
     // Usar transação para garantir atomicidade
     const createdAvailabilities = await prisma.$transaction(
       async (transaction) => {
@@ -84,11 +108,11 @@ export const createAvailabilityAttendance = async (
         } catch (error: any) {
           if (error.code === "P2002") {
             logger.warn(
-              "Já existe uma disponibilidade para este profissional no horário informado.",
+              "Já existe uma disponibilidade no horário informado.",
               error,
             );
             throw new Error(
-              "Já existe uma disponibilidade para este profissional no horário informado.",
+              "Já existe uma disponibilidade no horário informado!",
             );
           }
           throw error;
