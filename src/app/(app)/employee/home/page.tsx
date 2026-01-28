@@ -1,4 +1,10 @@
-import { CalendarDays, ClipboardPlus, LogOut, Stethoscope } from "lucide-react";
+import {
+  CalendarClock,
+  CalendarDays,
+  ClipboardPlus,
+  LogOut,
+  Stethoscope,
+} from "lucide-react";
 import Link from "next/link";
 import { PatientAttendance, User } from "@prisma/client";
 
@@ -55,11 +61,6 @@ export default async function HomePage() {
       <section className="flex flex-col gap-4">
         <h3 className="text-center">Boas vindas, {user.name?.split(" ")[0]}</h3>
         <div className="flex flex-row overflow-x-auto gap-6">
-          <CardMenu
-            href="/employee/patient/list"
-            title="Pacientes"
-            icon={<ClipboardPlus />}
-          />
           {isAdmin && (
             <CardMenu
               href="/admin/pre-psych/list"
@@ -68,9 +69,19 @@ export default async function HomePage() {
             />
           )}
           <CardMenu
+            href="/employee/patient/list"
+            title="Pacientes"
+            icon={<ClipboardPlus />}
+          />
+          <CardMenu
             href="/employee/patient-attendance"
             title="Agenda"
             icon={<CalendarDays />}
+          />
+          <CardMenu
+            href="/employee/availability-attendance"
+            title="Horários Disponíveis"
+            icon={<CalendarClock />}
           />
           <CardMenu href="/auth/logout" title="Sair" icon={<LogOut />} />
         </div>
