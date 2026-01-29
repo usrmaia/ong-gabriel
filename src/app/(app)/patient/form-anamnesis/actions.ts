@@ -3,7 +3,10 @@
 import { redirect } from "next/navigation";
 import { FormAnamnesis } from "@prisma/client";
 
-import { createPatientFormAnamnesis } from "@/services/patient.service";
+import {
+  createPatientFormAnamnesis,
+  getAvailabilityAttendances,
+} from "@/services";
 import { Result } from "@/types";
 
 export async function onSubmit(
@@ -17,6 +20,23 @@ export async function onSubmit(
   const result = await createPatientFormAnamnesis(formDataObject);
 
   if (!result.success) return { ...result, data: formDataObject };
+
+  const availabilityAttendancesResult = await getAvailabilityAttendances({
+    where: {
+      startAt: { gte: new Date() },
+      isBooked: false,
+    },
+  });
+
+  if (
+    availabilityAttendancesResult.data &&
+    availabilityAttendancesResult.data.length > 0
+  )
+    redirect(
+      redirectTo
+        ? `/patient/availability-attendance?formAnamnesisId=${result.data!.id}&redirectTo=${redirectTo}`
+        : `/patient/availability-attendance?formAnamnesisId=${result.data!.id}`,
+    );
 
   redirect(
     redirectTo
