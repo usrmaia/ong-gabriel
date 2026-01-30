@@ -9,8 +9,19 @@ import {
   Button,
 } from "@/components/ui";
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
+import { getFullUserAuthenticated } from "@/utils/auth";
 
 export default async function LandPage() {
+  let isUserDetailsComplete: boolean = false;
+  try {
+    const user = await getFullUserAuthenticated();
+    isUserDetailsComplete = !!(
+      user.date_of_birth &&
+      user.full_name &&
+      user.phone
+    );
+  } catch {}
+
   const testimonials = [
     {
       id: 1,
@@ -98,8 +109,11 @@ export default async function LandPage() {
           </div>
 
           <Link
-            href="/patient/form-anamnesis?redirectTo=/user/base-info"
-            className="w-full"
+            href={
+              isUserDetailsComplete
+                ? `/patient/form-anamnesis`
+                : `/patient/form-anamnesis?redirectTo=/user/base-info`
+            }
           >
             <Button className="cursor-pointer w-full">Quero ajuda</Button>
           </Link>
