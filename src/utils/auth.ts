@@ -29,3 +29,14 @@ export const getUserAuthenticated = async (): Promise<
 
   return userResult.data;
 };
+
+export const getFullUserAuthenticated = async (): Promise<User> => {
+  const userId = (await auth())?.user.id;
+  if (!userId) throw new Error("User not authenticated");
+
+  const userResult = await getUserById(userId);
+  if (!userResult.success || !userResult.data)
+    throw new Error("User not found");
+
+  return userResult.data;
+};
