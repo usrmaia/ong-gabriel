@@ -7,6 +7,11 @@ export default async function Layout({
 }>) {
   const user = await getUserAuthenticated();
 
-  if (!user.role.includes("ADMIN")) return <div>Unauthorized</div>;
+  if (!user.role.includes("ADMIN"))
+    return (
+      <p className="text-center text-error">
+        Você não tem permissão para acessar esta página.
+      </p>
+    );
   return <>{children}</>;
 }
