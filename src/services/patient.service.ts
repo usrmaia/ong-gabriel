@@ -1,4 +1,4 @@
-import { FormAnamnesis, Prisma, Role } from "@prisma/client";
+import { FormAnamnesis, PatientAttendance, Prisma, Role } from "@prisma/client";
 import z from "zod/v4";
 
 import logger from "@/config/logger";
@@ -73,7 +73,9 @@ export const getPatientFormAnamnesisFromUser = async (): Promise<
  */
 export const createPatientFormAnamnesis = async (
   formAnamnesis: FormAnamnesis,
-): Promise<Result<FormAnamnesis>> => {
+): Promise<
+  Result<FormAnamnesis & { PatientAttendance: PatientAttendance }>
+> => {
   try {
     const validatedAnamnesis =
       await PatientFormAnamnesisSchema.safeParseAsync(formAnamnesis);
@@ -91,9 +93,24 @@ export const createPatientFormAnamnesis = async (
     });
 
     await addRoleToUser(formAnamnesis.userId, Role.PATIENT);
-    createPatientAttendanceFromPatient();
 
-    return { success: true, data: createdFormAnamnesis, code: 201 };
+    const attendanceResult = await createPatientAttendanceFromPatient();
+
+    if (!attendanceResult.success)
+      return {
+        success: false,
+        error: attendanceResult.error,
+        code: attendanceResult.code,
+      };
+
+    return {
+      success: true,
+      data: {
+        ...createdFormAnamnesis,
+        PatientAttendance: attendanceResult.data!,
+      },
+      code: 201,
+    };
   } catch (error) {
     logger.error("Erro ao criar anamneses do paciente:", error);
     return {
