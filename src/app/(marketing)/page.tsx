@@ -1,10 +1,40 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button, RadioGroup, RadioGroupItem } from "@/components/ui";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Button,
+} from "@/components/ui";
+import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
 export default async function LandPage() {
+  const testimonials = [
+    {
+      id: 1,
+      text: "A ONG Gabriel mudou minha vida! Estava passando por um momento muito difícil e encontrei acolhimento e profissionalismo. O atendimento online é prático e os psicólogos são incríveis. Me sinto mais forte e confiante hoje!",
+      author: "Mariana Costa",
+      role: "Paciente",
+      image: "/default-user.jpg",
+    },
+    {
+      id: 2,
+      text: "É incrível fazer parte da ONG! Ajudar pessoas e ver o impacto do meu trabalho foi transformador. A plataforma é intuitiva e facilita muito o acompanhamento dos pacientes. Gratidão por essa oportunidade!",
+      author: "Adriana Souza",
+      role: "Psicóloga Voluntária",
+      image: "/default-user.jpg",
+    },
+    {
+      id: 3,
+      text: "Nunca imaginei que seria tão fácil ter acesso a terapia de qualidade. O cadastro foi simples, a equipe é atenciosa e o atendimento superou minhas expectativas. Recomendo de olhos fechados para quem precisa de apoio emocional!",
+      author: "Roberto Silva",
+      role: "Paciente",
+      image: "/default-user.jpg",
+    },
+  ];
+
   return (
     <>
       <header className="flex justify-between items-center p-6">
@@ -88,33 +118,7 @@ export default async function LandPage() {
 
         <section className="flex flex-col items-center text-center gap-4 my-12">
           <h2>Depoimentos</h2>
-          <figure className="relative">
-            <blockquote className="italic px-10 relative">
-              <span className="absolute left-0 top-[-20px] text-[70px] text-primary font-young-serif">“</span>
-              <span className="inline-block">
-                É incrível fazer parte do App Gabriel Guard! Ajudar pessoas e ver o impacto do meu trabalho foi transformador. Gratidão por essa oportunidade!
-              </span>
-              <span className="absolute right-[20px] top-[-20px] text-[70px] text-primary font-young-serif">”</span>
-            </blockquote>
-            <figcaption className="flex justify-center items-center gap-2 mt-4">
-              <Image
-                src="/default-user.jpg"
-                alt="Foto de um usuário"
-                width="40"
-                height="40"
-                className="rounded-full border-1 border-p-xanthous p-0.25 w-12 h-12"
-              />
-              <div>
-                <p className="font-bold">Adriana Souza</p>
-                <p className="text-sm">Psicóloga</p>
-              </div>
-            </figcaption>
-          </figure>
-          <RadioGroup className="flex justify-center mt-4">
-            <RadioGroupItem value="1" />
-            <RadioGroupItem value="2" />
-            <RadioGroupItem value="3" />
-          </RadioGroup>
+          <TestimonialsCarousel testimonials={testimonials} />
         </section>
 
         <aside className="bg-primary p-4 rounded-lg mx-4">
