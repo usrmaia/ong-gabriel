@@ -4,6 +4,7 @@ import {
   ClipboardPlus,
   LogOut,
   Stethoscope,
+  UserSearch,
 } from "lucide-react";
 import Link from "next/link";
 import { PatientAttendance, User } from "@prisma/client";
@@ -24,12 +25,12 @@ const CardMenu = (props: {
   icon: React.ReactNode;
 }) => (
   <Link href={props.href}>
-    <Card className="flex flex-col items-center justify-center gap-2 p-2 w-20 h-24 bg-s-azure-web-100 hover:bg-s-verdigris">
+    <Card className="flex flex-col items-center justify-between gap-1 w-20 h-24 pt-5 bg-s-azure-web-100 hover:bg-s-verdigris">
       <CardHeader className="justify-center text-s-van-dyke">
         <CardTitle>{props.icon}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardTitle className="font-poppins text-s-liver-100 font-medium text-xs">
+        <CardTitle className="flex items-center text-center h-8 font-poppins text-s-liver-100 font-medium text-xs">
           {props.title}
         </CardTitle>
       </CardContent>
@@ -62,11 +63,18 @@ export default async function HomePage() {
         <h3 className="text-center">Boas vindas, {user.name?.split(" ")[0]}</h3>
         <div className="flex flex-row overflow-x-auto gap-6">
           {isAdmin && (
-            <CardMenu
-              href="/admin/pre-psych/list"
-              title="Candidatos"
-              icon={<Stethoscope />}
-            />
+            <>
+              <CardMenu
+                href="/admin/pre-psych/list"
+                title="Candidatos"
+                icon={<Stethoscope />}
+              />
+              <CardMenu
+                href="/admin/user/list"
+                title="Usuários"
+                icon={<UserSearch />}
+              />
+            </>
           )}
           <CardMenu
             href="/employee/patient/list"
