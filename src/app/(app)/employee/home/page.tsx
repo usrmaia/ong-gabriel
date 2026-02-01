@@ -62,11 +62,18 @@ export default async function HomePage() {
         <h3 className="text-center">Boas vindas, {user.name?.split(" ")[0]}</h3>
         <div className="flex flex-row overflow-x-auto gap-6">
           {isAdmin && (
-            <CardMenu
-              href="/admin/pre-psych/list"
-              title="Candidatos"
-              icon={<Stethoscope />}
-            />
+            <>
+              <CardMenu
+                href="/admin/pre-psych/list"
+                title="Candidatos"
+                icon={<Stethoscope />}
+              />
+              <CardMenu
+                href="/admin/user/list"
+                title="Usuários"
+                icon={<Stethoscope />}
+              />
+            </>
           )}
           <CardMenu
             href="/employee/patient/list"
