@@ -1,3 +1,4 @@
+export * from "./auth.service";
 export * from "./availabilityAttendance.service";
 export * from "./document.service";
 export * from "./patient.service";

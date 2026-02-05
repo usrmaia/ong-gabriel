@@ -35,6 +35,36 @@ export const UserBaseInfoSchema = z.object({
 
 export type UserBaseInfo = z.input<typeof UserBaseInfoSchema>;
 
+const passwordSchema = z
+  .string()
+  .min(6, "Senha deve ter no mínimo 6 caracteres.")
+  .max(32, "Senha deve ter no máximo 32 caracteres.")
+  .regex(/\S/, "Senha não pode conter espaços.")
+  .regex(/[A-Z]/, "Senha deve conter ao menos uma letra maiúscula.")
+  .regex(/[a-z]/, "Senha deve conter ao menos uma letra minúscula.")
+  .regex(/[0-9]/, "Senha deve conter ao menos um número.");
+
+export const emailSchema = z.email("Email inválido.");
+
+export type Email = z.infer<typeof emailSchema>;
+
+export const UserInputSchema = z.object({
+  name: z.string().min(1, "Nome é obrigatório."),
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export type UserInput = z.infer<typeof UserInputSchema>;
+
+export const UserTokenInputSchema = z.object({
+  userId: z.string().min(1, "ID do usuário é obrigatório."),
+  type: z.enum(["RESET_PASSWORD", "EMAIL_VERIFICATION"], {
+    error: "Tipo de token inválido.",
+  }),
+});
+
+export type UserTokenInput = z.infer<typeof UserTokenInputSchema>;
+
 const PatientFormAnamnesisSalarySchema = z
   .union([z.string(), z.number(), z.bigint()])
   .transform<bigint>((value) => {
