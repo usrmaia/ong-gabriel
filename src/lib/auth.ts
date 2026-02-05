@@ -2,16 +2,20 @@
 
 import { signIn, signOut } from "@/auth";
 
-export type Provider = "Google" | "Facebook";
+export type Provider = "Google" | "Facebook" | "Credentials";
 
-export const login = async (provider: Provider, redirectTo?: any) => {
+export const login = async (
+  provider: Provider,
+  redirectTo?: string | null,
+  formData?: FormData,
+) => {
+  const formDataObject = Object.fromEntries(formData || new FormData());
   await signIn(provider.toLowerCase(), {
+    ...formDataObject,
     redirectTo: redirectTo || "/",
   });
 };
 
-export const logout = async () => {
-  await signOut({
-    redirectTo: "/",
-  });
+export const logout = async (redirectTo?: string | null) => {
+  await signOut({ redirectTo: redirectTo || "/" });
 };
