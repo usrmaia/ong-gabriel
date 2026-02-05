@@ -7,6 +7,12 @@ const envSchema = z.object({
     .optional()
     .transform((val) => val?.trim().toLowerCase() === "true"),
 
+  SECURE_COOKIES_ENABLED: z
+    .string()
+    .optional()
+    .transform((val) => val?.trim().toLowerCase() === "true"),
+  NEXT_PUBLIC_URL: z.string(),
+
   AUTH_SECRET: z.string().optional(),
   AUTH_GOOGLE_ID: z.string().optional(),
   AUTH_GOOGLE_SECRET: z.string().optional(),
@@ -20,17 +26,12 @@ const envSchema = z.object({
   EMAIL_GOOGLE_ACCESS_TOKEN: z.string().optional(),
   EMAIL_IMG_PUBLIC_URL: z.string().url(),
 
-  SECURE_COOKIES_ENABLED: z
-    .string()
-    .optional()
-    .transform((val) => val?.trim().toLowerCase() === "true"),
-
+  CRYPTO_SECRET_KEY: z.string().length(32),
   LOG_FILE_ENABLED: z
     .string()
     .optional()
     .transform((val) => val?.trim().toLowerCase() === "true"),
   NEXT_PUBLIC_HOTJAR_ID: z.string().optional(),
-  NEXT_PUBLIC_URL: z.string(),
 
   FEEDBACK_FORM: z.string().url().optional(),
 });
