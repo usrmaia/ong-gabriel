@@ -1,0 +1,22 @@
+ONG Gabriel
+
+Olá {{userName}},
+
+Recebemos uma solicitação para redefinir a senha da sua conta na plataforma da ONG Gabriel. Para garantir a segurança do seu acesso, precisamos confirmar sua identidade.
+
+Seu código de verificação é:
+
+{{verificationCode}}
+
+Digite este código na tela de redefinição de senha para criar uma nova senha de acesso.
+
+Se você não solicitou a redefinição de senha, ignore este e-mail. Sua senha atual permanecerá ativa.
+
+Em caso de dúvidas, estamos à disposição.
+
+Atenciosamente,
+Equipe ONG Gabriel
+
+ONG Gabriel
+Rua Heitor Ribas Bueno, 231
+Cidade Satélite Íris, Campinas - SP

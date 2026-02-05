@@ -1,0 +1,22 @@
+ONG Gabriel
+
+Olá {{userName}},
+
+Recebemos seu cadastro na plataforma da ONG Gabriel! Para garantir a segurança do seu acesso, precisamos confirmar seu endereço de e-mail.
+
+Seu código de verificação é:
+
+{{verificationCode}}
+
+Digite este código na tela de verificação para ativar sua conta.
+
+Se você não solicitou este cadastro, pode ignorar este e-mail.
+
+Em caso de dúvidas, estamos à disposição.
+
+Atenciosamente,
+Equipe ONG Gabriel
+
+ONG Gabriel
+Rua Heitor Ribas Bueno, 231
+Cidade Satélite Íris, Campinas - SP

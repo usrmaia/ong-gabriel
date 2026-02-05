@@ -4,7 +4,9 @@ export type Template =
   | "hello-world"
   | "pre-psycho-approved"
   | "pre-psycho-adjustment"
-  | "pre-psycho-failed";
+  | "pre-psycho-failed"
+  | "email-verification-registration-code"
+  | "email-verification-reset-code";
 
 export type TemplateContext = {
   "hello-world": {
@@ -20,6 +22,14 @@ export type TemplateContext = {
   "pre-psycho-failed": {
     userName: string;
     pendingNote: string;
+  };
+  "email-verification-registration-code": {
+    userName: string;
+    verificationCode: string;
+  };
+  "email-verification-reset-code": {
+    userName: string;
+    verificationCode: string;
   };
 };
 
@@ -51,6 +61,8 @@ export const TemplateContextData: Record<Template, Record<string, string>> = {
     LINKEDIN_URL: "https://www.linkedin.com/company/ong-gabriel",
     YOUTUBE_URL: "https://www.youtube.com/@ONGGabriel",
   },
+  "email-verification-registration-code": {},
+  "email-verification-reset-code": {},
 };
 
 export const TemplateSubject: Record<Template, string> = {
@@ -59,4 +71,6 @@ export const TemplateSubject: Record<Template, string> = {
     "Cadastro Aprovado – Bem-vindo à Plataforma da ONG Gabriel",
   "pre-psycho-adjustment": "Ajustes Necessários no Cadastro – ONG Gabriel",
   "pre-psycho-failed": "Cadastro Não Aprovado – ONG Gabriel",
+  "email-verification-registration-code": "Código de Verificação - ONG Gabriel",
+  "email-verification-reset-code": "Código de Verificação - ONG Gabriel",
 };
