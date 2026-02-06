@@ -8,6 +8,7 @@ export * from "./button-sign";
 export * from "./card";
 export * from "./checkbox";
 export * from "./input";
+export * from "./input-otp";
 export * from "./label";
 export * from "./patient";
 export * from "./user";
