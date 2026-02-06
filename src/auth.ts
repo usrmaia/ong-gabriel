@@ -1,5 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth, { DefaultSession, NextAuthConfig } from "next-auth";
+import { cookies } from "next/headers";
 import CredentialProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
@@ -7,6 +8,9 @@ import FacebookProvider from "next-auth/providers/facebook";
 import { env } from "@/config/env";
 import prisma from "./lib/prisma";
 import { decrypt } from "./utils";
+
+// Constantes de duração de sessão
+const SESSION_MAX_AGE_PERSISTENT = 60 * 60 * 24 * 7; // 7 dias
 
 declare module "next-auth" {
   interface User {
@@ -54,14 +58,37 @@ const providers = [
 // allowDangerousEmailAccountLinking
 const authConfig: NextAuthConfig = {
   providers: providers,
-  session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 }, // 7 days
+  session: { strategy: "jwt", maxAge: SESSION_MAX_AGE_PERSISTENT }, // Padrão: 7 dias
   adapter: PrismaAdapter(prisma),
   useSecureCookies: env.SECURE_COOKIES_ENABLED,
+  cookies: {
+    sessionToken: {
+      name: env.SECURE_COOKIES_ENABLED
+        ? "__Secure-authjs.session-token"
+        : "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: env.SECURE_COOKIES_ENABLED,
+      },
+    },
+  },
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role || ["USER"];
+        token.role = user.role;
+
+        // Verificar preferência de sessão
+        try {
+          const cookieStore = await cookies();
+          const sessionPreference =
+            cookieStore.get("session-preference")?.value;
+          token.rememberMe = sessionPreference === "persistent";
+        } catch {
+          token.rememberMe = true; // Padrão: manter sessão
+        }
       }
       return token;
     },
