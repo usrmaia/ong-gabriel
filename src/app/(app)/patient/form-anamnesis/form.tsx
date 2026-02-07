@@ -562,6 +562,54 @@ export function PatientFormAnamnesis() {
         </span>
       </section>
 
+      <h3 className="text-center">O que você espera do atendimento?</h3>
+
+      <section className="flex flex-col gap-3 mt-4">
+        <Label
+          id="mainExpectationsFromAttendance-label"
+          htmlFor="mainExpectationsFromAttendance"
+          className="font-semibold text-foreground"
+        >
+          Qual a sua principal expectativa em relação a este atendimento?
+        </Label>
+        <Input
+          type="text"
+          id="mainExpectationsFromAttendance"
+          name="mainExpectationsFromAttendance"
+          placeholder="Descreva..."
+          aria-describedby="mainExpectationsFromAttendance-error"
+        />
+        <span
+          id="mainExpectationsFromAttendance-error"
+          role="alert"
+          className="text-xs text-error h-2"
+        >
+          {state.error?.properties?.mainExpectationsFromAttendance?.errors}
+        </span>
+
+        <Label
+          id="specificTalkAbout-label"
+          htmlFor="specificTalkAbout"
+          className="font-semibold text-foreground"
+        >
+          Existe algo específico que você gostaria de conversar?
+        </Label>
+        <Input
+          type="text"
+          id="specificTalkAbout"
+          name="specificTalkAbout"
+          placeholder="Descreva..."
+          aria-describedby="specificTalkAbout-error"
+        />
+        <span
+          id="specificTalkAbout-error"
+          role="alert"
+          className="text-xs text-error h-2"
+        >
+          {state.error?.properties?.specificTalkAbout?.errors}
+        </span>
+      </section>
+
       <Button className="mt-8" type="submit">
         Continuar
       </Button>

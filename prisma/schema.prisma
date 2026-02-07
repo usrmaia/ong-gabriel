@@ -136,6 +136,8 @@ model FormAnamnesis {
   hasMedicalDiagnosis               String?
   currentlyUndergoingPsychTreatment String?
   currentlyTakingMedication         String?
+  mainExpectationsFromAttendance    String?
+  specificTalkAbout                 String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
