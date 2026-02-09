@@ -5,6 +5,7 @@ import {
   LogOut,
   Stethoscope,
   UserSearch,
+  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { PatientAttendance, User } from "@prisma/client";
@@ -90,6 +91,11 @@ export default async function HomePage() {
             href="/employee/availability-attendance"
             title="Horários Disponíveis"
             icon={<CalendarClock />}
+          />
+          <CardMenu
+            href="/user/profile"
+            title="Meu Perfil"
+            icon={<UserRound />}
           />
           <CardMenu href="/auth/logout" title="Sair" icon={<LogOut />} />
         </div>

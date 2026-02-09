@@ -5,6 +5,7 @@ import {
   DocumentCategory,
   MimeType,
   PsychStatus,
+  Role,
   WhoLivesWith,
 } from "@prisma/client";
 import { z } from "zod/v4";
@@ -34,6 +35,23 @@ export const UserBaseInfoSchema = z.object({
 });
 
 export type UserBaseInfo = z.input<typeof UserBaseInfoSchema>;
+
+export const roleLabel = (role: Role) => {
+  switch (role) {
+    case "USER":
+      return "Usuário";
+    case "ADMIN":
+      return "Administrador";
+    case "EMPLOYEE":
+      return "Psicologo/Colaborador";
+    case "PATIENT":
+      return "Paciente";
+    case "PREPSYCHO":
+      return "Pré-Psicólogo";
+    default:
+      return role;
+  }
+};
 
 const passwordSchema = z
   .string()

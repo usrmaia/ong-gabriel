@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Role } from "@prisma/client";
 
+import { onSubmit } from "./action";
 import {
   Button,
   CardUserAvatar,
@@ -16,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui";
-import { onSubmit } from "./action";
+import { roleLabel } from "@/schemas";
 
 export default function UserListFilterPage() {
   const [state, formAction] = useActionState(onSubmit, {
@@ -49,20 +50,7 @@ export default function UserListFilterPage() {
               <SelectLabel className="p-2">Função</SelectLabel>
               {Object.values(Role).map((role) => (
                 <SelectItem key={role} value={role}>
-                  {(() => {
-                    switch (role) {
-                      case "USER":
-                        return "Usuário";
-                      case "ADMIN":
-                        return "Administrador";
-                      case "EMPLOYEE":
-                        return "Psicologo/Colaborador";
-                      case "PATIENT":
-                        return "Paciente";
-                      case "PREPSYCHO":
-                        return "Pré-Psicólogo";
-                    }
-                  })()}
+                  {roleLabel(role)}
                 </SelectItem>
               ))}
             </SelectGroup>
