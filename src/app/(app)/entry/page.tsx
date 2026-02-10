@@ -42,6 +42,15 @@ export default async function EntryPage() {
             Sou voluntário/funcionário
           </Button>
         </Link>
+
+        <Link href="/patient/home">
+          <Button
+            variant="default"
+            className="font-semibold w-full rounded text-md"
+          >
+            Sou paciente
+          </Button>
+        </Link>
       </section>
     </>
   );
