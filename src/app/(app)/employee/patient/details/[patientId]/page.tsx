@@ -50,7 +50,7 @@ export default async function PatientDetailsPage({
             alt={`${patient.name}'s avatar`}
             width={100}
             height={100}
-            className="rounded-full border-1 border-p-tealwave p-0.25 w-14 h-14 object-cover"
+            className="rounded-full border border-p-tealwave p-px w-14 h-14 object-cover"
           />
           <p className="font-poppins text-lg text-s-van-dyke">{patient.name}</p>
         </div>
@@ -59,7 +59,7 @@ export default async function PatientDetailsPage({
           Histórico de Atendimento(s)
         </p>
         {patientAttendances.map((attendance) => (
-          <CardAttendance key={attendance.id} patientAttendance={attendance} />
+          <CardAttendance key={attendance.id} patientAttendance={attendance} mode="employee" />
         ))}
         <p className="font-raleway font-bold text-lg text-s-van-dyke mt-2">
           Histórico de Anamneses

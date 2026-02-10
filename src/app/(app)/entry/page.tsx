@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { BackNavigationHeader, Button } from "@/components/ui";
+import { BackNavigationHeader, Button, Separator } from "@/components/ui";
 import { getFullUserAuthenticated } from "@/utils/auth";
 
 export default async function EntryPage() {
@@ -31,6 +31,17 @@ export default async function EntryPage() {
             className="font-semibold w-full rounded text-md"
           >
             Busco atendimento psicológico
+          </Button>
+        </Link>
+
+        <Separator className="bg-s-silver-100" />
+
+        <Link href="/patient/home">
+          <Button
+            variant="outline"
+            className="font-semibold w-full rounded text-md text-s-navy-100 border-s-navy-100"
+          >
+            Sou paciente
           </Button>
         </Link>
 

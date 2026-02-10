@@ -7,37 +7,11 @@ import {
   UserSearch,
   UserRound,
 } from "lucide-react";
-import Link from "next/link";
 import { PatientAttendance, User } from "@prisma/client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardPatientAttendance,
-  CardTitle,
-} from "@/components/ui";
+import { CardMenu, CardPatientAttendance } from "@/components/ui";
 import { getPatientAttendances } from "@/services";
 import { getUserAuthenticated } from "@/utils/auth";
-
-const CardMenu = (props: {
-  href: string;
-  title: string;
-  icon: React.ReactNode;
-}) => (
-  <Link href={props.href}>
-    <Card className="flex flex-col items-center justify-between gap-1 w-20 h-24 pt-5 bg-s-azure-web-100 hover:bg-s-verdigris">
-      <CardHeader className="justify-center text-s-van-dyke">
-        <CardTitle>{props.icon}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CardTitle className="flex items-center text-center h-8 font-poppins text-s-liver-100 font-medium text-xs">
-          {props.title}
-        </CardTitle>
-      </CardContent>
-    </Card>
-  </Link>
-);
 
 export default async function HomePage() {
   const user = await getUserAuthenticated();
@@ -107,8 +81,8 @@ export default async function HomePage() {
         <div className="flex flex-col gap-2">
           {upcomingPatientAttendances.map((attendance) => (
             <CardPatientAttendance
-              attendance={attendance}
               key={attendance.id}
+              attendance={attendance}
             />
           ))}
         </div>
