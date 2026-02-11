@@ -4,11 +4,12 @@ import {
     Card,
     CardContent,
     CardHeader,
+    CardAttendance,
     CardTitle,
 } from "@/components/ui";
 import { getUserAuthenticated } from "@/utils/auth";
-import { CardAttendance } from "@/components/ui/patient"
 import { getPatientAttendances } from "@/services";
+import { PatientAttendance, User } from "@prisma/client";
 
 const CardMenu = (props: {
     href: string;
@@ -32,7 +33,21 @@ const CardMenu = (props: {
 export default async function PatientHomePage() {
     const user = await getUserAuthenticated();
     const isPatient = user.role.includes("PATIENT");
-
+    const thirtyMinutesAgo = new Date(new Date().getTime() - 30 * 60 * 1000);
+    const upcomingPatientAttendancesResult = await getPatientAttendances({
+        where: {
+            professionalId: isPatient ? undefined : { equals: user.id },
+            dateAt: { gte: thirtyMinutesAgo },
+        },
+        include: {
+            patient: true,
+        },
+        orderBy: { dateAt: "asc" },
+    });
+    const upcomingPatientAttendances =
+        (upcomingPatientAttendancesResult.data as (PatientAttendance & {
+            patient: User;
+        })[]) || [];
 
     return (
         <>
@@ -54,6 +69,21 @@ export default async function PatientHomePage() {
                         </>
                     )}
                     <CardMenu href="/auth/logout" title="Sair" icon={<LogOut />} />
+                </div>
+            </section>
+
+            <section className="flex flex-col gap-2">
+                <p className="font-raleway text-lg font-bold text-s-gunmetal-100">
+                    Próximas consultas
+                </p>
+                <div className="flex flex-col gap-2">
+                    {upcomingPatientAttendances.map((attendance) => (
+                        <CardAttendance
+                            patientAttendance={attendance}
+                            key={attendance.id}
+                            mode="patient"
+                        />
+                    ))}
                 </div>
             </section>
         </>

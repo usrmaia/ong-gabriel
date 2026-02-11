@@ -179,9 +179,9 @@ export const CardFormAnamnesis = ({
 };
 
 export const CardAttendance = ({
-  patientAttendance,
+  patientAttendance
 }: {
-  patientAttendance: PatientAttendance;
+    patientAttendance: PatientAttendance; mode: 'patient' | 'employee';
 }) => {
   return (
     <Card className="shadow-lg w-full py-4 border-0 rounded-lg relative">
