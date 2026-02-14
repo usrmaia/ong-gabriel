@@ -19,8 +19,6 @@ import {
   WhoLivesWithSchema,
 } from "@/schemas";
 
-// ...existing code...
-
 export const CardPatientAttendance = ({
   attendance,
 }: {
@@ -179,16 +177,22 @@ export const CardFormAnamnesis = ({
 };
 
 export const CardAttendance = ({
-  patientAttendance
+  patientAttendance,
+  mode,
 }: {
-    patientAttendance: PatientAttendance; mode: 'patient' | 'employee';
+  patientAttendance: PatientAttendance;
+  mode: "patient" | "employee";
 }) => {
   return (
     <Card className="shadow-lg w-full py-4 border-0 rounded-lg relative">
       <CardHeader className="flex justify-center absolute top-2 right-2">
         <CardAction>
           <Link
-            href={`/employee/patient-attendance/details/${patientAttendance.id}/edit`}
+            href={
+              mode === "employee"
+                ? `/employee/patient-attendance/details/${patientAttendance.id}/edit`
+                : `/patient/patient-attendance/details/${patientAttendance.id}/edit`
+            }
           >
             <Button size="icon" variant="ghost">
               <Edit />
@@ -212,10 +216,12 @@ export const CardAttendance = ({
             ? `${patientAttendance.durationMinutes} minutos`
             : "A definir"}
         </p>
-        <p className="text-sm font-poppins text-s-van-dyke">
-          <span className="font-bold">Anotações: </span>
-          {patientAttendance.note}
-        </p>
+        {mode === "employee" && (
+          <p className="text-sm font-poppins text-s-van-dyke">
+            <span className="font-bold">Anotações: </span>
+            {patientAttendance.note}
+          </p>
+        )}
       </CardContent>
     </Card>
   );
