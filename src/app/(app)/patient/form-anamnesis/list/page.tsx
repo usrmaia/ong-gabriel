@@ -1,28 +1,39 @@
-import { BackNavigationHeader, CardFormAnamnesis } from "@/components/ui";
+import Link from "next/link";
+
+import {
+  BackNavigationHeader,
+  Button,
+  CardFormAnamnesis,
+} from "@/components/ui";
 import { getPatientFormAnamnesisFromUser } from "@/services";
 
 export default async function FormAnamnesisList() {
   const formAnamnesisResult = await getPatientFormAnamnesisFromUser();
 
-  // Order by createdAt descending
-  const formAnamnesis = (formAnamnesisResult.data || []).sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+  if (!formAnamnesisResult.success)
+    return (
+      <p className="text-center text-gray-500 py-8">
+        Opa! Parece que você ainda não realizou o seu anamneses!
+      </p>
+    );
+
+  const formAnamnesis = formAnamnesisResult.data || [];
 
   return (
     <>
       <BackNavigationHeader title="Histórico de Anamneses" />
+
       <section className="flex flex-col gap-2">
-        {formAnamnesis.length > 0 ? (
-          formAnamnesis.map((anamnesis) => (
-            <CardFormAnamnesis key={anamnesis.id} anamnesis={anamnesis} />
-          ))
-        ) : (
-          <p className="text-center text-gray-500 py-8">
-            Nenhuma anamnese encontrada.
-          </p>
-        )}
+        {formAnamnesis.map((anamnesis) => (
+          <CardFormAnamnesis key={anamnesis.id} anamnesis={anamnesis} />
+        ))}
       </section>
+
+      <Link href="/patient/form-anamnesis">
+        <Button className="font-semibold w-full rounded text-md">
+          Realizar nova anamnese
+        </Button>
+      </Link>
     </>
   );
 }

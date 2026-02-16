@@ -52,6 +52,7 @@ export const getPatientFormAnamnesisFromUser = async (): Promise<
   const userId = await getUserIdAuthenticated();
   const userAnamnesisForms = await prisma.formAnamnesis.findMany({
     where: { userId },
+    orderBy: { createdAt: "desc" },
   });
 
   if (userAnamnesisForms.length === 0)

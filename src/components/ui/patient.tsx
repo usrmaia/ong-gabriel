@@ -171,6 +171,18 @@ export const CardFormAnamnesis = ({
           <p className="font-bold">Usa algum tipo de medicamento?</p>
           <p>{anamnesis.currentlyTakingMedication || "N/A"}</p>
         </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Qual a sua principal expectativa em relação a este atendimento?
+          </p>
+          <p>{anamnesis.mainExpectationsFromAttendance || "N/A"}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">
+            Existe algo específico que você gostaria de conversar?
+          </p>
+          <p>{anamnesis.specificTalkAbout || "N/A"}</p>
+        </div>
       </CardContent>
     </Card>
   );
