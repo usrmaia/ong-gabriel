@@ -18,6 +18,7 @@ type Resource =
   | "users"
   | "formAnamnesis"
   | "patientAttendance"
+  | "patientAttendance-patient"
   | "psychs"
   | "documents"
   | "availabilityAttendance";
@@ -109,8 +110,18 @@ export const policies: Readonly<Record<Role | string, PolicyStatement[]>> = {
   ],
   PATIENT: [
     {
+      action: "view",
+      resource: "patientAttendance",
+      condition: (user, targetResource) => user.id === targetResource.patientId,
+    },
+    {
       action: "simpleCreate",
       resource: "patientAttendance",
+    },
+    {
+      action: "simpleUpdate",
+      resource: "patientAttendance-patient",
+      condition: (user, targetResource) => user.id === targetResource.patientId,
     },
     {
       action: "simpleUpdate",

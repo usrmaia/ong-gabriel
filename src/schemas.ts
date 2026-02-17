@@ -213,6 +213,11 @@ const PatientAttendanceDurationMinutesSchema = z
     message: "Duração deve ser um número positivo.",
   });
 
+export const PatientAttendanceFeedbackSchema = z
+  .string()
+  .max(2048, "Feedback deve ter no máximo 2048 caracteres.")
+  .optional();
+
 export const CreatePatientAttendanceSchema = z.object({
   patientId: z.string().min(1, "ID do paciente é obrigatório."),
   professionalId: z.string().min(1, "ID do profissional é obrigatório."),

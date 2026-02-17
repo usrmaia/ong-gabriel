@@ -19,21 +19,17 @@ export function PatientAttendanceEditForm({
 }: {
   patientAttendance: PatientAttendance & { patient: User };
 }) {
-  const [state, formAction] = useActionState(onSubmit, {
-    data: patientAttendance,
-    success: false,
-    error: { errors: [] },
-  });
-
-  const handleSubmit = (formData: FormData) => {
-    const dateAtRaw = formData.get("dateAt") as string;
-    if (dateAtRaw)
-      formData.set("dateAt", new TZDateMini(dateAtRaw, "UTC").toISOString());
-    formAction(formData);
-  };
+  const [state, formAction] = useActionState(
+    onSubmit.bind(null, patientAttendance.id),
+    {
+      data: patientAttendance,
+      success: false,
+      error: { errors: [] },
+    },
+  );
 
   return (
-    <form action={handleSubmit} className="flex flex-col gap-3">
+    <form action={formAction} className="flex flex-col gap-3">
       <div className="flex justify-between">
         <Label htmlFor="dateAt" className="font-semibold text-foreground">
           Data
@@ -52,11 +48,8 @@ export function PatientAttendanceEditForm({
               )
             : undefined
         }
-        required
+        disabled
       />
-      <span id="dateAt-error" role="alert" className="text-xs text-error h-2">
-        {state.error?.properties?.dateAt?.errors}
-      </span>
 
       <Label
         htmlFor="durationMinutes"
@@ -69,49 +62,32 @@ export function PatientAttendanceEditForm({
         type="number"
         name="durationMinutes"
         defaultValue={state.data?.durationMinutes || undefined}
+        disabled
       />
-      <span
-        id="durationMinutes-error"
-        role="alert"
-        className="text-xs text-error h-2"
-      >
-        {state.error?.properties?.durationMinutes?.errors}
-      </span>
-
-      <div className="flex justify-between">
-        <Label htmlFor="note" className="font-semibold text-foreground">
-          Anotações
-        </Label>
-      </div>
-      <Textarea
-        id="note"
-        name="note"
-        defaultValue={state.data?.note || undefined}
-        onClick={autoResizeTextarea}
-        onInput={autoResizeTextarea}
-      />
-      <span id="note-error" role="alert" className="text-xs text-error h-2">
-        {state.error?.properties?.note?.errors}
-      </span>
 
       <Label htmlFor="feedback" className="font-semibold text-foreground">
         Feedback
       </Label>
       <Textarea
         id="feedback"
+        name="feedback"
         defaultValue={state.data?.feedback || undefined}
-        disabled
+        onClick={autoResizeTextarea}
+        onInput={autoResizeTextarea}
       />
+      <span id="feedback-error" role="alert" className="text-xs text-error h-2">
+        {state.error?.properties?.feedback?.errors}
+      </span>
 
       <Button type="submit" className="mt-2">
-        Salvar alterações
+        Salvar feedback
       </Button>
 
       <span role="alert" className="text-xs text-center h-2 p-2">
         {state.error?.errors ? (
           <span className="text-error">{state.error.errors}</span>
         ) : state.success ? (
-          <span className="text-success">Sucesso!</span>
+          <span className="text-success">Feedback salvo com sucesso!</span>
         ) : undefined}
       </span>
     </form>

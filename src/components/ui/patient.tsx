@@ -231,9 +231,13 @@ export const CardAttendance = ({
         {mode === "employee" && (
           <p className="text-sm font-poppins text-s-van-dyke">
             <span className="font-bold">Anotações: </span>
-            {patientAttendance.note}
+            {patientAttendance.note || "Sem anotações"}
           </p>
         )}
+        <p className="text-sm font-poppins text-s-van-dyke">
+          <span className="font-bold">Feedback: </span>
+          {patientAttendance.feedback || "Sem feedback"}
+        </p>
       </CardContent>
     </Card>
   );

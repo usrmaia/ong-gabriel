@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { can } from "@/permissions";
 import {
   CreatePatientAttendanceSchema,
+  PatientAttendanceFeedbackSchema,
   UpdatePatientAttendanceSchema,
 } from "@/schemas";
 import { Result } from "@/types";
@@ -42,7 +43,13 @@ export const getPatientAttendanceById = async (
 ): Promise<Result<PatientAttendance>> => {
   try {
     const user = await getUserAuthenticated();
-    if (!can(user, "view", "patientAttendance"))
+
+    const patientAttendance = await prisma.patientAttendance.findUnique({
+      where: { id: patientAttendanceId },
+      ...filter,
+    });
+
+    if (!can(user, "view", "patientAttendance", patientAttendance))
       return {
         success: false,
         error: {
@@ -51,10 +58,6 @@ export const getPatientAttendanceById = async (
         code: 403,
       };
 
-    const patientAttendance = await prisma.patientAttendance.findUnique({
-      where: { id: patientAttendanceId },
-      ...filter,
-    });
     if (!patientAttendance)
       return {
         success: false,
@@ -331,6 +334,64 @@ export const updatePatientAttendanceFromAvailability = async (
       error: {
         errors: ["Erro ao atualizar atendimento/disponibilidade do paciente!"],
       },
+      code: 500,
+    };
+  }
+};
+
+export const updatePatientAttendanceFromPatient = async (
+  patientAttendanceId: string,
+  { feedback }: { feedback: string },
+): Promise<Result<PatientAttendance>> => {
+  try {
+    const validatedFeedback =
+      await PatientAttendanceFeedbackSchema.safeParseAsync(feedback);
+    if (!validatedFeedback.success)
+      return {
+        success: false,
+        error: z.treeifyError(validatedFeedback.error),
+        code: 400,
+      };
+
+    const user = await getUserAuthenticated();
+
+    const existingAttendance = await prisma.patientAttendance.findUnique({
+      select: { patientId: true },
+      where: { id: patientAttendanceId },
+    });
+    if (!existingAttendance)
+      return {
+        success: false,
+        error: { errors: ["Atendimento do paciente não encontrado!"] },
+        code: 404,
+      };
+
+    if (
+      !can(
+        user,
+        "simpleUpdate",
+        "patientAttendance-patient",
+        existingAttendance,
+      )
+    )
+      return {
+        success: false,
+        error: {
+          errors: ["Usuário não autorizado a atualizar este atendimento!"],
+        },
+        code: 403,
+      };
+
+    const updatedPatientAttendance = await prisma.patientAttendance.update({
+      data: { feedback },
+      where: { id: patientAttendanceId },
+    });
+    return { success: true, data: updatedPatientAttendance };
+  } catch (error) {
+    logger.error("Erro ao atualizar atendimento do paciente:", error);
+    return {
+      success: false,
+      error: { errors: ["Erro ao atualizar atendimento do paciente!"] },
       code: 500,
     };
   }
