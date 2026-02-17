@@ -202,9 +202,10 @@ model PatientAttendance {
   availabilityId String?                 @unique
   availability   AvailabilityAttendance? @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
 
-  dateAt          DateTime? // TODO: remover este campo futuramente
+  dateAt          DateTime?
   note            String?
   durationMinutes Int?
+  feedback        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

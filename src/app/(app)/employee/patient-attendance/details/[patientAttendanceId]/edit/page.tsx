@@ -32,7 +32,7 @@ export default async function PatientAttendanceEditPage({
   return (
     <>
       <BackNavigationHeader
-        title="Editar agendamento"
+        title="Editar atendimento"
         href={`/employee/patient/details/${patientAttendance.patientId}`}
       />
       <section className="flex flex-col gap-4">
