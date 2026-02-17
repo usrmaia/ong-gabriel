@@ -59,7 +59,11 @@ export default async function PatientDetailsPage({
           Histórico de Atendimento(s)
         </p>
         {patientAttendances.map((attendance) => (
-          <CardAttendance key={attendance.id} patientAttendance={attendance} mode="employee" />
+          <CardAttendance
+            key={attendance.id}
+            patientAttendance={attendance}
+            mode="employee"
+          />
         ))}
         <p className="font-raleway font-bold text-lg text-s-van-dyke mt-2">
           Histórico de Anamneses

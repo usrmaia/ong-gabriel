@@ -4,7 +4,7 @@ No modelo padrão de desenvolvimento, o código é desenvolvido diretamente na b
 
 ## O que é o Gitflow?
 
-O Gitflow é um modelo de branching para Git que ajuda a organizar o desenvolvimento de software. Ele define um conjunto de regras e convenções para criar branches, fazer merges e versionar o código. Nele, o desenvolvimento é dividido em várias branches, cada uma com um propósito específico. 
+O Gitflow é um modelo de branching para Git que ajuda a organizar o desenvolvimento de software. Ele define um conjunto de regras e convenções para criar branches, fazer merges e versionar o código. Nele, o desenvolvimento é dividido em várias branches, cada uma com um propósito específico.
 
 **Ao iniciar uma nova task, o desenvolvedor cria uma nova branch a partir da branch develop. O código é desenvolvido, revisado e aprovado nessa nova branch. Quando a task é concluída, a branch é mesclada de volta à branch develop. Isso permite que várias tarefas sejam desenvolvidas simultaneamente, sem interferir no trabalho de outros desenvolvedores.**
 
@@ -42,7 +42,7 @@ Onde <command> é um dos seguintes:
 
 ```bash
     git flow feature start      # Inicia uma nova feature.
-    git flow feature finish     # Finaliza uma feature. 
+    git flow feature finish     # Finaliza uma feature.
     git flow feature publish    # Publica uma feature. O padrão é branch atual.
     git flow feature track      # Rastreia uma feature.
     git flow feature diff       # Mostra as diferenças de uma feature.
@@ -68,5 +68,6 @@ git flow feature publish minha-feature
 ```
 
 ## Fonte
+
 - [Atlassian - Saiba tudo sobre o Gitflow Workflow](https://www.atlassian.com/br/git/tutorials/comparing-workflows/gitflow-workflow)
 - [Vozes da Minha Cabeça]()

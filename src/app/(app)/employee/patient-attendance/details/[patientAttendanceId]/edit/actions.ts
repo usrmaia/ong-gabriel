@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { PatientAttendance } from "@prisma/client";
 
 import logger from "@/config/logger";
@@ -32,6 +33,11 @@ export async function onSubmit(
         data: { ...initialState.data!, ...formDataObject },
         error: updatedAttendanceResult.error,
       };
+
+    revalidatePath(
+      "/employee/patient-attendance/details/[patientAttendanceId]/edit",
+    );
+
     return {
       success: true,
       data: { ...initialState.data!, ...updatedAttendanceResult.data },

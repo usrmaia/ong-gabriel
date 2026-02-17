@@ -13,12 +13,10 @@ Exemplo: 2.4.1
 ## Regras de Incremento
 
 1. **MAJOR (X)** - Quando fizer mudanças incompatíveis na API
-
    - Alterações que quebram compatibilidade com versões anteriores
    - As versões MINOR e PATCH são reiniciadas para 0 quando MAJOR é incrementado
 
 2. **MINOR (Y)** - Quando adicionar funcionalidades mantendo compatibilidade
-
    - Novas funcionalidades que não quebram a compatibilidade com versões anteriores
    - Quando marcar funcionalidades como obsoletas (deprecated)
    - A versão PATCH é reiniciada para 0 quando MINOR é incrementado
